@@ -1,0 +1,4 @@
+https://github.com/wolfeidau/mbedtls
+https://github.com/DaveGamble/cJSON
+https://github.com/KermitProject/ekermit
+https://github.com/alex85k/wingetopt

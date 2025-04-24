@@ -1,0 +1,3 @@
+setuptools
+cibuildwheel
+twine

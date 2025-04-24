@@ -1,0 +1,1011 @@
+#include "rockblock_9704.h"
+#include "jspr_command.h"
+#include "serial.h"
+#include "imt_queue.h"
+
+#include "third_party/cJSON/cJSON.h"
+#include "third_party/base64/base64.h"
+#include <stddef.h>
+#include <errno.h>
+#include <stdlib.h>
+#include "crossplatform.h"
+
+#if defined(_WIN32)
+#include <io.h>
+#define access _access
+#else
+#include <unistd.h>
+#endif
+
+#define IMT_MIN_TOPIC_ID 64U
+#define IMT_MAX_TOPIC_ID 65535U
+#define FIRMWARE_VERSION_STRING_LEN 13U
+
+extern int messageReference;
+extern serialContext context;
+extern enum serialState serialState;
+
+static uint8_t base64Buffer [BASE64_TEMP_BUFFER];
+static uint8_t crcBuffer [IMT_CRC_SIZE];
+static bool sending = false;
+
+extern imt_t imtMo[MO_QUEUE_SIZE];
+extern imt_t imtMt[MT_QUEUE_SIZE];
+
+jsprHwInfo_t hwInfo;
+jsprSimStatus_t simStatus;
+
+#ifdef __linux__
+    #define SERIAL_CONTEXT_SETUP_FUNC setContextLinux
+#elif __APPLE__
+    #define SERIAL_CONTEXT_SETUP_FUNC setContextLinux
+#elif _WIN32
+    #define SERIAL_CONTEXT_SETUP_FUNC setContextWindows
+#elif ARDUINO
+    // arduino specific call
+    #define SERIAL_CONTEXT_SETUP_FUNC setContextArduino
+#else
+    #define SERIAL_CONTEXT_SETUP_FUNC
+    #error A serial context is needed
+#endif
+
+// Gives the user the option to set-up their own set-up function outside of the library
+#ifndef SERIAL_CONTEXT_SETUP_FUNC
+    #error A serial context function is needed
+#endif
+
+
+#ifdef RB_GPIO
+bool rbBeginGpio(char * port, const rbGpioTable_t * gpioInfo, const int timeout)
+{
+    bool enabled = false;
+    if (gpioDriveLow(gpioInfo->powerEnable.chip, gpioInfo->powerEnable.pin))
+    {
+        if (gpioDriveHigh(gpioInfo->iridiumEnable.chip, gpioInfo->iridiumEnable.pin))
+        {
+            if (gpioListenIridBooted(gpioInfo->booted.chip, gpioInfo->booted.pin, timeout))
+            {
+                sleep(1);
+                if (rbBegin(port))
+                {
+                    enabled = true;
+                }
+            }
+        }
+    }
+    return enabled;
+}
+
+bool rbEndGpio(const rbGpioTable_t * gpioInfo)
+{
+    bool disabled = false;
+    if (gpioDriveHigh(gpioInfo->powerEnable.chip, gpioInfo->powerEnable.pin))
+    {
+        if (gpioDriveLow(gpioInfo->iridiumEnable.chip, gpioInfo->iridiumEnable.pin))
+        {
+            if (rbEnd())
+            {
+                disabled = true;
+            }
+        }
+    }
+    return disabled;
+}
+
+bool rbBeginHat(const int timeout)
+{
+    bool enabled = false;
+    if (rbBeginGpio(PI_HAT_PATH, &gpioTable, timeout))
+    {
+        enabled = true;
+    }
+    return enabled;
+}
+
+bool rbEndHat(void)
+{
+    bool disabled = false;
+    if (rbEndGpio(&gpioTable))
+    {
+        disabled = true;
+    }
+    return disabled;
+}
+#endif
+
+static const unsigned short CRC16Table[256] =
+{
+  0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50a5, 0x60c6, 0x70e7,
+  0x8108, 0x9129, 0xa14a, 0xb16b, 0xc18c, 0xd1ad, 0xe1ce, 0xf1ef,
+  0x1231, 0x0210, 0x3273, 0x2252, 0x52b5, 0x4294, 0x72f7, 0x62d6,
+  0x9339, 0x8318, 0xb37b, 0xa35a, 0xd3bd, 0xc39c, 0xf3ff, 0xe3de,
+  0x2462, 0x3443, 0x0420, 0x1401, 0x64e6, 0x74c7, 0x44a4, 0x5485,
+  0xa56a, 0xb54b, 0x8528, 0x9509, 0xe5ee, 0xf5cf, 0xc5ac, 0xd58d,
+  0x3653, 0x2672, 0x1611, 0x0630, 0x76d7, 0x66f6, 0x5695, 0x46b4,
+  0xb75b, 0xa77a, 0x9719, 0x8738, 0xf7df, 0xe7fe, 0xd79d, 0xc7bc,
+  0x48c4, 0x58e5, 0x6886, 0x78a7, 0x0840, 0x1861, 0x2802, 0x3823,
+  0xc9cc, 0xd9ed, 0xe98e, 0xf9af, 0x8948, 0x9969, 0xa90a, 0xb92b,
+  0x5af5, 0x4ad4, 0x7ab7, 0x6a96, 0x1a71, 0x0a50, 0x3a33, 0x2a12,
+  0xdbfd, 0xcbdc, 0xfbbf, 0xeb9e, 0x9b79, 0x8b58, 0xbb3b, 0xab1a,
+  0x6ca6, 0x7c87, 0x4ce4, 0x5cc5, 0x2c22, 0x3c03, 0x0c60, 0x1c41,
+  0xedae, 0xfd8f, 0xcdec, 0xddcd, 0xad2a, 0xbd0b, 0x8d68, 0x9d49,
+  0x7e97, 0x6eb6, 0x5ed5, 0x4ef4, 0x3e13, 0x2e32, 0x1e51, 0x0e70,
+  0xff9f, 0xefbe, 0xdfdd, 0xcffc, 0xbf1b, 0xaf3a, 0x9f59, 0x8f78,
+  0x9188, 0x81a9, 0xb1ca, 0xa1eb, 0xd10c, 0xc12d, 0xf14e, 0xe16f,
+  0x1080, 0x00a1, 0x30c2, 0x20e3, 0x5004, 0x4025, 0x7046, 0x6067,
+  0x83b9, 0x9398, 0xa3fb, 0xb3da, 0xc33d, 0xd31c, 0xe37f, 0xf35e,
+  0x02b1, 0x1290, 0x22f3, 0x32d2, 0x4235, 0x5214, 0x6277, 0x7256,
+  0xb5ea, 0xa5cb, 0x95a8, 0x8589, 0xf56e, 0xe54f, 0xd52c, 0xc50d,
+  0x34e2, 0x24c3, 0x14a0, 0x0481, 0x7466, 0x6447, 0x5424, 0x4405,
+  0xa7db, 0xb7fa, 0x8799, 0x97b8, 0xe75f, 0xf77e, 0xc71d, 0xd73c,
+  0x26d3, 0x36f2, 0x0691, 0x16b0, 0x6657, 0x7676, 0x4615, 0x5634,
+  0xd94c, 0xc96d, 0xf90e, 0xe92f, 0x99c8, 0x89e9, 0xb98a, 0xa9ab,
+  0x5844, 0x4865, 0x7806, 0x6827, 0x18c0, 0x08e1, 0x3882, 0x28a3,
+  0xcb7d, 0xdb5c, 0xeb3f, 0xfb1e, 0x8bf9, 0x9bd8, 0xabbb, 0xbb9a,
+  0x4a75, 0x5a54, 0x6a37, 0x7a16, 0x0af1, 0x1ad0, 0x2ab3, 0x3a92,
+  0xfd2e, 0xed0f, 0xdd6c, 0xcd4d, 0xbdaa, 0xad8b, 0x9de8, 0x8dc9,
+  0x7c26, 0x6c07, 0x5c64, 0x4c45, 0x3ca2, 0x2c83, 0x1ce0, 0x0cc1,
+  0xef1f, 0xff3e, 0xcf5d, 0xdf7c, 0xaf9b, 0xbfba, 0x8fd9, 0x9ff8,
+  0x6e17, 0x7e36, 0x4e55, 0x5e74, 0x2e93, 0x3eb2, 0x0ed1, 0x1ef0
+};
+
+static bool setApi(void)
+{
+    bool set = false;
+    jsprResponse_t response;
+    for(int i = 0; i < 2; i++) //if modem is sleeping it may need not catch first command, use first loop to wake
+    {
+#ifdef ARDUINO
+        delay(5);
+#else
+        usleep(5000);
+#endif
+        if(jsprGetApiVersion())
+        {
+            if (receiveJspr(&response, true))
+            {
+                if(JSPR_RC_NO_ERROR == response.code)
+                {
+                    jsprApiVersion_t apiVersion;
+                    parseJsprGetApiVersion(response.json, &apiVersion);
+                    if(!apiVersion.activeVersionSet)
+                    {   //HOW DO WE DECIDE WHICH VERSION TO USE IF THERE IS MORE THAN ONE AVAILABLE?
+                        jsprPutApiVersion(&apiVersion.supportedVersions[0]);
+                        receiveJspr(&response, true);
+                    }
+                    if(JSPR_RC_NO_ERROR == response.code || apiVersion.activeVersionSet)
+                    {
+                        set = true;
+                        i = 2;
+                    }
+                }
+            }
+        }
+    }
+    return set;
+}
+
+static bool setSim(void)
+{
+    bool set = false;
+    jsprResponse_t response;
+    if(jsprGetSimInterface())
+    {
+        if (receiveJspr(&response, true))
+        {
+            if(JSPR_RC_NO_ERROR == response.code)
+            {
+                jsprSimInterface_t simInterface;
+                parseJsprGetSimInterface(response.json, &simInterface);
+                
+                if(!simInterface.ifaceSet || simInterface.iface != INTERNAL)
+                {
+                    putSimInterface(INTERNAL);
+                    receiveJspr(&response, false);
+                    if ((JSPR_RC_NO_ERROR == response.code) &&
+                        (strncmp(response.target, "simConfig", JSPR_MAX_TARGET_LENGTH) == 0))
+                    {
+                        parseJsprGetSimInterface(response.json, &simInterface);
+
+                        // Wait for simStatus to come back
+                        do
+                        {
+                            receiveJspr(&response, false);
+                        } while ((JSPR_RC_UNSOLICITED_MESSAGE != response.code) &&
+                                 (strncmp(response.target, "simStatus", JSPR_MAX_TARGET_LENGTH) != 0));
+                        set = true;
+                    }
+                }
+                else if (JSPR_RC_NO_ERROR == response.code && simInterface.iface == INTERNAL)
+                {
+                    set = true;
+                }
+            }
+        }
+    }
+    return set;
+}
+
+static bool setState(void)
+{
+    bool set = false;
+    jsprResponse_t response;
+    if(jsprGetOperationalState())
+    {
+        if(receiveJspr(&response, true))
+        {
+            if(JSPR_RC_NO_ERROR == response.code)
+            {
+                jsprOperationalState_t state;
+                parseJsprGetOperationalState(response.json, &state);
+                if(state.operationalStateSet)
+                {
+                    if(state.operationalState == ACTIVE)
+                    {
+                        set = true;
+                    }
+                    else if(state.operationalState == INACTIVE)
+                    {
+                        putOperationalState(ACTIVE);
+                        receiveJspr(&response, true);
+                        if(JSPR_RC_NO_ERROR == response.code)
+                        {
+                            set = true;
+                        }
+                    }
+                    else //if its in another mode it may need to be turned inactive first
+                    {
+                        putOperationalState(INACTIVE);
+                        receiveJspr(&response, true);
+                        if(JSPR_RC_NO_ERROR == response.code)
+                        {
+                            putOperationalState(ACTIVE);
+                            receiveJspr(&response, true);
+                            if(JSPR_RC_NO_ERROR == response.code)
+                            {
+                                set = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return set;
+}
+
+bool rbBegin(char* port)
+{
+    bool began = false;
+    if(SERIAL_CONTEXT_SETUP_FUNC(port, RB9704_BAUD))
+    {
+        if(context.serialInit != NULL)
+        {
+            if(context.serialInit())
+            {
+                serialState = OPEN;
+                if(setApi())
+                {
+                    if(setSim())
+                    {
+                        if(setState())
+                        {
+                            imtQueueInit(); //initialise (clean) the queue
+                            began = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return began;
+}
+
+static size_t encodeData(const char * srcBuffer, const size_t srcLength, char * destBuffer, const size_t destLength)
+{
+    size_t encodedBytes = -1;
+    if(srcBuffer != NULL && srcLength > 0 && destBuffer != NULL && destLength > 0)
+    {
+        int err = mbedtls_base64_encode(destBuffer, destLength, &encodedBytes, srcBuffer, srcLength);
+        if (0 != err)
+        {
+            encodedBytes = -1;
+        }
+    }
+    return encodedBytes;
+}
+
+static size_t decodeData(const char * srcBuffer, const size_t srcLength, char * destBuffer, const size_t destLength)
+{
+    size_t decodedBytes = -1;
+    if(srcBuffer != NULL && srcLength > 0 && destBuffer != NULL && destLength > 0)
+    {
+        int err = mbedtls_base64_decode(destBuffer, destLength, &decodedBytes, srcBuffer, srcLength);
+        if (0 != err)
+        {
+            decodedBytes = -1;
+        }
+    }
+    return decodedBytes;
+}
+
+static bool appendCrc(uint8_t * buffer, size_t length)
+{
+    bool appended = false;
+    int crc = calculateCrc(buffer, length, 0);
+    if (calculateCrc > 0)
+    {
+        crcBuffer[0] = (crc >> 8) & 0xFFU;
+        crcBuffer[1] = crc & 0xFFU;
+        memcpy(buffer + length, crcBuffer, IMT_CRC_SIZE);
+        appended = true;
+    }
+    memset(crcBuffer, 0, IMT_CRC_SIZE);
+    return appended;
+}
+
+bool sendMessage(const char * data, const size_t length)
+{
+    bool sent = false;
+    int8_t queuePosition = -1;
+    if(checkProvisioning(RAW_TOPIC))
+    {
+        if(data != NULL && length > 0 && length <= IMT_PAYLOAD_SIZE - IMT_CRC_SIZE)
+        {
+            queuePosition = addMoToQueue(RAW_TOPIC, data, length);
+            if(queuePosition >= 0)
+            {
+                if(appendCrc(imtMo[queuePosition].buffer, length))
+                {
+                    imtMo[queuePosition].readyToProcess = true; //This matters for the async approach
+                    if(!sending)
+                    {
+                        sent = sendMoFromQueue(); //this is currently synchronous, will never be more than 1 message in que at one time.
+                                           //sendMoFromQueue() can be put in a separate thread to make it possible to que more messages.
+                    }
+                }
+                else
+                {
+                    removeMoFromQueue(queuePosition); //failed to apply crc, drop message
+                }
+            }
+        }
+    }
+    return sent;
+}
+
+bool sendMessageCloudloop(cloudloopTopics_t topic, const char * data, const size_t length)
+{
+    bool sent = false;
+    int8_t queuePosition = -1;
+    if(checkProvisioning(topic))
+    {
+        if(data != NULL && length > 0 && length <= IMT_PAYLOAD_SIZE - IMT_CRC_SIZE)
+        {
+            queuePosition = addMoToQueue(topic, data, length);
+            if(queuePosition >= 0)
+            {
+                if(appendCrc(imtMo[queuePosition].buffer, length))
+                {
+                    imtMo[queuePosition].readyToProcess = true; //This matters for the async approach
+                    if(!sending)
+                    {
+                        sent = sendMoFromQueue(); //this is currently synchronous, will never be more than 1 message in que at one time.
+                                           //sendMoFromQueue() can be put in a separate thread to make it possible to que more messages.
+                    }
+                }
+                else
+                {
+                    removeMoFromQueue(queuePosition); //failed to apply crc, drop message
+                }
+            }
+        }
+    }
+    return sent;
+}
+
+bool sendMessageAny(uint16_t topic, const char * data, const size_t length)
+{
+    bool sent = false;
+    int8_t queuePosition = -1;
+    if(checkProvisioning(topic))
+    {
+        if(data != NULL && length > 0 && length <= IMT_PAYLOAD_SIZE - IMT_CRC_SIZE)
+        {
+            queuePosition = addMoToQueue(topic, data, length);
+            if(queuePosition >= 0)
+            {
+                if(appendCrc(imtMo[queuePosition].buffer, length))
+                {
+                    imtMo[queuePosition].readyToProcess = true; //This matters for the async approach
+                    if(!sending)
+                    {
+                        sent = sendMoFromQueue(); //this is currently synchronous, will never be more than 1 message in que at one time.
+                                           //sendMoFromQueue() can be put in a separate thread to make it possible to que more messages.
+                    }
+                }
+                else
+                {
+                    removeMoFromQueue(queuePosition); //failed to apply crc, drop message
+                }
+            }
+        }
+    }
+    return sent;
+}
+
+static bool sendMoFromQueue(void)
+{
+    bool sent = false;
+    jsprResponse_t response;
+    int initCrc = 0;
+    int segmentStart;
+    int segmentLength;
+    int encodedBytes;
+    //JS TODO: Maybe add timeout, if message goes over timeout cancel it and break out of the loop
+    //iterate through queue //if we wanted to make asynchronous maybe make it a while loop as messages can enter the que at any point
+    sending = true; //for async approach
+    for(size_t i = 0; i < MO_QUEUE_SIZE; i++)
+    {
+        if(imtMo[i].buffer != NULL && imtMo[i].length > 0 && imtMo[i].topic >= IMT_MIN_TOPIC_ID 
+        && imtMo[i].topic <= IMT_MAX_TOPIC_ID && imtMo[i].readyToProcess)
+        {
+            if(jsprPutMessageOriginate(imtMo[i].topic, imtMo[i].length + IMT_CRC_SIZE))
+            {
+                if(receiveJspr(&response, true))
+                {
+                    if(JSPR_RC_NO_ERROR == response.code)
+                    {
+                        jsprMessageOriginate_t messageOriginate;
+                        parseJsprPutMessageOriginate(response.json, &messageOriginate);
+                        imtMo[i].id = messageOriginate.messageId;
+                        while (true)
+                        {
+                            receiveJspr(&response, false);
+                            if(JSPR_RC_UNSOLICITED_MESSAGE == response.code && strcmp(response.target, "messageOriginateSegment") == 0)
+                            {
+                                jsprMessageOriginateSegment_t messageOriginateSegment;
+                                parseJsprUnsMessageOriginateSegment(response.json, &messageOriginateSegment);
+                                if(messageOriginateSegment.messageId == imtMo[i].id && 
+                                messageOriginateSegment.topic == messageOriginate.topic)
+                                {
+                                    segmentStart = messageOriginateSegment.segmentStart;
+                                    segmentLength = messageOriginateSegment.segmentLength;
+                                    encodedBytes = encodeData(imtMo[i].buffer + segmentStart, 
+                                    segmentLength, base64Buffer, BASE64_TEMP_BUFFER);
+                                    if(0 < encodedBytes)
+                                    {
+                                        jsprPutMessageOriginateSegment(&messageOriginate, segmentLength, 
+                                        segmentStart, base64Buffer);
+                                        receiveJspr(&response, true);
+                                        if(JSPR_RC_NO_ERROR != response.code)
+                                        {
+                                            break;
+                                            removeMoFromQueue(i); //drop message
+                                        }
+                                    }
+                                }
+                            }
+                            if(JSPR_RC_UNSOLICITED_MESSAGE == response.code && strcmp(response.target, "messageOriginateStatus") == 0)
+                            {
+                                jsprMessageOriginateStatus_t messageOriginateStatus;
+                                if(parseJsprUnsMessageOriginateStatus(response.json, &messageOriginateStatus))
+                                {
+                                    if(messageOriginateStatus.finalMoStatus == MO_ACK_RECEIVED_MOS 
+                                    && imtMo[i].id == messageOriginateStatus.messageId)
+                                    {
+                                        sent = true;
+                                        removeMoFromQueue(i);
+                                        //if we increase the que a function to shift the messages up by one will be needed here
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    sending = false; //for async approach
+    return sent;
+}
+
+size_t receiveMessage(char ** buffer)
+{
+    size_t length = 0;
+    if(listenForMt()) //keep like this for now, in an async approach this would operate in its own loop (thread)?
+    {
+        if(buffer != NULL)
+        {
+            if(imtMt[0].buffer != NULL && imtMt[0].length > 0 && imtMt[0].topic >= IMT_MIN_TOPIC_ID &&
+                imtMt[0].topic <= IMT_MAX_TOPIC_ID && imtMt[0].readyToProcess) //check head is valid mt
+            {
+                length = (imtMt[0].length - IMT_CRC_SIZE);
+                imtMt[0].buffer[length] = '\0'; //remove crc
+                *buffer = imtMt[0].buffer;
+            }
+        }
+    }
+    return length;
+}
+
+size_t receiveMessageWithTopic(char ** buffer, uint16_t topic)
+{
+    size_t length = 0;
+    if(listenForMt()) //keep like this for now, in an async approach this would operate in its own loop (thread)?
+    {
+        if(buffer != NULL)
+        {
+            if(imtMt[0].buffer != NULL && imtMt[0].length > 0 && imtMt[0].topic >= IMT_MIN_TOPIC_ID &&
+                imtMt[0].topic <= IMT_MAX_TOPIC_ID && imtMt[0].readyToProcess) //check head is valid mt
+            {
+
+                length = (imtMt[0].length - IMT_CRC_SIZE);
+                imtMt[0].buffer[length] = '\0'; //remove crc
+                *buffer = imtMt[0].buffer;
+                topic = imtMt[0].topic;
+            }
+        }
+    }
+    return length;
+}
+
+static bool listenForMt(void) //this needs to loop (listen for mt's) in a separate thread for queuing to work
+{                             //otherwise it'll never queue more than 1 at a time
+    bool received = false;
+    int8_t queuePosition = -1;
+    jsprResponse_t response;
+    int encodedBytes;
+    int segmentStart;
+    int segmentLength;
+    int messageLength = 0;
+    //JS TODO: Maybe add timeout, if message goes over timeout cancel it and break out of the loop
+    if(receiveJspr(&response, false))
+    {
+        if(JSPR_RC_UNSOLICITED_MESSAGE == response.code && strcmp(response.target, "messageTerminate") == 0)
+        {
+            jsprMessageTerminate_t messageTerminate;
+            parseJsprUnsMessageTerminate(response.json, &messageTerminate);
+            queuePosition = addMtToQueue(messageTerminate.topic, messageTerminate.messageId, messageTerminate.messageLengthMax);
+            if (queuePosition >= 0) //returns -1 if que is full, no free spots to store mt
+            {
+                imtMt[queuePosition].readyToProcess = true;
+                while(true)
+                {
+                    receiveJspr(&response, false);
+                    if(JSPR_RC_UNSOLICITED_MESSAGE == response.code && strcmp(response.target, "messageTerminateSegment") == 0)
+                    {
+                        jsprMessageTerminateSegment_t messageTerminateSegment;
+                        parseJsprUnsMessageTerminateSegment(response.json, &messageTerminateSegment);
+                        segmentStart = messageTerminateSegment.segmentStart;
+                        segmentLength = messageTerminateSegment.segmentLength;
+                        //JS TODO: Chance that second mt comes through early, need to deal with that
+                        if(imtMt[queuePosition].id == messageTerminateSegment.messageId) //make sure you're still dealing with the same message
+                        {
+                            encodedBytes = decodeData(messageTerminateSegment.data, messageTerminateSegment.dataLength, 
+                            imtMt[queuePosition].buffer + segmentStart, segmentLength);
+                            messageLength += segmentLength;
+                            if(0 > encodedBytes)
+                            {
+                                removeMtFromQueue(queuePosition);
+                                break;
+                            }
+                        }
+                    }
+                    if(JSPR_RC_UNSOLICITED_MESSAGE == response.code && strcmp(response.target, "messageTerminateStatus") == 0)
+                    {
+                        jsprMessageTerminateStatus_t messageTerminateStatus;
+                        if(parseJsprUnsMessageTerminateStatus(response.json, &messageTerminateStatus))
+                        {
+                            if(messageTerminateStatus.finalMtStatus == COMPLETE 
+                            && imtMt[queuePosition].id == messageTerminateStatus.messageId)
+                            {
+                                imtMt[queuePosition].length = messageLength;
+                                received = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return received;
+}
+
+int8_t getSignal(void)
+{
+    int8_t signal = -1;
+    jsprResponse_t response;
+    jsprGetSignal();
+    receiveJspr(&response, true);
+    if(JSPR_RC_NO_ERROR == response.code && strcmp(response.target, "constellationState") == 0)
+    {
+        jsprConstellationState_t conState;
+        if(parseJsprGetSignal(response.json, &conState))
+        {
+            if(conState.signalBars >= 0 && conState.signalBars <= 5)
+            {
+                signal = conState.signalBars;
+            }
+        }
+    }
+    return signal; //potential option to show signalLevel and constellationVisible if we want to return structure?
+}
+
+static bool getHwInfo(jsprHwInfo_t * hwInfo)
+{
+    bool populated = false;
+    jsprResponse_t response;
+    jsprGetHwInfo();
+    receiveJspr(&response, true);
+    if(JSPR_RC_NO_ERROR == response.code && strcmp(response.target, "hwInfo") == 0)
+    {
+        if(parseJsprGetHwInfo(response.json, hwInfo))
+        {
+            populated = true;
+        }
+    }
+    return populated;
+}
+
+char * getImei(void)
+{
+    char * imei = NULL;
+    if(getHwInfo(&hwInfo))
+    {
+        imei = hwInfo.imei;
+    }
+    return imei;
+}
+
+char * getHwVersion(void)
+{
+    char * hwVersion = NULL;
+    if(getHwInfo(&hwInfo))
+    {
+        hwVersion = hwInfo.hwVersion;
+    }
+    return hwVersion;
+}
+
+char * getSerialNumber(void)
+{
+    char * serialNumber = NULL;
+    if(getHwInfo(&hwInfo))
+    {
+        serialNumber = hwInfo.serialNumber;
+    }
+    return serialNumber;
+}
+
+int8_t getBoardTemp(void)
+{
+    int8_t boardTemp = -100; //needs to be some value that the temp can't be
+    jsprHwInfo_t hwInfo;
+    if(getHwInfo(&hwInfo))
+    {
+        boardTemp = hwInfo.boardTemp;
+    }
+    return boardTemp;
+}
+
+static bool getSimStatus(jsprSimStatus_t * simStatus)
+{
+    bool populated = false;
+    jsprResponse_t response;
+    jsprGetSimStatus();
+    receiveJspr(&response, true);
+    if(JSPR_RC_NO_ERROR == response.code && strcmp(response.target, "simStatus") == 0)
+    {
+        if(parseJsprGetSimStatus(response.json, simStatus))
+        {
+            populated = true;
+        }
+    }
+    return populated;
+}
+
+bool getCardPresent(void)
+{
+    bool cardPresent = false;
+    if(getSimStatus(&simStatus))
+    {
+        cardPresent = simStatus.cardPresent;
+    }
+    return cardPresent;
+}
+
+bool getSimConnected(void)
+{
+    bool simConnected = false;
+    if(getSimStatus(&simStatus))
+    {
+        simConnected = simStatus.simConnected;
+    }
+    return simConnected;
+}
+
+char * getIccid(void)
+{
+    char * iccid = NULL;
+    if(getSimStatus(&simStatus))
+    {
+        iccid = simStatus.iccid;
+    }
+    return iccid;
+}
+
+static bool getFirmwareInfo(jsprFirmwareInfo_t * fwInfo)
+{
+    bool populated = false;
+    jsprResponse_t response;
+    jsprGetFirmware(JSPR_BOOT_SOURCE_PRIMARY);
+    receiveJspr(&response, true);
+    if(JSPR_RC_NO_ERROR == response.code && strcmp(response.target, "firmware") == 0)
+    {
+        if(parseJsprFirmwareInfo(response.json, fwInfo))
+        {
+            populated = true;
+        }
+    }
+    else
+    {
+        printf("Failed\n");
+    }
+    return populated;
+}
+
+char * getFirmwareVersion(void)
+{
+    static char firmwareVersion [FIRMWARE_VERSION_STRING_LEN];
+    jsprFirmwareInfo_t firmwareInfo;
+
+    if(getFirmwareInfo(&firmwareInfo))
+    {
+        snprintf(firmwareVersion, FIRMWARE_VERSION_STRING_LEN,"v%u.%u.%u",
+            firmwareInfo.versionInfo.version.major, 
+            firmwareInfo.versionInfo.version.minor,
+            firmwareInfo.versionInfo.version.patch);
+    }
+    else
+    {
+        firmwareVersion[0] = '\0';
+    }
+
+    return firmwareVersion;
+}
+
+static int calculateCrc(const void * buffer, int bufferLength, int initialCRC)
+{
+  int crc = initialCRC;
+
+  if (buffer != 0)
+  {
+    for (int i = 0; i < bufferLength; i++)
+    {
+      unsigned char data = ((unsigned char *)buffer)[i];
+
+      int tableIndex = (((crc >> 8) ^ data) & 0xFF);
+      crc = (((crc << 8) ^ CRC16Table[tableIndex]) & 0xFFFF);
+    }
+  }
+
+  return (crc);
+}
+
+bool rbEnd(void)
+{
+    bool deinitialised = false;
+    if(context.serialDeInit())
+    {
+        deinitialised = true;
+        serialState = CLOSED;
+    }
+    return deinitialised;
+}
+
+static bool checkProvisioning(uint16_t topic)
+{
+    bool provisioned = false;
+
+    if(topic >= IMT_MIN_TOPIC_ID && topic <= IMT_MAX_TOPIC_ID)
+    {
+        if(jsprGetMessageProvisioning())
+        {
+            jsprResponse_t response;
+            receiveJspr(&response, true);
+            if(JSPR_RC_NO_ERROR == response.code && strcmp(response.target, "messageProvisioning") == 0)
+            {
+                jsprMessageProvisioning_t messageProvisioning;
+                if(parseJsprGetMessageProvisioning(response.json, &messageProvisioning))
+                {
+                    int count = messageProvisioning.topicCount;
+                    if(count > 0)
+                    {
+                        for (int i = 0; i < count && i < JSPR_MAX_TOPICS; i++)
+                        {
+                            if(messageProvisioning.provisioning[i].topicId == topic)
+                            {
+                                provisioned = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return provisioned;
+}
+
+#if defined(KERMIT)
+#include "kermit_io.h"
+
+struct k_data kermitData;
+struct k_response kermitResponse;
+int kermitStatus = 0;
+unsigned char i_buf[IBUFLEN+8];
+
+bool updateFirmware (const char * firmwareFile, updateProgressCallback progress)
+{
+    const char * firmwareFileList[2] = {firmwareFile, NULL};
+    unsigned char *inputBufferPtr = (unsigned char *)0; // E-Kermit doesn't like NULL
+    short receiveSlot = 0;
+    int kermitRxLength = 0;
+
+    jsprResponse_t response;
+    jsprOperationalState_t state;
+    jsprFirmwareInfo_t firmware;
+    jsprBootInfo_t bootInfo;
+
+    bool kermitDone = false;
+    bool isInactive = false;
+    bool isInKermitMode = false;
+    bool firmwareUpdated = false;
+
+    memset(&kermitData, 0, sizeof(kermitData));
+    memset(&kermitResponse, 0, sizeof(kermitResponse));
+
+    const long filesize = kermit_io_filesize(firmwareFile);
+    if (filesize <= 0)
+    {
+        // invalid firmware file
+        return firmwareUpdated;
+    }
+
+    if(jsprGetOperationalState())
+    {
+        if(receiveJspr(&response, true))
+        {
+            if(JSPR_RC_NO_ERROR == response.code)
+            {
+                parseJsprGetOperationalState(response.json, &state);
+                if (state.operationalState != INACTIVE)
+                {
+                    putOperationalState(INACTIVE);
+                    receiveJspr(&response, false);
+                    parseJsprGetOperationalState(response.json, &state);
+                }
+
+                if (state.operationalStateSet == true)
+                {
+                    isInactive = state.operationalState == INACTIVE;
+                }
+            }
+        }
+    }
+
+    if (isInactive == true)
+    {
+        if (jsprPutFirmware(JSPR_BOOT_SOURCE_PRIMARY))
+        {
+            if(receiveJspr(&response, true))
+            {
+                if(JSPR_RC_NO_ERROR == response.code)
+                {
+                    isInKermitMode = parseJsprFirmwareInfo(response.json, &firmware);
+                }
+            }
+        }
+    }
+
+    if (isInKermitMode == true)
+    {;
+        kermit_io_init_string();
+#ifdef ARDUINO
+        delay(1000);
+#else
+        usleep(100000);
+#endif
+
+        kermitData.xfermode = 0;                                         /* Automatic Mode  */
+        kermitData.remote = 0;                                           /* Local */
+        kermitData.binary = 1;                                           /* Binary */
+        kermitData.parity = PAR_NONE;                                    /* No parity */
+        kermitData.bct = 1;                                              /* Use Block check type 3 */
+        kermitData.ikeep = OFF;                                          /* Don't keep files but pointless i this implementation */
+        kermitData.filelist = (unsigned char **)&firmwareFileList;       /* List of files to send (if any) */
+        kermitData.cancel = 0;                                           /* Not canceled yet */
+
+        /*  Fill in the i/o pointers  */
+        kermitData.zinbuf = i_buf;                                       /* File input buffer */
+        kermitData.zinlen = IBUFLEN;                                     /* File input buffer length */
+        kermitData.zincnt = 0;                                           /* File input buffer position */
+        kermitData.obuf = (unsigned char *)0;                            /* File output buffer */
+        kermitData.obuflen = 0;                                          /* File output buffer length */
+        kermitData.obufpos = 0;                                          /* File output buffer position */
+
+        kermitData.rxd    = kermit_io_readpkt;
+        kermitData.txd    = kermit_io_tx_data;
+        kermitData.ixd    = kermit_io_inchk;
+        kermitData.openf  = kermit_io_openfile;
+        kermitData.finfo  = 0;
+        kermitData.readf  = kermit_io_readfile;
+        kermitData.writef = 0;
+        kermitData.closef = kermit_io_closefile;
+        kermitData.dbf    = 0;
+
+        kermitStatus = kermit(K_INIT, &kermitData, 0, 0, 0, &kermitResponse);
+        if (kermitStatus == SUCCESS)
+        {
+            kermitResponse.filesize = filesize; // Need a file size for a progress callback
+
+            kermitStatus = kermit(K_SEND, &kermitData, 0, 0, 0, &kermitResponse);
+            if (kermitStatus == SUCCESS)
+            {
+                while (kermitStatus != X_RC_DONE)
+                {
+                    inputBufferPtr = (unsigned char *)0; // E-Kermit doesn't like NULL;
+                    receiveSlot = -1;
+                    kermitRxLength = 0;
+
+                    if (kermitData.ixd(&kermitData) > 0)
+                    {
+                        inputBufferPtr = getrslot(&kermitData, &receiveSlot);
+                        kermitRxLength = kermitData.rxd(&kermitData, inputBufferPtr, P_PKTLEN);
+
+                        if (kermitRxLength < 1)
+                        {
+                            freesslot(&kermitData, receiveSlot);
+                            break;
+                        }
+                    }
+
+                    kermitStatus = kermit(K_RUN, &kermitData, receiveSlot, kermitRxLength, 0, &kermitResponse);
+                    switch (kermitStatus)
+                    {
+                        case X_RC_OK:
+                            if ((kermitResponse.status == S_DATA) && (progress != NULL))
+                            {
+                                progress(kermitResponse.sofar, kermitResponse.filesize);
+                            }
+                        break;
+                        case X_RC_DONE:
+                            kermitDone = true;
+                        break;
+                        case X_RC_ERROR:
+                            // printf("Kermit K_RUN error\n");
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    if (kermitDone == true)
+    {
+        // Look for bootInfo
+        do
+        {
+            receiveJspr(&response, false);
+        } while ((JSPR_RC_UNSOLICITED_MESSAGE != response.code) &&
+                 (strncmp(response.target, "bootInfo", JSPR_MAX_TARGET_LENGTH) != 0));
+
+        firmwareUpdated = parseJsprBootInfo(response.json, &bootInfo);
+        setApi(); // Set the API so it is possible to command JSPR after
+    }
+
+    return firmwareUpdated;
+}
+#endif

@@ -1,0 +1,2 @@
+[tool.cibuildwheel]
+build = "cp38* cp39* cp31*"
