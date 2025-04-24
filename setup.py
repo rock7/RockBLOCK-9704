@@ -48,7 +48,7 @@ class CMakeBuild(build_ext):
 
 setup(
     name="rockblock9704",
-    version="0.1.8",
+    version="0.1.9",
     requires_python=">=3.8",
     description="RockBLOCK 9704 serial tools",
     long_description=open("README.rst").read(),
