@@ -1,8 +1,44 @@
 import rockblock as _rb
 
 
-class RockBlock9704:
+class GpioConfig:
 
+    def __init__(self, power_pin: int, iridium_pin: int, booted_pin: int, default_card: str = None, power_card: str = None, iridium_card: str = None,
+                 booted_card: str = None):
+        """
+        A utility class for storing the GPIO pin config.
+        :param power_pin: Power Enable pin ID
+        :param iridium_pin: Iridium Enable pin ID
+        :param booted_pin: Booted pin ID
+        :param default_card: Default GPIO card (i.e. /dev/gpiochip0)
+        :param power_card: GPIO card for Power Enable pin to override default
+        :param iridium_card: GPIO card for Iridium Enable pin to override default
+        :param booted_card: GPIO card for Booted pin to override default
+        """
+        self.default_card = default_card
+        self.power_pin = power_pin
+        self.iridium_pin = iridium_pin
+        self.booted_pin = booted_pin
+        self.power_card = power_card
+        self.iridium_card = iridium_card
+        self.booted_card = booted_card
+
+    def to_dict(self) -> dict:
+        """
+        Generates a dictionary representing the GPIO config for use by the C Library
+        :return:
+        """
+        if self.default_card is None and (self.power_card is None or self.iridium_card is None or self.booted_card is None):
+            raise Exception("All GPIO card parameters must set if default card is not provided")
+
+        return {
+            "powerEnable": (self.power_card if self.power_card is not None else self.default_card, self.power_pin),
+            "iridiumEnable": (self.iridium_card if self.iridium_card is not None else self.default_card, self.iridium_pin),
+            "booted": (self.booted_card if self.booted_card is not None else self.booted_card, self.booted_pin)
+        }
+
+
+class RockBlock9704:
     RAW_TOPIC = 244
     PURPLE_TOPIC = 313
     PINK_TOPIC = 314
@@ -37,55 +73,55 @@ class RockBlock9704:
         """
         self.connected = not _rb.end()
         return not self.connected
-    
-    def beginHat(self, timeout: int) -> bool:
+
+    def begin_hat(self, timeout: int) -> bool:
         """
         Drives pin 24 (power enable) low and pin 16
         (iridium enable) high to initialise the RB9704
-        PiHat. Initialises the the serial connection in the detected context 
+        PiHat. Initialises the serial connection in the detected context
         (or user defined), if successful continue to set the API, SIM & 
         state of the modem in order to be ready for messaging.
         :param timeout: in seconds
         :return: boolean indicating success
         """
-        self.connected = _rb.beginHat(timeout)
+        self.connected = _rb.begin_hat(timeout)
         return self.connected
 
-    def endHat(self) -> bool:
+    def end_hat(self) -> bool:
         """
         Drives pin 24 (power enable) high and pin 16
         (iridium enable) low to deinitialise the RB9704
-        PiHat. Uninitialises/closes the the serial connection.
+        PiHat. Uninitialises/closes the serial connection.
         :return: boolean indicating success
         """
-        self.connected = not _rb.endHat()
+        self.connected = not _rb.end_hat()
         return not self.connected
-    
-    def beginGpio(self, port: str, gpioDict: dict, timeout: int) -> bool:
+
+    def begin_gpio(self, port: str, gpio_config: GpioConfig, timeout: int) -> bool:
         """
         Drives user defined pin (power enable) low and user defined pin (iridium enable) high to 
         initialise the RB9704 PiHat. Initialise the serial connection in the 
         detected context (or user defined), if successful continue to set 
         the API, SIM & state of the modem in order to be ready for messaging.
-        :param port pointer to port name
-        :param gpioInfo structure containing a valid chip & pin for powerEnable, IridiumEnable and booted
-        :param timeout in seconds
+        :param port: pointer to port name
+        :param gpio_config: structure containing a valid chip & pin for powerEnable, IridiumEnable and booted
+        :param timeout: in seconds
         :return: boolean indicating success
         """
-        self.connected = _rb.beginGpio(port, gpioDict, timeout)
+        self.connected = _rb.begin_gpio(port, gpio_config.to_dict(), timeout)
         return self.connected
 
-    def endGpio(self, gpioDict: dict) -> bool:
+    def end_gpio(self, gpio_config: GpioConfig) -> bool:
         """
         Drives user defined pin (power enable) high and another
         user defined pin (iridium enable) low to deinitialise the RB9704
-        PiHat. Uninitialises/closes the the serial connection.
+        PiHat. Uninitialises/closes the serial connection.
         :return: boolean indicating success
         """
-        self.connected = not _rb.endGpio(gpioDict)
+        self.connected = not _rb.end_gpio(gpio_config.to_dict())
         return not self.connected
 
-    def send_message(self, message: bytes, topic: int=None) -> bool:
+    def send_message(self, message: bytes, topic: int = None) -> bool:
         """
         Sends a message from the RockBLOCK 9704
         :param message: bytes to send
@@ -97,7 +133,7 @@ class RockBlock9704:
         else:
             return _rb.send_message_any(topic, message)
 
-    def receive_message(self, topic: int=None) -> bytes:
+    def receive_message(self, topic: int = None) -> bytes:
         """
         Check for messages sent to the RockBLOCK 9704
         :param topic: optional to only get messages sent to this topic
@@ -139,7 +175,7 @@ class RockBlock9704:
     def get_card_present(self) -> bool:
         """
         Checks if a SIM card is present
-        "return: bool depicting SIM presence
+        :return: bool depicting SIM presence
         """
         return _rb.get_card_present()
 

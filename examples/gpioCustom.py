@@ -13,15 +13,14 @@ if __name__ == '__main__':
         # Create RockBlock9704 instance
         rb = RockBlock9704()
 
-        # Create a dictionary with your custom GPIO layout
-        gpioInfo = {
-            "powerEnable": ("/dev/gpiochip0", 24), #Drive pin 24 low
-            "iridiumEnable": ("/dev/gpiochip0", 16), #Drive pin 16 high
-            "booted": ("/dev/gpiochip0", 23), #wait for pin 23 to be driven high
-        }
+        # Create a config with your custom GPIO layout
+        # Drive pin 24 low
+        # Drive pin 16 high
+        # wait for pin 23 to be driven high
+        config = GpioConfig(24, 16, 23, default_card="/dev/gpiochip0")
 
         # Begin serial communication
-        connected = rb.beginGpio(args.device, gpioInfo, 60)
+        connected = rb.begin_gpio(args.device, config, 60)
 
         if connected:
 
@@ -29,4 +28,4 @@ if __name__ == '__main__':
             print("9704 Modem IMEI: \t", rb.get_imei())
 
             # End Connection
-            end = rb.endGpio(gpioInfo)
+            end = rb.end_gpio(config)

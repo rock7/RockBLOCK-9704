@@ -320,10 +320,10 @@ static PyMethodDef rockblockMethods[] = {
     {"begin", py_rbBegin, METH_VARARGS, "Function for starting serial connection to modem"},
     {"end", py_rbEnd, METH_VARARGS, "Function for ending serial connection to modem"},
 #ifdef RB_GPIO
-    {"beginHat", py_rbBeginHat, METH_VARARGS, "Function for starting serial connection to modem and initaliasing PiHat"},
-    {"endHat", py_rbEndHat, METH_VARARGS, "Function for ending serial connection to modem and deinitaliasing PiHat"},
-    {"beginGpio", py_rbBeginGpio, METH_VARARGS, "Function for starting serial connection to modem and initaliasing PiHat manually"},
-    {"endGpio", py_rbEndGpio, METH_VARARGS, "Function for ending serial connection to modem and deinitaliasing PiHat manually"},
+    {"begin_hat", py_rbBeginHat, METH_VARARGS, "Function for starting serial connection to modem and initaliasing PiHat"},
+    {"end_hat", py_rbEndHat, METH_VARARGS, "Function for ending serial connection to modem and deinitaliasing PiHat"},
+    {"begin_gpio", py_rbBeginGpio, METH_VARARGS, "Function for starting serial connection to modem and initaliasing PiHat manually"},
+    {"end_gpio", py_rbEndGpio, METH_VARARGS, "Function for ending serial connection to modem and deinitaliasing PiHat manually"},
 #endif
     {"send_message", py_sendMessage, METH_VARARGS, "Function for sending mo data to the default topic"},
     {"send_message_any", py_sendMessageAny, METH_VARARGS, "Function for sending mo data to any topic"},
