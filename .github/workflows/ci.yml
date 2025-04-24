@@ -1,0 +1,26 @@
+name: build, release and publish
+
+on:
+  push:
+#    branches:
+#     - main
+    tags:
+      - v*
+
+permissions:
+  contents: write
+
+jobs:
+
+  build:
+    uses: './.github/workflows/build.yml'
+    secrets: inherit
+
+  release:
+    needs: build
+    uses: './.github/workflows/release.yml'
+
+  publish:
+    needs: release
+    uses: './.github/workflows/publish.yml'
+    secrets: inherit

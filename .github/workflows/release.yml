@@ -1,0 +1,26 @@
+name: release
+
+on:
+  workflow_call:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: release
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - name: download artifact
+        uses: actions/download-artifact@v4
+      - name: bundle
+        run: tar -zcvf ./rockblock-9704-python.tar.gz rockblock-9704-python-*
+      - name: create release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: rockblock-9704-python.tar.gz
+          name: Release ${{ github.ref_name }}
+          body: |
+            This is an automated release from a workflow.
+          fail_on_unmatched_files: true
