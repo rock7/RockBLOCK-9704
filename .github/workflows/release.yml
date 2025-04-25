@@ -9,6 +9,7 @@ permissions:
 jobs:
   release:
     name: release
+    environment: Release
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
