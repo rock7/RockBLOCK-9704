@@ -121,17 +121,18 @@ class RockBlock9704:
         self.connected = not _rb.end_gpio(gpio_config.to_dict())
         return not self.connected
 
-    def send_message(self, message: bytes, topic: int = None) -> bool:
+    def send_message(self, message: bytes, topic: int = None, timeout: int = 30) -> bool:
         """
         Sends a message from the RockBLOCK 9704
         :param message: bytes to send
         :param topic: optional topic to send to (defaults to raw topic)
+        :param timeout: optional timeout in seconds (defaults to 30s)
         :return: boolean indicating success
         """
         if topic is None:
-            return _rb.send_message(message)
+            return _rb.send_message(message, timeout)
         else:
-            return _rb.send_message_any(topic, message)
+            return _rb.send_message_any(topic, message, timeout)
 
     def receive_message(self, topic: int = None) -> bytes:
         """

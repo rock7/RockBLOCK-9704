@@ -1,6 +1,5 @@
 import argparse
 from rockblock9704 import *
-from time import sleep
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='receive-message', description="Python example to receive IMT message on RockBLOCK 9704.")

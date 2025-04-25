@@ -184,14 +184,15 @@ static PyObject *py_sendMessage(PyObject *self, PyObject *args) {
     int result;
     char * data;
     Py_ssize_t length;
+    int timeout;
 
-    if (!PyArg_ParseTuple(args, "s#", &data, &length)) {
+    if (!PyArg_ParseTuple(args, "s#i", &data, &length, &timeout)) {
 
         return NULL;
 
     }
 
-    result = sendMessage(data, length);
+    result = sendMessage(data, length, timeout);
 
     return Py_BuildValue("i", result);
 
@@ -202,14 +203,15 @@ static PyObject *py_sendMessageAny(PyObject *self, PyObject *args) {
     int result, topic;
     char * data;
     Py_ssize_t length;
+    int timeout;
 
-    if (!PyArg_ParseTuple(args, "is#", &topic, &data, &length)) {
+    if (!PyArg_ParseTuple(args, "is#i", &topic, &data, &length, &timeout)) {
 
         return NULL;
 
     }
 
-    result = sendMessageAny(topic, data, length);
+    result = sendMessageAny(topic, data, length, timeout);
 
     return Py_BuildValue("i", result);
 

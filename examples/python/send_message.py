@@ -42,17 +42,23 @@ if __name__ == '__main__':
 
             print("Signal acquired!")
 
-            # Send message
-            sent = rb.send_message(b"Hello, world!")
+            # Send message with a custom 60s timeout
+            sent = rb.send_message(b"Hello, world!", timeout=60)
 
             if sent:
                 print("Message sent!")
+            else:
+                # Timed out
+                print("Sending failed")
 
             # Send message to specific topic
             sent = rb.send_message(b"Hello, red topic!", topic=RockBlock9704.RED_TOPIC)
 
             if sent:
                 print("Message sent!")
+            else:
+                # Timed out
+                print("Sending failed")
     else:
         print("Please specify a serial port")
         parser.print_help()
