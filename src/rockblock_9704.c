@@ -8,6 +8,7 @@
 #include <stddef.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <time.h>
 #include "crossplatform.h"
 
 #if defined(_WIN32)
@@ -344,7 +345,7 @@ static bool appendCrc(uint8_t * buffer, size_t length)
     return appended;
 }
 
-bool sendMessage(const char * data, const size_t length)
+bool sendMessage(const char * data, const size_t length, const int timeout)
 {
     bool sent = false;
     int8_t queuePosition = -1;
@@ -360,7 +361,7 @@ bool sendMessage(const char * data, const size_t length)
                     imtMo[queuePosition].readyToProcess = true; //This matters for the async approach
                     if(!sending)
                     {
-                        sent = sendMoFromQueue(); //this is currently synchronous, will never be more than 1 message in que at one time.
+                        sent = sendMoFromQueue(timeout); //this is currently synchronous, will never be more than 1 message in que at one time.
                                            //sendMoFromQueue() can be put in a separate thread to make it possible to que more messages.
                     }
                 }
@@ -374,7 +375,7 @@ bool sendMessage(const char * data, const size_t length)
     return sent;
 }
 
-bool sendMessageCloudloop(cloudloopTopics_t topic, const char * data, const size_t length)
+bool sendMessageCloudloop(cloudloopTopics_t topic, const char * data, const size_t length, const int timeout)
 {
     bool sent = false;
     int8_t queuePosition = -1;
@@ -390,7 +391,7 @@ bool sendMessageCloudloop(cloudloopTopics_t topic, const char * data, const size
                     imtMo[queuePosition].readyToProcess = true; //This matters for the async approach
                     if(!sending)
                     {
-                        sent = sendMoFromQueue(); //this is currently synchronous, will never be more than 1 message in que at one time.
+                        sent = sendMoFromQueue(timeout); //this is currently synchronous, will never be more than 1 message in que at one time.
                                            //sendMoFromQueue() can be put in a separate thread to make it possible to que more messages.
                     }
                 }
@@ -404,7 +405,7 @@ bool sendMessageCloudloop(cloudloopTopics_t topic, const char * data, const size
     return sent;
 }
 
-bool sendMessageAny(uint16_t topic, const char * data, const size_t length)
+bool sendMessageAny(uint16_t topic, const char * data, const size_t length, const int timeout)
 {
     bool sent = false;
     int8_t queuePosition = -1;
@@ -420,7 +421,7 @@ bool sendMessageAny(uint16_t topic, const char * data, const size_t length)
                     imtMo[queuePosition].readyToProcess = true; //This matters for the async approach
                     if(!sending)
                     {
-                        sent = sendMoFromQueue(); //this is currently synchronous, will never be more than 1 message in que at one time.
+                        sent = sendMoFromQueue(timeout); //this is currently synchronous, will never be more than 1 message in que at one time.
                                            //sendMoFromQueue() can be put in a separate thread to make it possible to que more messages.
                     }
                 }
@@ -434,9 +435,10 @@ bool sendMessageAny(uint16_t topic, const char * data, const size_t length)
     return sent;
 }
 
-static bool sendMoFromQueue(void)
+static bool sendMoFromQueue(const int timeout)
 {
     bool sent = false;
+    time_t start = time(NULL);
     jsprResponse_t response;
     int initCrc = 0;
     int segmentStart;
@@ -500,6 +502,11 @@ static bool sendMoFromQueue(void)
                                         break;
                                     }
                                 }
+                            }
+                            if (difftime(time(NULL), start) >= timeout)
+                            {
+                                sent = false;
+                                break;
                             }
                         }
                     }

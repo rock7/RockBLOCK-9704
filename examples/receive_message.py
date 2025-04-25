@@ -2,6 +2,15 @@ import argparse
 from rockblock9704 import *
 from time import sleep
 
+#This script receives a message via the RB9704.
+#
+#A serial connection will first be attempted on the selected port, if successful 
+#the device information will be printed and the signal will be polled and once obtained 
+#the script will listen for a message to come in.
+#
+#Requirements:
+#Have an open view of the sky where a good signal can be obtained.
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='receive-message', description="Python example to receive IMT message on RockBLOCK 9704.")
     parser.add_argument("--device",

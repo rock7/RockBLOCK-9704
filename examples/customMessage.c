@@ -13,13 +13,27 @@
 #include <unistd.h>
 #endif
 
+/**
+ * This script sends a specified message via the RB9704, then waits to receive a
+ * message (if topic 80 is used this will be the same message that was sent out).
+ * 
+ * A serial connection will first be attempted on the selected port, if successful a request to
+ * que the message will be issued (note: this will fail if the RB9704 is not provisioned
+ * for the specified topic and will block until the message is fully transferred, this might
+ * take a while if the signal is poor). Once the message is sent the script will display
+ * any change in signal and listen for the message to be reflected back, once the message
+ * has been received an attempt to shutdown the serial connection will be made.
+ * 
+ * Requirements:
+ * RB9704 needs to be provisioned for the specified topic.
+ * Have an open view of the sky where a good signal can be obtained.
+ * 
+*/
+
 static char _serialDevice[PATH_MAX];
 static char _message[PATH_MAX];
 static int _topic;
 static volatile bool _run = true;
-
-//example script which sends a user defined message
-//on a user defined topic, through a user defined port.
 
 typedef enum
 {
@@ -107,7 +121,7 @@ int main(int argc, char * argv[])
         {
             printf("Successfully started serial session with RB9704\r\n");
             //Queue and send MO
-            if(sendMessageAny(_topic, _message, strlen(_message)))
+            if(sendMessageAny(_topic, _message, strlen(_message), 600))
             {
                 printf("Sent MO: %s\r\n", _message);
                 //Start listening for MT

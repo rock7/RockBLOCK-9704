@@ -12,6 +12,23 @@
 #include <unistd.h>
 #endif
 
+/**
+ * This script sends a "Cloudloop Hello World!" message via the RB9704, then attempts
+ * to read a message sent from Cloudloop to the device.
+ * 
+ * A serial connection will first be attempted on the selected port, if successful a request to
+ * que the message will be issued (note: this will fail if the RB9704 is not provisioned
+ * for the specified topic and will block until the message is fully transferred, this might
+ * take a while if the signal is poor). Once the message is sent the script will display
+ * any change in signal and listen for the message, once the message has been received 
+ * an attempt to shutdown the serial connection will be made.
+ * 
+ * Requirements:
+ * RB9704 needs to be provisioned for messaging topic 244 (RAW).
+ * Have an open view of the sky where a good signal can be obtained.
+ * 
+*/
+
 static char _serialDevice[PATH_MAX];
 static volatile bool _run = true;
 
@@ -24,10 +41,6 @@ typedef enum
     FAILED_QUEUE_MESSAGE,
     FAILED_INIT_SERIAL,
 } returnCode_t;
-
-//example script which sends a MO on the 244 topic
-//shows the signal when its changed and waits to
-//receive an MT before exiting
 
 static struct option _longOptions[] =
 {
@@ -90,7 +103,7 @@ int main(int argc, char * argv[])
             printf("Successfully started serial session with RB9704\r\n");
             //Queue and send MO
             const char *message = "Cloudloop Hello World!";
-            if(sendMessage(message, strlen(message)))
+            if(sendMessage(message, strlen(message), 600))
             {
                 printf("Sent MO: %s\r\n", message);
                 //Start listening for MT

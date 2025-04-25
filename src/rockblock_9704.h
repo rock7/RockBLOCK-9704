@@ -50,9 +50,10 @@ bool rbEnd(void);
  * 
  * @param data pointer to data (message).
  * @param length size_t of data length. (Max 100kB).
+ * @param timeout in seconds.
  * @return bool depicting success or failure.
  */
-bool sendMessage(const char * data, const size_t length);
+bool sendMessage(const char * data, const size_t length, const int timeout);
 
 /**
  * Send a mobile originated message from the modem on a cloudloop topic of choice.
@@ -60,9 +61,10 @@ bool sendMessage(const char * data, const size_t length);
  * @param topic uint16_t topic.
  * @param data pointer to data (message).
  * @param length size_t of data length. (Max 100kB).
+ * @param timeout in seconds.
  * @return bool depicting success or failure.
  */
-bool sendMessageCloudloop(cloudloopTopics_t topic, const char * data, const size_t length);
+bool sendMessageCloudloop(cloudloopTopics_t topic, const char * data, const size_t length, const int timeout);
 
 /**
  * Send a mobile originated message from the modem on any topic.
@@ -70,15 +72,16 @@ bool sendMessageCloudloop(cloudloopTopics_t topic, const char * data, const size
  * @param topic uint16_t topic.
  * @param data pointer to data (message).
  * @param length size_t of data length. (Max 100kB).
+ * @param timeout in seconds.
  * @return bool depicting success or failure.
  */
-bool sendMessageAny(uint16_t topic, const char * data, const size_t length);
+bool sendMessageAny(uint16_t topic, const char * data, const size_t length, const int timeout);
 
 /**
  * Listen for a mobile terminated message from the modem.
  * 
- * @param buffer pointer to buffer of the stored MT messages
- * @return size_t the length of the buffer minus the IMT CRC
+ * @param buffer pointer to buffer of the stored MT messages.
+ * @return size_t the length of the buffer minus the IMT CRC.
  * 
  * * @note this pointer is a pointer to a pointer to the MT queue buffer, 
  * it may be reused to store another MT. It must be copied if the application 
@@ -235,7 +238,7 @@ static bool setApi(void);
 static bool setSim(void);
 static bool setState(void);
 static bool checkProvisioning(uint16_t topic);
-static bool sendMoFromQueue(void);
+static bool sendMoFromQueue(const int timeout);
 static bool listenForMt(void);
 static bool getHwInfo(jsprHwInfo_t * hwInfo);
 static bool getSimStatus(jsprSimStatus_t * simStatus);

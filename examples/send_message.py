@@ -2,6 +2,18 @@ import argparse
 from rockblock9704 import *
 from time import sleep
 
+#This script sends a "Hello, world!" message via the RB9704.
+#
+#A serial connection will first be attempted on the selected port, if successful 
+#the device information will be printed and the signal will be polled and once obtained 
+#a request to que the message will be issued (note: this will fail if the RB9704 is not 
+#provisioned for the specified topic and will block until the message is fully transferred, 
+#this might take a while if the signal is poor).
+#
+#Requirements:
+#RB9704 needs to be provisioned for topic 315 (RED).
+#Have an open view of the sky where a good signal can be obtained.
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='receive-message', description="Python example to send IMT message on RockBLOCK 9704.")
     parser.add_argument("--device",

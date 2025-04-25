@@ -13,6 +13,11 @@
 #include <unistd.h>
 #endif
 
+/**
+ * 
+ * 
+*/
+
 #define PROGRESS_BAR_WIDTH 60U
 
 static char _serialDevice[PATH_MAX];
