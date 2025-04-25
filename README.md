@@ -46,7 +46,7 @@ RockBLOCK 9704 C and Python Library
 #### Run cmake and compile project
 
 ```
-    mkdir build
+    mkdir -p build
     cd build
     cmake ..
     (For debug: cmake -DDEBUG=ON ..)
@@ -79,7 +79,7 @@ RockBLOCK 9704 C and Python Library
 #### Run cmake and compile project
 
 ```
-    mkdir build
+    mkdir -p build
     cd build
     cmake ..
     (For debug: cmake -DDEBUG=ON ..)
@@ -112,7 +112,7 @@ RockBLOCK 9704 C and Python Library
 To ensure you are using the right environment, open the Developer Command Prompt for Visual Studio 2022. You can find this in your Start menu under `Visual Studio 2022 > x64 Native Tools Command Prompt for VS 2022` or `x86 Native Tools Command Prompt for VS 2022` is building for 32bit. Alternatively you can run the bat in `C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat` or  `C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars32.bat`.
 
 ```
-mkdir build
+mkdir -p build
 cmake -G "Visual Studio 17 2022" -A <ARCH> -S . -B build
 msbuild build\ALL_BUILD.vcxproj /p:Configuration=Debug /p:Platform=<ARCH>
 ```
@@ -161,7 +161,7 @@ Replace `<COM PORT>` for the configured COM port of the RockBLOCK 9704.
 #### Run cmake and compile project
 
 ```
-    mkdir build
+    mkdir -p build
     cd build
     cmake ..
     (For debug: cmake -DDEBUG=ON ..)
@@ -193,15 +193,33 @@ Replace `<COM PORT>` for the configured COM port of the RockBLOCK 9704.
   - Select "Serial Port".
   - Select **No** to shell over serial.
   - Select **Yes** to serial port hardware enabled.
-  - Select "**/dev/ttyS0**" as the USB port.
+  - Use "**/dev/ttyS0**" as your port.
 
     ***Notes:***
-    - When using the RB9704 PiHat you will need run ```gpioEnablePiHat()``` before doing anything else, this will configure the necessary pins on the Raspberry Pi to enable communication with the modem.
-    - After the above has ran successfully the modem might take anywhere between ~1s-40s to boot, if you want your application to check for this use ```gpioListenIridBooted(<timeout>)``` which will block until the modem has booted or the timeout is reached.
-    - Alternatively for manual pin manipulation follow these instructions:
-        - Drive BCM pin **24 LOW**.
-        - Drive BCM pin **16 HIGH**.
-        - Monitor BCM pin **23** for **HIGH** transition.
+    - When using the RB9704 on a raspberry pi via **GPIO** you will need to use ```rbBeginGpio(char * port, const rbGpioTable_t * gpioInfo, const int timeout)```.
+    - The minimum following connections will need to be made from the RB9704 to the Pi:
+      - GND -> GND
+      - VIN -> VIN
+      - TX (13) -> RX (14)
+      - RX (14) -> TX (15)
+      - P_EN (6) -> Any free GPIO (Recommended: 24)
+      - I_EN (3) -> Any free GPIO (Recommended: 16)
+      - I_BTD (7) -> Any free GPIO (Recommended: 23)
+    - Here's a rbGpioTable_t structure example if the recommended pins above were used:
+    ```
+    #define CHIP_NAME "/dev/gpiochip0"
+    #define POWER_ENABLE_PIN 24U
+    #define IRIDIUM_ENABLE_PIN 16U
+    #define IRIDIUM_BOOTED_PIN 23U
+
+    const rbGpioTable_t customGpioTable = 
+    {
+        { CHIP_NAME, POWER_ENABLE_PIN},
+        { CHIP_NAME, IRIDIUM_ENABLE_PIN},
+        { CHIP_NAME, IRIDIUM_BOOTED_PIN}
+    };
+    ```
+    - Use ```rbEndGpio(const rbGpioTable_t * gpioInfo)``` with the same structure used to begin to end the serial connection and shutdown the RB9704.
 
 ## Arduino 
 
@@ -211,7 +229,7 @@ Download Arduino IDE from: https://www.arduino.cc/en/software/
 
 #### Include library in Arduino IDE
 
-- Copy the library into /<ArduinoInstallationDirectory>/Arduino/libraries
+- Copy the library into /ArduinoInstallationDirectory/Arduino/libraries
 - At the top of your sketch include: ```#include "rockblock_9704.h"```
 
 ***Notes:***
