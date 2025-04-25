@@ -1,6 +1,6 @@
 #ifdef ARDUINO
 #include "serial_arduino.h"
-#include "serial.h"
+#include "../../serial.h"
 #include <Stream.h>
 #include "Arduino.h"
 
