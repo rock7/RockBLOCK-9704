@@ -162,7 +162,7 @@ static bool setApi(void)
 #endif
         if(jsprGetApiVersion())
         {
-            if (receiveJspr(&response, true))
+            if (receiveJspr(&response, "apiVersion"))
             {
                 if(JSPR_RC_NO_ERROR == response.code)
                 {
@@ -171,7 +171,7 @@ static bool setApi(void)
                     if(!apiVersion.activeVersionSet)
                     {   //HOW DO WE DECIDE WHICH VERSION TO USE IF THERE IS MORE THAN ONE AVAILABLE?
                         jsprPutApiVersion(&apiVersion.supportedVersions[0]);
-                        receiveJspr(&response, true);
+                        receiveJspr(&response, "apiVersion");
                     }
                     if(JSPR_RC_NO_ERROR == response.code || apiVersion.activeVersionSet)
                     {
@@ -191,7 +191,7 @@ static bool setSim(void)
     jsprResponse_t response;
     if(jsprGetSimInterface())
     {
-        if (receiveJspr(&response, true))
+        if (receiveJspr(&response, "simConfig"))
         {
             if(JSPR_RC_NO_ERROR == response.code)
             {
@@ -201,7 +201,7 @@ static bool setSim(void)
                 if(!simInterface.ifaceSet || simInterface.iface != INTERNAL)
                 {
                     putSimInterface(INTERNAL);
-                    receiveJspr(&response, false);
+                    receiveJspr(&response, "simConfig");
                     if ((JSPR_RC_NO_ERROR == response.code) &&
                         (strncmp(response.target, "simConfig", JSPR_MAX_TARGET_LENGTH) == 0))
                     {
@@ -210,7 +210,7 @@ static bool setSim(void)
                         // Wait for simStatus to come back
                         do
                         {
-                            receiveJspr(&response, false);
+                            receiveJspr(&response, "simStatus");
                         } while ((JSPR_RC_UNSOLICITED_MESSAGE != response.code) &&
                                  (strncmp(response.target, "simStatus", JSPR_MAX_TARGET_LENGTH) != 0));
                         set = true;
@@ -232,7 +232,7 @@ static bool setState(void)
     jsprResponse_t response;
     if(jsprGetOperationalState())
     {
-        if(receiveJspr(&response, true))
+        if(receiveJspr(&response, "operationalState"))
         {
             if(JSPR_RC_NO_ERROR == response.code)
             {
@@ -247,7 +247,7 @@ static bool setState(void)
                     else if(state.operationalState == INACTIVE)
                     {
                         putOperationalState(ACTIVE);
-                        receiveJspr(&response, true);
+                        receiveJspr(&response, "operationalState");
                         if(JSPR_RC_NO_ERROR == response.code)
                         {
                             set = true;
@@ -256,11 +256,11 @@ static bool setState(void)
                     else //if its in another mode it may need to be turned inactive first
                     {
                         putOperationalState(INACTIVE);
-                        receiveJspr(&response, true);
+                        receiveJspr(&response, "operationalState");
                         if(JSPR_RC_NO_ERROR == response.code)
                         {
                             putOperationalState(ACTIVE);
-                            receiveJspr(&response, true);
+                            receiveJspr(&response, "operationState");
                             if(JSPR_RC_NO_ERROR == response.code)
                             {
                                 set = true;
@@ -452,7 +452,7 @@ static bool sendMoFromQueue(void)
         {
             if(jsprPutMessageOriginate(imtMo[i].topic, imtMo[i].length + IMT_CRC_SIZE))
             {
-                if(receiveJspr(&response, true))
+                if(receiveJspr(&response, "messageOriginate"))
                 {
                     if(JSPR_RC_NO_ERROR == response.code)
                     {
@@ -461,7 +461,7 @@ static bool sendMoFromQueue(void)
                         imtMo[i].id = messageOriginate.messageId;
                         while (true)
                         {
-                            receiveJspr(&response, false);
+                            receiveJspr(&response, NULL);
                             if(JSPR_RC_UNSOLICITED_MESSAGE == response.code && strcmp(response.target, "messageOriginateSegment") == 0)
                             {
                                 jsprMessageOriginateSegment_t messageOriginateSegment;
@@ -477,7 +477,7 @@ static bool sendMoFromQueue(void)
                                     {
                                         jsprPutMessageOriginateSegment(&messageOriginate, segmentLength, 
                                         segmentStart, base64Buffer);
-                                        receiveJspr(&response, true);
+                                        receiveJspr(&response, "messageOriginateSegment");
                                         if(JSPR_RC_NO_ERROR != response.code)
                                         {
                                             break;
@@ -561,7 +561,7 @@ static bool listenForMt(void) //this needs to loop (listen for mt's) in a separa
     int segmentLength;
     int messageLength = 0;
     //JS TODO: Maybe add timeout, if message goes over timeout cancel it and break out of the loop
-    if(receiveJspr(&response, false))
+    if(receiveJspr(&response, "messageTerminate"))
     {
         if(JSPR_RC_UNSOLICITED_MESSAGE == response.code && strcmp(response.target, "messageTerminate") == 0)
         {
@@ -573,7 +573,7 @@ static bool listenForMt(void) //this needs to loop (listen for mt's) in a separa
                 imtMt[queuePosition].readyToProcess = true;
                 while(true)
                 {
-                    receiveJspr(&response, false);
+                    receiveJspr(&response, NULL);
                     if(JSPR_RC_UNSOLICITED_MESSAGE == response.code && strcmp(response.target, "messageTerminateSegment") == 0)
                     {
                         jsprMessageTerminateSegment_t messageTerminateSegment;
@@ -619,7 +619,7 @@ int8_t getSignal(void)
     int8_t signal = -1;
     jsprResponse_t response;
     jsprGetSignal();
-    receiveJspr(&response, true);
+    receiveJspr(&response, "constellationState");
     if(JSPR_RC_NO_ERROR == response.code && strcmp(response.target, "constellationState") == 0)
     {
         jsprConstellationState_t conState;
@@ -639,7 +639,7 @@ static bool getHwInfo(jsprHwInfo_t * hwInfo)
     bool populated = false;
     jsprResponse_t response;
     jsprGetHwInfo();
-    receiveJspr(&response, true);
+    receiveJspr(&response, "hwInfo");
     if(JSPR_RC_NO_ERROR == response.code && strcmp(response.target, "hwInfo") == 0)
     {
         if(parseJsprGetHwInfo(response.json, hwInfo))
@@ -696,7 +696,7 @@ static bool getSimStatus(jsprSimStatus_t * simStatus)
     bool populated = false;
     jsprResponse_t response;
     jsprGetSimStatus();
-    receiveJspr(&response, true);
+    receiveJspr(&response, "simStatus");
     if(JSPR_RC_NO_ERROR == response.code && strcmp(response.target, "simStatus") == 0)
     {
         if(parseJsprGetSimStatus(response.json, simStatus))
@@ -742,7 +742,7 @@ static bool getFirmwareInfo(jsprFirmwareInfo_t * fwInfo)
     bool populated = false;
     jsprResponse_t response;
     jsprGetFirmware(JSPR_BOOT_SOURCE_PRIMARY);
-    receiveJspr(&response, true);
+    receiveJspr(&response, "firmware");
     if(JSPR_RC_NO_ERROR == response.code && strcmp(response.target, "firmware") == 0)
     {
         if(parseJsprFirmwareInfo(response.json, fwInfo))
@@ -815,7 +815,7 @@ static bool checkProvisioning(uint16_t topic)
         if(jsprGetMessageProvisioning())
         {
             jsprResponse_t response;
-            receiveJspr(&response, true);
+            receiveJspr(&response, "messageProvisioning");
             if(JSPR_RC_NO_ERROR == response.code && strcmp(response.target, "messageProvisioning") == 0)
             {
                 jsprMessageProvisioning_t messageProvisioning;
@@ -876,7 +876,7 @@ bool updateFirmware (const char * firmwareFile, updateProgressCallback progress)
 
     if(jsprGetOperationalState())
     {
-        if(receiveJspr(&response, true))
+        if(receiveJspr(&response, "operationalState"))
         {
             if(JSPR_RC_NO_ERROR == response.code)
             {
@@ -884,7 +884,7 @@ bool updateFirmware (const char * firmwareFile, updateProgressCallback progress)
                 if (state.operationalState != INACTIVE)
                 {
                     putOperationalState(INACTIVE);
-                    receiveJspr(&response, false);
+                    receiveJspr(&response, "operationalState");
                     parseJsprGetOperationalState(response.json, &state);
                 }
 
@@ -900,7 +900,7 @@ bool updateFirmware (const char * firmwareFile, updateProgressCallback progress)
     {
         if (jsprPutFirmware(JSPR_BOOT_SOURCE_PRIMARY))
         {
-            if(receiveJspr(&response, true))
+            if(receiveJspr(&response, "firmware"))
             {
                 if(JSPR_RC_NO_ERROR == response.code)
                 {
@@ -998,7 +998,7 @@ bool updateFirmware (const char * firmwareFile, updateProgressCallback progress)
         // Look for bootInfo
         do
         {
-            receiveJspr(&response, false);
+            receiveJspr(&response, "bootInfo");
         } while ((JSPR_RC_UNSOLICITED_MESSAGE != response.code) &&
                  (strncmp(response.target, "bootInfo", JSPR_MAX_TARGET_LENGTH) != 0));
 
