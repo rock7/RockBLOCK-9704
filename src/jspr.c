@@ -32,7 +32,7 @@ int sendJspr(const char *buffer, size_t length)
         return bytesWritten;
 }
 
-bool receiveJspr(jsprResponse_t * response, const bool skipUnsolicited)
+bool receiveJspr(jsprResponse_t * response, const char * expectedTarget)
 {
     bool received = false;
     int loop;
@@ -106,19 +106,23 @@ bool receiveJspr(jsprResponse_t * response, const bool skipUnsolicited)
                         memmove(jsprRxBuffer, &jsprRxBuffer[resultCodeIndexStart], (pos - resultCodeIndexStart));
                     }
 
-                    if ((skipUnsolicited == true) &&
-                        (response->code == JSPR_RC_UNSOLICITED_MESSAGE))
-                    {
-                        memset(jsprRxBuffer, 0 , RX_BUFFER_SIZE);
-                        pos = 0;
-                        continue;
-                    }
-
                     targetStart = &jsprRxBuffer[JSPR_RESULT_CODE_LENGTH + 1];
                     targetEnd = strchr(targetStart, ' ');
                     targetLength = targetEnd - targetStart;
                     memcpy(response->target, targetStart, targetLength);
                     response->target[targetLength] = '\0';
+
+                    if (expectedTarget != NULL)
+                    {
+                        if (strncmp(response->target, expectedTarget, JSPR_MAX_TARGET_LENGTH) !=0)
+                        {
+                            pos = 0;
+                            memset(jsprRxBuffer, 0 , RX_BUFFER_SIZE);
+                            memset(response, 0, sizeof(response));
+                            continue;
+                        }
+                    }
+
                     jsonStart = strchr(targetStart, '{');
                     response->jsonSize = strchr(targetStart, '\0') - jsonStart;
                     strncpy(response->json, jsonStart, response->jsonSize);
