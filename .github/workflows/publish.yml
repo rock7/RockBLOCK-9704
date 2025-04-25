@@ -9,6 +9,7 @@ permissions:
 jobs:
   publish:
     name: publish wheels to pypi
+    environment: Release
     runs-on: ubuntu-latest
 
     steps:
