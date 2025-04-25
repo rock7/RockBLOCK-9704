@@ -23,6 +23,7 @@ RockBLOCK 9704 C and Python Library
   - Hardware setup
 - [**Arduino**](#arduino)
   - Build steps
+  - Compatible models
 - [**Python**](#python)
   - Dependencies
   - Build steps
@@ -233,8 +234,16 @@ Download Arduino IDE from: https://www.arduino.cc/en/software/
 - At the top of your sketch include: ```#include "rockblock_9704.h"```
 
 ***Notes:***
-- Message size both outgoing and incoming capped at 5kB due to memory constraints.
+- Message size both outgoing and incoming limited to 2-5kb (depending on model) due to RAM memory constraints.
 - Message buffers can be increased manually if sufficient memory exists, these can be increased in **imt_queue.h** under the **IMT_PAYLOAD_SIZE** definition.
+
+### Compatible models
+***Notes:***
+- This library has been designed to work with most Arduino models, the list below shows models that have been **tested** and proven to work. Therefore other **untested** models may or may not be currently compatible.
+
+**List of tested working models:**
+- MKR 1010 (**Note:** Message size limit ~5kb)
+- UNO R4 (**Note:** Message size limit ~2kb)
 
 ## Python
 ### Dependencies
