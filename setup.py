@@ -47,11 +47,6 @@ class CMakeBuild(build_ext):
         shutil.copyfile(built_so_path, target_pyd_path)
 
 setup(
-    name="rockblock9704",
-    version="0.1.9",
-    requires_python=">=3.8",
-    description="RockBLOCK 9704 serial tools",
-    long_description=open("README.rst").read(),
     packages=["rockblock9704"],
     ext_modules=[CMakeExtension("rockblock")],
     cmdclass={"build_ext": CMakeBuild},

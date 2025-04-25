@@ -1,2 +1,14 @@
+[project]
+name="rockblock9704"
+version="0.1.10"
+requires-python=">=3.8"
+description="RockBLOCK 9704 serial tools"
+readme = "README.rst"
+
+[project.urls]
+About = "https://www.groundcontrol.com/product/rockblock-9704/"
+Docs = "https://docs.groundcontrol.com/iot/rockblock-9704"
+Examples = "https://github.com/rock7/RockBLOCK-9704/tree/master/examples"
+
 [tool.cibuildwheel]
 build = "cp38* cp39* cp31*"
