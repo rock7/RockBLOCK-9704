@@ -3,6 +3,10 @@ name: publish
 on:
   workflow_call:
 
+permissions:
+  contents: write
+  id-token: write
+
 jobs:
   publish:
     name: publish wheels to pypi
@@ -10,9 +14,6 @@ jobs:
     environment:
       name: Release
       url: https://pypi.org/p/rockblock9704
-    permissions:
-      contents: write
-      id-token: write
 
     steps:
       - name: download artifacts
