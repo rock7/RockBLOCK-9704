@@ -43,7 +43,7 @@ This project provides easy-to-use C and Python libraries to send and receive dat
 
 ### 📜 Function List
 
-The high level API functions can be seen in the generated Doxygen documentation [here](https://rock7.github.io/rockblock-9704) or the `rockblock_9704.h` header file.
+The high level API functions can be seen in the generated Doxygen documentation [here](https://rock7.github.io/RockBLOCK-9704/) or the `rockblock_9704.h` header file.
 
 ---
 
