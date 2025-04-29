@@ -5,6 +5,12 @@
 extern "C" {
 #endif
 
+/**
+ * @file rockblock_9704.h
+ * @brief The RockBLOCK 9704 library. Maintained by Ground Control (https://www.groundcontrol.com/)
+ * and license under the MIT License.
+ */
+
 #include "serial.h"
 #include "jspr.h"
 #include <stdio.h>
@@ -13,23 +19,49 @@ extern "C" {
 #include <string.h>
 #include <stddef.h>
 
+/**
+ * @brief Temporary buffer size used for Base64 encoding/decoding of IMT messages.
+ */
 #define BASE64_TEMP_BUFFER 2048U
-#define RB9704_BAUD 230400U
-
-typedef enum
-{
-    RAW_TOPIC = 244, 
-    PURPLE_TOPIC = 313, 
-    PINK_TOPIC = 314, 
-    RED_TOPIC = 315,
-    ORANGE_TOPIC = 316, 
-    YELLOW_TOPIC = 317
-}cloudloopTopics_t;
-
-//user functions
 
 /**
- * Initialise the the serial connection in the detected context (or user defined),
+ * @brief Fixed serial baud rate for communication with the RockBLOCK 9704 modem.
+ *
+ * This value should not be changed, as it is required by the modem hardware.
+ */
+#define RB9704_BAUD 230400U
+
+
+/**
+ * @brief Predefined Cloudloop topic identifiers for RockBLOCK 9704.
+ *
+ * This enum defines known topic IDs used to route messages through the
+ * Cloudloop data.
+ */
+typedef enum
+{
+    /** Raw topic ID used for unfiltered transmission. */
+    RAW_TOPIC = 244,
+
+    /** Topic ID for messages labeled "Purple". */
+    PURPLE_TOPIC = 313,
+
+    /** Topic ID for messages labeled "Pink". */
+    PINK_TOPIC = 314,
+
+    /** Topic ID for messages labeled "Red". */
+    RED_TOPIC = 315,
+
+    /** Topic ID for messages labeled "Orange". */
+    ORANGE_TOPIC = 316,
+
+    /** Topic ID for messages labeled "Yellow". */
+    YELLOW_TOPIC = 317
+} cloudloopTopics_t;
+
+
+/**
+ * @brief Initialise the the serial connection in the detected context (or user defined),
  * if successful continue to set the API, SIM & state of the modem in order
  * to be ready for messaging.
  * 
@@ -39,14 +71,14 @@ typedef enum
 bool rbBegin(char * port);
 
 /**
- * Uninitialise/close the the serial connection.
+ * @brief Uninitialise/close the the serial connection.
  * 
  * @return bool depicting success or failure.
  */
 bool rbEnd(void);
 
 /**
- * Send a mobile originated message from the modem on the default topic (244).
+ * @brief Send a mobile originated message from the modem on the default topic (244).
  * 
  * @param data pointer to data (message).
  * @param length size_t of data length. (Max 100kB).
@@ -56,7 +88,7 @@ bool rbEnd(void);
 bool sendMessage(const char * data, const size_t length, const int timeout);
 
 /**
- * Send a mobile originated message from the modem on a cloudloop topic of choice.
+ * @brief Send a mobile originated message from the modem on a cloudloop topic of choice.
  * 
  * @param topic uint16_t topic.
  * @param data pointer to data (message).
@@ -67,7 +99,7 @@ bool sendMessage(const char * data, const size_t length, const int timeout);
 bool sendMessageCloudloop(cloudloopTopics_t topic, const char * data, const size_t length, const int timeout);
 
 /**
- * Send a mobile originated message from the modem on any topic.
+ * @brief Send a mobile originated message from the modem on any topic.
  * 
  * @param topic uint16_t topic.
  * @param data pointer to data (message).
@@ -78,7 +110,7 @@ bool sendMessageCloudloop(cloudloopTopics_t topic, const char * data, const size
 bool sendMessageAny(uint16_t topic, const char * data, const size_t length, const int timeout);
 
 /**
- * Listen for a mobile terminated message from the modem.
+ * @brief Listen for a mobile terminated message from the modem.
  * 
  * @param buffer pointer to buffer of the stored MT messages.
  * @return size_t the length of the buffer minus the IMT CRC.
@@ -90,11 +122,11 @@ bool sendMessageAny(uint16_t topic, const char * data, const size_t length, cons
 size_t receiveMessage(char ** buffer);
 
 /**
- * Listen for a mobile terminated message from the modem.
+ * @brief Listen for a mobile terminated message from the modem.
  * 
- * @param buffer pointer to buffer of the stored MT messages
- * @param length uint16_t to store the topic of the incoming message.
- * @return size_t the length of the buffer minus the IMT CRC
+ * @param buffer pointer to buffer of the stored MT messages.
+ * @param topic uint16_t topic.
+ * @return size_t the length of the buffer minus the IMT CRC.
  * 
  * * @note this pointer is a pointer to a pointer to the MT queue buffer, 
  * it may be reused to store another MT. It must be copied if the application 
@@ -103,42 +135,42 @@ size_t receiveMessage(char ** buffer);
 size_t receiveMessageWithTopic(char ** buffer, uint16_t topic);
 
 /**
- * Get the current signal strength (0-5) from the modem.
+ * @brief Get the current signal strength (0-5) from the modem.
  * 
  * @return uint8_t of the signal strength from the modem (-1 on error).
  */
 int8_t getSignal(void);
 
 /**
- * Get the hardware version.
+ * @brief Get the hardware version.
  * 
  * @return char pointer to hwVersion string.
  */
 char * getHwVersion(void);
 
 /**
- * Get the serial number.
+ * @brief Get the serial number.
  * 
  * @return char pointer to serial number string.
  */
 char * getSerialNumber(void);
 
 /**
- * Get the imei.
+ * @brief Get the imei.
  * 
  * @return char pointer to imei string.
  */
 char * getImei(void);
 
 /**
- * Get the board temperature.
+ * @brief Get the board temperature.
  * 
  * @return int8_t of the current temperature (-100 on error).
  */
 int8_t getBoardTemp(void);
 
 /**
- * Check if SIM presence is currently asserted.
+ * @brief Check if SIM presence is currently asserted.
  * 
  * @return bool depicting SIM presence.
  * * @note This function will return false either if it received
@@ -147,7 +179,7 @@ int8_t getBoardTemp(void);
 bool getCardPresent(void);
 
 /**
- * Check if SIM card is present, communicating properly with,
+ * @brief Check if SIM card is present, communicating properly with,
  * and has presented no errors in SIM transactions with the
  * transceiver.
  * 
@@ -158,14 +190,14 @@ bool getCardPresent(void);
 bool getSimConnected(void);
 
 /**
- * Get the iccid.
+ * @brief Get the iccid.
  * 
  * @return char pointer to iccid string.
  */
 char * getIccid(void);
 
 /**
- * Get the Iridium modem firmware version as vX.Y.X
+ * @brief Get the Iridium modem firmware version as vX.Y.X
  * with X being the major number, Y being the minor number and X
  * being the patch number
  * 
@@ -174,7 +206,25 @@ char * getIccid(void);
 char *  getFirmwareVersion(void);
 
 #if defined(KERMIT)
+/**
+ * @brief A callback definition for the kermit transfer
+ * 
+ * @param sofar the number of bytes transferred so far.
+ * @param total the total number of bytes to transfer.
+ * @return void
+ * * @note This is only defined if KERMIT was defined during the build.
+ */
 typedef void(*updateProgressCallback)(const unsigned long sofar, const unsigned long total);
+
+/**
+ * @brief Update 9704 firmware. This is a blocking call and will take approximately
+ * 10 minutes to upgrade, the updateProgressCallback is recommended.
+ * 
+ * @param firmwareFile path to the sxbin firmware files from Iridium
+ * @param progress pointer to the update progress callback, this can be NULL.
+ * @return bool true if the upgrade was successful.
+ * * @note This is only defined if KERMIT was defined during the build.
+ */
 bool updateFirmware (const char * firmwareFile, updateProgressCallback progress);
 #endif
 
@@ -183,7 +233,7 @@ bool updateFirmware (const char * firmwareFile, updateProgressCallback progress)
 
 /**
  * 
- * Drives user defined pin (power enable) low and user defined pin (iridium enable) high to 
+ * @brief Drives user defined pin (power enable) low and user defined pin (iridium enable) high to 
  * initialise the RB9704 PiHat. Initialise the serial connection in the 
  * detected context (or user defined), if successful continue to set 
  * the API, SIM & state of the modem in order to be ready for messaging.
@@ -196,7 +246,7 @@ bool updateFirmware (const char * firmwareFile, updateProgressCallback progress)
 bool rbBeginGpio(char * port, const rbGpioTable_t * gpioInfo, const int timeout);
 
 /**
- * Drives user defined pin (power enable) high and another
+ * @brief Drives user defined pin (power enable) high and another
  * user defined pin (iridium enable) low to deinitialise the RB9704
  * PiHat. Uninitialises/closes the the serial connection.
  * 
@@ -204,43 +254,107 @@ bool rbBeginGpio(char * port, const rbGpioTable_t * gpioInfo, const int timeout)
  * @return bool depicting success or failure.
  */
 bool rbEndGpio(const rbGpioTable_t * gpioInfo);
-
-/**
- * 
- * Drives pin 24 (power enable) low and pin 16
- * (iridium enable) high to initialise the RB9704
- * PiHat. Initialises the the serial connection in the detected context 
- * (or user defined), if successful continue to set the API, SIM & 
- * state of the modem in order to be ready for messaging.
- * 
- * @param timeout in seconds.
- * @return bool depicting success or failure.
- */
-bool rbBeginHat(const int timeout);
-
-/**
- * 
- * Drives pin 24 (power enable) high and pin 16
- * (iridium enable) low to deinitialise the RB9704
- * PiHat. Uninitialises/closes the the serial connection.
- * 
- * @return bool depicting success or failure.
- */
-bool rbEndHat(void);
 #endif
 
-//internal functions
+/**
+ * @brief Calculate CRC for a buffer.
+ *
+ * @param buffer Pointer to the data buffer.
+ * @param bufferLength Length of the buffer in bytes.
+ * @param initialCRC Initial CRC value to start from.
+ * @return Calculated CRC as an integer.
+ */
 static int calculateCrc(const void * buffer, int bufferLength, int initialCRC);
+
+/**
+ * @brief Append CRC to the end of a buffer.
+ *
+ * @param buffer Pointer to the buffer to append CRC to.
+ * @param length Length of the buffer in bytes.
+ * @return true on success, false on failure.
+ */
 static bool appendCrc(uint8_t * buffer, size_t length);
+
+/**
+ * @brief Encode binary data to base64 format.
+ *
+ * @param srcBuffer Pointer to source binary data.
+ * @param srcLength Length of source data in bytes.
+ * @param destBuffer Pointer to destination buffer for base64 string.
+ * @param destLength Length of destination buffer.
+ * @return Number of bytes written to destBuffer.
+ */
 static size_t encodeData(const char * srcBuffer, const size_t srcLength, char * destBuffer, const size_t destLength);
+
+/**
+ * @brief Decode base64 data back into binary.
+ *
+ * @param srcBuffer Pointer to base64-encoded string.
+ * @param srcLength Length of encoded string.
+ * @param destBuffer Pointer to destination binary buffer.
+ * @param destLength Length of destination buffer.
+ * @return Number of bytes written to destBuffer.
+ */
 static size_t decodeData(const char * srcBuffer, const size_t srcLength, char * destBuffer, const size_t destLength);
+
+/**
+ * @brief Set the modem API version.
+ *
+ * @return true if successful, false otherwise.
+ */
 static bool setApi(void);
+
+/**
+ * @brief Initialise SIM card configuration.
+ *
+ * @return true if SIM setup succeeded, false otherwise.
+ */
 static bool setSim(void);
+
+/**
+ * @brief Set operational state for the modem.
+ *
+ * @return true if successful, false otherwise.
+ */
 static bool setState(void);
+
+/**
+ * @brief Check if the given topic is provisioned.
+ *
+ * @param topic Topic ID to check.
+ * @return true if the topic is provisioned, false otherwise.
+ */
 static bool checkProvisioning(uint16_t topic);
+
+/**
+ * @brief Send a queued message using mobile originated (MO) transmission.
+ *
+ * @param timeout Timeout duration in seconds.
+ * @return true if message was sent successfully, false otherwise.
+ */
 static bool sendMoFromQueue(const int timeout);
+
+/**
+ * @brief Listen for an incoming mobile terminated (MT) message.
+ *
+ * @return true if a message was received, false otherwise.
+ */
 static bool listenForMt(void);
+
+/**
+ * @brief Retrieve hardware information from the modem.
+ *
+ * @param hwInfo Pointer to structure to populate with hardware info.
+ * @return true on success, false on failure.
+ */
 static bool getHwInfo(jsprHwInfo_t * hwInfo);
+
+/**
+ * @brief Get current SIM card status.
+ *
+ * @param simStatus Pointer to structure to populate with SIM status.
+ * @return true on success, false on failure.
+ */
 static bool getSimStatus(jsprSimStatus_t * simStatus);
 
 #ifdef __cplusplus

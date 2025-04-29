@@ -1,78 +1,87 @@
-# RockBLOCK 9704
-The official RockBLOCK 9704 C and Python Library made by [Ground Control](https://www.groundcontrol.com) 
+# 📡 RockBLOCK 9704
 
-For more information about RockBLOCK 9704, see: [groundcontrol.com/product/rockblock-9704](https://www.groundcontrol.com/product/rockblock-9704/)
+[![Build](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/rock7/rockblock-9704/actions)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![PyPI](https://img.shields.io/pypi/v/rockblock9704)](https://pypi.org/project/rockblock9704/)
 
-## Contents
+Official C and Python libraries for the [RockBLOCK 9704](https://www.groundcontrol.com/product/rockblock-9704/) satellite modem, maintained by [Ground Control](https://www.groundcontrol.com).
 
-### Code
-- [**Simple send/receive**](#simple-sendreceive)
-  - Script
-  - Result
-- [**Examples**](#examples)
-  - C
-  - Python
-### Building
-- [**Python**](#python)
-  - Dependencies
-  - Build steps
-- [**Linux**](#linux)
-  - Dependencies
-  - Build steps
-- [**MacOS**](#macos)
-  - Dependencies
-  - Build steps
-- [**Windows**](#windows)
-  - Dependencies
-  - Build steps
-- [**Raspberry Pi**](#raspberry-pi)
-  - Dependencies
-  - Build steps
-  - Hardware setup
-- [**Arduino**](#arduino)
-  - Build steps
-  - Compatible models
-- [**Python**](#python)
-  - Dependencies
-  - Build steps
+Further documentation for hardware and specifications can be found on our document site [here](https://docs.groundcontrol.com/iot/rockblock-9704).
 
-# Code
 
-## Simple send/receive:
+---
 
-### Script
+## 📋 Table of Contents
+
+- [📖 About](#-about)
+- [🚀 Quick Start](#-quick-start)
+  - [Simple Send/Receive Example](#simple-sendreceive-example)
+- [💡 Examples](#-examples)
+- [🛠️ Building from Source](#%EF%B8%8F-building-from-source)
+  - [🐍 Python](#-python)
+  - [🐧 Linux](#-linux)
+  - [🍏 macOS](#-macos)
+  - [🖥️ Windows](#%EF%B8%8F-windows)
+  - [🥧 Raspberry Pi](#-raspberry-pi)
+  - [🤖 Arduino](#-arduino)
+- [🔌 Hardware Setup](#-hardware-setup)
+- [📚 Quick-start your own project](#-quick-start-your-own-project)
+  - [🪜 Quick-start step-by-step guide](#-quick-start-step-by-step-guide)
+  - [⚙️ Example `CMakeLists.txt`](#%EF%B8%8F-example-cmakeliststxt)
+- [❓ Frequently Imagined Questions (FIQ)](#-frequently-imagined-questions-fiq)
+- [⚖️ License](#%EF%B8%8F-license)
+
+---
+
+## 📖 About
+
+This project provides easy-to-use C and Python libraries to send and receive data over the Iridium satellite network using the RockBLOCK 9704.
+
+- **Official library maintained by Ground Control**
+- **Supports** Linux, macOS, Windows, Raspberry Pi, Arduino
+- **Available on PyPI** for easy Python installation: [rockblock9704](https://pypi.org/project/rockblock9704/)
+
+### 📜 Function List
+
+The high level API functions can be seen in the generated Doxygen documentation [here](https://rock7.github.io/rockblock-9704) or the `rockblock_9704.h` header file.
+
+---
+
+## 🚀 Quick Start
+
+### Simple Send/Receive Example
+
+***Note:*** In this example we send a message to the cloudloop RAW topic then use cloudloop to send a message back to the RB9704.
+
+**Requirements for below example:**
+- Your RB9704 needs to be provisioned for the cloudloop RAW topic (244).
+- Have a good view of the sky so that signal can be obtained.
 
 ```c
+#include <stdio.h>
 #include "rockblock_9704.h"
 
-int main()
+int main(void)
 {
-    const char *message = "Hello World!";
+    const char *message = "Ground Control to Major Tom...";
     char * mtBuffer = NULL;
 
-    //Begin serial connection and initialise the modem
-    if(rbBegin("/dev/ttyUSB2"))
+    if (rbBegin("/dev/ttyUSB2"))
     {
-        //Queue and send MO
-        if(sendMessageAny(80, message, strlen(message), 600))
+        if (sendMessage(message, strlen(message), 600))
         {
             printf("Sent message: %s\r\n", message);
-            //Start listening for MT
-            while(true)
+            while (true)
             {
-                const size_t mtLength = receiveMessage(&mtBuffer);
+                size_t mtLength = receiveMessage(&mtBuffer);
                 if ((mtLength > 0) && (mtBuffer != NULL))
                 {
                     printf("Received message: %s\r\n", mtBuffer);
-                    break; //Break out of loop if MT is found
+                    break;
                 }
                 usleep(100000);
             }
-            //End serial connection
-            if(rbEnd())
-            {
-                printf("Ended connection successfully\r\n");
-            }
+            rbEnd();
         }
         else
         {
@@ -81,235 +90,317 @@ int main()
     }
     else
     {
-        printf("Failed to begin the serial connection\r\n");
+        printf("Failed to begin serial connection\r\n");
     }
+
+    return 0;
 }
 ```
 
-### Result
+#### Example Output
 
 ```bash
 linux@laptop:~/Documents/RockBLOCK-9704/build$ ./simpleSendReceive
-Sent message: Hello World!
-Received message: Hello World!
+Sent message: Ground Control to Major Tom...
+Received message: Major Tom to Ground Control...
 Ended connection successfully
 ```
 
-## Examples:
+---
 
-### C
+## 💡 Examples
 
-#### Run executable
-
-```c
-    ./<examplename> <arguments>
-
-    eg ./reflected -d <serial device>
-    eg ./customFileMessage -d <serial device> -t 244 -f "/path/to/file.txt"
-```
-***Notes:***
-- Replace `<serial device>` with the serial instance of your RockBLOCK 9704
-- When running these examples on windows make sure to use the configured COM port of the RockBLOCK 9704 as your ```-d``` argument.
-
-### Python
-
-#### Run Scripts
-
-```python
-    python <examplename> <arguments>
-
-    eg python receive_message.py --device <serial device> 
-    eg python send_message.py --device <serial device> 
-```
-***Notes:***
-- Replace `<serial device>` with the serial instance of your RockBLOCK 9704
-
-# Building
-
-## Python 🐍
-
-The Python library can be installed from [PyPI](https://pypi.org/project/rockblock9704/), building from source is not required in most situations.
+### C Examples
 
 ```bash
-pip install rockblock9704
+./<example_name> <arguments>
+
+e.g., ./reflected -d <serial device>
+e.g., ./customFileMessage -d <serial device> -t 244 -f "/path/to/file.txt"
 ```
 
-Build instructions are included below for those not using PyPI.
+### Python Examples
 
-### Dependencies
-  - Python  >= 3.8
-  - CMake  >= 3.16
- ### Build steps
-  ```bash
-  python -m pip install -r requirements.txt
-  python -m pip install .
-  ```
+```bash
+python <example_name>.py --device <serial device>
 
-## Linux:
+e.g., python receive_message.py --device /dev/ttyUSB2
+e.g., python send_message.py --device /dev/ttyUSB2
+```
 
-### Dependencies
+---
 
-- CMake >= 3.16
+## 🛠️ Building from Source
+
+> **Tip:** If you're using Python, install directly from PyPI:
+>
+> ```bash
+> pip install rockblock9704
+> ```
+
+---
+
+### 🐍 Python
+
+**Dependencies:**
+
+- Download and install [Python](https://www.python.org/downloads/)  >= 3.8.
+- Download and install [CMake](https://cmake.org/download/) >= 3.16.
+
+**Build:**
+
+```bash
+python -m pip install -r requirements.txt
+python -m pip install .
+```
+
+---
+
+### 🐧 Linux
+
+**Dependencies:**
+
+- Download and install [CMake](https://cmake.org/download/) >= 3.16.
+- [git](https://git-scm.com/downloads/linux).
+- build-essentials.
+
+Install dependencies:
+
+```bash
+sudo apt install cmake git build-essential
+```
+
+**Build Steps:**
+
+```bash
+mkdir build
+cd build
+cmake ..
+make
+```
+
+*(For debug builds use **`cmake -DDEBUG=ON ..`**)*
+
+---
+
+### 🍏 macOS
+
+**Dependencies:**
+
+- Download and install [CMake](https://cmake.org/download/) >= 3.16.
 - make
-- git
-- build-essentials
+- [git](https://git-scm.com/downloads/mac).
 
-***Notes*** : ```sudo apt install <dependancy>```
-
-### Build steps
-
-#### Run cmake and compile project
+Install dependencies:
 
 ```bash
-    mkdir -p build
-    cd build
-    cmake ..
-    (For debug: cmake -DDEBUG=ON ..)
-    make
+brew install cmake make git
 ```
 
-## MacOS:
-
-### Dependencies
-
-- CMake >= 3.16
-- make
-- git
-
-***Notes:*** ```brew install <dependancy>```
-
-### Build steps
-
-#### Run cmake and compile project
+**Build Steps:**
 
 ```bash
-    mkdir -p build
-    cd build
-    cmake ..
-    (For debug: cmake -DDEBUG=ON ..)
-    make
+mkdir build
+cd build
+cmake ..
+make
 ```
 
-## Windows:
+---
 
-### Dependencies
+### 🖥️ Windows
 
-- Download and install [Visual Studios](https://visualstudio.microsoft.com/). If using the Python library install [Python Native Development Tools](https://learn.microsoft.com/en-us/visualstudio/python/installing-python-support-in-visual-studio?view=vs-2022) with Visual Studios as well.
-- Download and install [CMake](https://cmake.org/download/).
-- [git](https://git-scm.com/downloads/win)
-- Downloaded and install the [FTDI VCP drivers](https://ftdichip.com/drivers/).
+**Dependencies:**
 
-### Build steps
+- [Visual Studio](https://visualstudio.microsoft.com/) (C++ and Python Development Tools)
+- [CMake](https://cmake.org/download/)
+- [Git for Windows](https://git-scm.com/downloads/win)
+- [FTDI VCP drivers](https://ftdichip.com/drivers/)
 
-
-To ensure you are using the right environment, open the Developer Command Prompt for Visual Studio 2022. You can find this in your Start menu under `Visual Studio 2022 > x64 Native Tools Command Prompt for VS 2022` or `x86 Native Tools Command Prompt for VS 2022` is building for 32bit. Alternatively you can run the bat in `C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat` or  `C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars32.bat`.
+**Build Steps:**
 
 ```bash
-mkdir -p build
+mkdir build
 cmake -G "Visual Studio 17 2022" -A <ARCH> -S . -B build
 msbuild build\ALL_BUILD.vcxproj /p:Configuration=Debug /p:Platform=<ARCH>
 ```
-- Replace `<ARCH>` with x64, Win32, ARM64, etc., depending on your architecture.
-- You can set /p:Configuration=Release for a release build.
 
-The build outputs will be in `build\Debug\` or `build\Release\` depending on the build configuration used.
+Replace `<ARCH>` with `x64`, `Win32`, `ARM64`, etc.
 
-## Raspberry Pi:
+---
 
-### Dependencies
+### 🥧 Raspberry Pi
 
-- CMake >= 3.16
-- make
-- git
-- build-essentials
-- libgpiod >= 3.1.1 ***note: This may need to be installed from source to get the appropriate version, steps to do this are outlined below. Only required if you need pin manipulation.*** 
+**Dependencies:**
 
-***Notes:*** ```sudo apt install <dependancy>```
+- Download and install [CMake](https://cmake.org/download/) >= 3.16.
+- [git](https://git-scm.com/downloads/linux).
+- build-essentials.
+- (Optional) [libgpiod](https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git) >= 3.1.1 for GPIO pin control.
 
-### Build steps
-
-#### Install libgpiod *Optional
+**Install libgpiod:**
 
 ```bash
-    git clone https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git 
-    cd libgpiod
-    ./autogen.sh
-    ./configure --enable-shared=yes
-    make
-    sudo make install
+git clone https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git
+cd libgpiod
+./autogen.sh
+./configure --enable-shared=yes
+make
+sudo make install
 ```
 
-#### Run cmake and compile project
+**Build Steps:**
 
 ```bash
-    mkdir -p build
-    cd build
-    cmake ..
-    (For debug: cmake -DDEBUG=ON ..)
-    make
+mkdir build
+cd build
+cmake ..
+make
 ```
 
-### Hardware setup
-- **USB-C**
+---
 
-  - Plug in USB-C cable.
-  - Select correct USB port.
-- **Pi-Hat**
+### 🤖 Arduino
 
-    ```bash
-    sudo raspi-config
-    ```
-  - Select "Interface Options".
-  - Select "Serial Port".
-  - Select **No** to shell over serial.
-  - Select **Yes** to serial port hardware enabled.
-  - Use "**/dev/ttyS0**" as your port.
+**Getting Started:**
 
-    ***Notes:***
-    - When using the RB9704 on a raspberry pi via **GPIO** you will need to use ```rbBeginGpio(char * port, const rbGpioTable_t * gpioInfo, const int timeout)```.
-    - The minimum following connections will need to be made from the RB9704 to the Pi:
-      - GND -> GND
-      - VIN -> VIN
-      - TX (13) -> RX (14)
-      - RX (14) -> TX (15)
-      - P_EN (6) -> Any free GPIO (Recommended: 24)
-      - I_EN (3) -> Any free GPIO (Recommended: 16)
-      - I_BTD (7) -> Any free GPIO (Recommended: 23)
-    - Here's a rbGpioTable_t structure example if the recommended pins above were used:
-    ```c
-    #define CHIP_NAME "/dev/gpiochip0"
-    #define POWER_ENABLE_PIN 24U
-    #define IRIDIUM_ENABLE_PIN 16U
-    #define IRIDIUM_BOOTED_PIN 23U
+- Download [Arduino IDE](https://www.arduino.cc/en/software/)
+- Copy the library to `/Arduino/libraries`
+- Include it in your sketch:
 
-    const rbGpioTable_t customGpioTable = 
-    {
-        { CHIP_NAME, POWER_ENABLE_PIN},
-        { CHIP_NAME, IRIDIUM_ENABLE_PIN},
-        { CHIP_NAME, IRIDIUM_BOOTED_PIN}
-    };
-    ```
-    - Use ```rbEndGpio(const rbGpioTable_t * gpioInfo)``` with the same structure used to begin to end the serial connection and shutdown the RB9704.
+```cpp
+#include "rockblock_9704.h"
+```
 
-## Arduino 
+**Notes:**
 
-### Build steps
+- Message size: ~2–5 KB depending on Arduino model.
+- Buffers adjustable in `imt_queue.h` via `IMT_PAYLOAD_SIZE`.
 
-Download Arduino IDE from: https://www.arduino.cc/en/software/
+**Tested Boards:**
 
-#### Include library in Arduino IDE
+- MKR 1010 (~5KB limit).
+- UNO R4 (~2KB limit).
 
-- Copy the library into /ArduinoInstallationDirectory/Arduino/libraries
-- At the top of your sketch include: ```#include "rockblock_9704.h"```
+---
 
-***Notes:***
-- Message size both outgoing and incoming limited to 2-5kb (depending on model) due to RAM memory constraints.
-- Message buffers can be increased manually if sufficient memory exists, these can be increased in **imt_queue.h** under the **IMT_PAYLOAD_SIZE** definition.
+## 🔌 Hardware Setup
 
-### Compatible models
-***Notes:***
-- This library has been designed to work with most Arduino models, the list below shows models that have been **tested** and proven to work. Therefore other **untested** models may or may not be currently compatible.
+### Raspberry Pi — GPIO Mode
 
-**List of tested working models:**
-- MKR 1010 (**Note:** Message size limit ~5kb)
-- UNO R4 (**Note:** Message size limit ~2kb)
+**Minimal Wiring:**
+
+| RockBLOCK Pin | Raspberry Pi Pin |
+| ------------- | ---------------- |
+| GND           | GND              |
+| VIN           | VIN              |
+| TX (13)       | RX (14)          |
+| RX (14)       | TX (15)          |
+| P_EN (6)      | GPIO 24          |
+| I_EN (3)      | GPIO 16          |
+| I_BTD (7)     | GPIO 23          |
+
+**Enable Serial Port:**
+
+```bash
+sudo raspi-config
+# Interface Options -> Serial Port -> Disable shell, enable serial hardware
+```
+
+**Example GPIO config in C:**
+
+```c
+#define CHIP_NAME "/dev/gpiochip0"
+#define POWER_ENABLE_PIN 24U
+#define IRIDIUM_ENABLE_PIN 16U
+#define IRIDIUM_BOOTED_PIN 23U
+
+const rbGpioTable_t customGpioTable =
+{
+    { CHIP_NAME, POWER_ENABLE_PIN },
+    { CHIP_NAME, IRIDIUM_ENABLE_PIN },
+    { CHIP_NAME, IRIDIUM_BOOTED_PIN }
+};
+```
+
+---
+
+## 📚 Quick-start your own project
+
+**Dependencies:**
+
+For dependencies refer to your specific target under the [🛠️ Building from Source](#%EF%B8%8F-building-from-source) section.
+
+**Pre-requisites**
+
+These steps will assume you have created a blank repository using git.
+
+### 🪜 Quick-start step-by-step guide
+1. In your blank repository, add this library as a submodule:
+```
+git submodule add https://github.com/rock7/RockBLOCK-9704.git
+```
+
+2. Change into the `RockBLOCK-9704` directory and (optionally) checkout the latest version or a specific branch using standard Git commands. In this guide, we'll use the latest tip of the default branch.
+
+3. Create a new `CMakeLists.txt` for your project like this:
+```
+cmake_minimum_required(VERSION 3.16)
+project(MyAwesomeProject)
+
+# This will provide  RB9704_LIB for linking and RB9704_INCLUDES for including
+add_subdirectory("RockBLOCK-9704")
+```
+The key line here is `add_subdirectory("RockBLOCK-9704")`, which brings in the required sources so your project can link against them.
+
+4. Create your project source files. To get started, you can use the [Simple Send/Receive Example](#simple-sendreceive-example) above. In this guide we will assume you have one source file called `main.c`.
+
+5. Now define your executable in `CMakeLists.txt`:
+```
+add_executable(${CMAKE_PROJECT_NAME} main.c)
+```
+To build the project, you will also need to link the library and include the necessary headers. Add the following two lines:
+```
+target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC ${RB9704_INCLUDES})
+target_link_libraries(${CMAKE_PROJECT_NAME} ${RB9704_LIB})
+```
+
+6. To build follow the steps for your specific target under the [🛠️ Building from Source](#%EF%B8%8F-building-from-source) section.
+
+### ⚙️ Example `CMakeLists.txt`
+```
+cmake_minimum_required(VERSION 3.16)
+project(MyAwesomeProject)
+
+# This will provide  RB9704_LIB for linking and RB9704_INCLUDES for including
+add_subdirectory("RockBLOCK-9704")
+
+add_executable(${CMAKE_PROJECT_NAME} main.c)
+target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC ${RB9704_INCLUDES})
+target_link_libraries(${CMAKE_PROJECT_NAME} ${RB9704_LIB})
+
+```
+
+---
+
+## ❓ Frequently Imagined Questions (FIQ)
+
+> **Q:** Can I send memes to space?
+> 
+> **A:** Technically yes, if you compress them enough.
+>
+> **Q:** How fast is it?
+>
+> **A:** About as fast as a satellite flying over your head at Mach 20.
+>
+> **Q:** Can it survive being strapped to a rocket?
+>
+> **A:** The modem, yes. Your nerves, maybe not.
+
+---
+
+## ⚖️ License
+
+This project is maintained by [Ground Control](https://www.groundcontrol.com) and is open-source under an MIT-style license.
+
+---

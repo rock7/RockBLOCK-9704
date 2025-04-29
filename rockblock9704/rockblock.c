@@ -37,33 +37,6 @@ static PyObject *py_rbEnd(PyObject *self, PyObject *args) {
 
 }
 #ifdef RB_GPIO
-static PyObject *py_rbBeginHat(PyObject *self, PyObject *args) {
-
-    int result;
-    int timeout;
-
-    if (!PyArg_ParseTuple(args, "i", &timeout)) {
-
-        return NULL;
-
-    }
-
-    result = rbBeginHat(timeout);
-
-    return Py_BuildValue("i", result);
-
-}
-
-static PyObject *py_rbEndHat(PyObject *self, PyObject *args) {
-
-    int result;
-
-    result = rbEndHat();
-
-    return Py_BuildValue("i", result);
-
-}
-
 static PyObject *py_rbBeginGpio(PyObject *self, PyObject *args) {
 
     int result;
@@ -322,8 +295,6 @@ static PyMethodDef rockblockMethods[] = {
     {"begin", py_rbBegin, METH_VARARGS, "Function for starting serial connection to modem"},
     {"end", py_rbEnd, METH_VARARGS, "Function for ending serial connection to modem"},
 #ifdef RB_GPIO
-    {"begin_hat", py_rbBeginHat, METH_VARARGS, "Function for starting serial connection to modem and initaliasing PiHat"},
-    {"end_hat", py_rbEndHat, METH_VARARGS, "Function for ending serial connection to modem and deinitaliasing PiHat"},
     {"begin_gpio", py_rbBeginGpio, METH_VARARGS, "Function for starting serial connection to modem and initaliasing PiHat manually"},
     {"end_gpio", py_rbEndGpio, METH_VARARGS, "Function for ending serial connection to modem and deinitaliasing PiHat manually"},
 #endif

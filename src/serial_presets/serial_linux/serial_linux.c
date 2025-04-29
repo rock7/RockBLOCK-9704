@@ -156,7 +156,6 @@ int readLinux(char *bytes, const uint16_t length)
         fd_set read_fds;
         FD_ZERO(&read_fds);
         FD_SET(serialConnection, &read_fds);
-        //below will wait for 100ms to see if data is available before attempting to read, this is to prevent read from blocking
         int ready = select(serialConnection + 1, &read_fds, NULL, NULL, &timeout);
         if (ready < 0)
         {

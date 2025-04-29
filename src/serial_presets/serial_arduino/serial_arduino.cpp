@@ -13,16 +13,13 @@ extern serialContext context;
 
 bool openPortArduino()
 {
-    //make it clear in documentation that its the user has to call SerialX.begin(BAUD)
-    //where serialX is the same port used for rbBegin and BAUD is the same baud
     serialState = OPEN;
-    serialPortArduino.setTimeout(1000); //Might need to play around with this, seems stable for the moment
+    serialPortArduino.setTimeout(1000);
     return true;
 }
 
 bool closePortArduino()
 {
-    //make it clear in documentation that its the user has to call SerialX.end()
     serialState = CLOSED;
     return true;
 }
@@ -43,7 +40,7 @@ bool setContextArduino(char * port, int baud)
     {
         serialPortArduino = Serial1;
     }
-//JS TODO: Are the below preprocessor defines correct? need to test with actualy boards
+//JS TODO: double check the preprocessor defines below
 #ifdef defined(AVR_MEGA2560) || defined(ARDUINO_SAM_DUE) || defined(ARDUINO_GIGA)
     else if(strcmp(port, "Serial2") == 0)
     {

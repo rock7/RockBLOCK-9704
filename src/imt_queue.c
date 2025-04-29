@@ -3,7 +3,6 @@
 imt_t imtMo[MO_QUEUE_SIZE] = { {0, NULL, 0, 0, false} };
 imt_t imtMt[MT_QUEUE_SIZE] = { {0, NULL, 0, 0, false} };
 
-// This where we need to becareful as this is big buffers
 static uint8_t imtMoBuffer[MO_QUEUE_SIZE][IMT_PAYLOAD_SIZE];
 static uint8_t imtMtBuffer[MT_QUEUE_SIZE][IMT_PAYLOAD_SIZE];
 

@@ -43,14 +43,12 @@ jsprSimStatus_t simStatus;
 #elif _WIN32
     #define SERIAL_CONTEXT_SETUP_FUNC setContextWindows
 #elif ARDUINO
-    // arduino specific call
     #define SERIAL_CONTEXT_SETUP_FUNC setContextArduino
 #else
-    #define SERIAL_CONTEXT_SETUP_FUNC
+    #define SERIAL_CONTEXT_SETUP_FUNC //Custom approach
     #error A serial context is needed
 #endif
 
-// Gives the user the option to set-up their own set-up function outside of the library
 #ifndef SERIAL_CONTEXT_SETUP_FUNC
     #error A serial context function is needed
 #endif
@@ -89,26 +87,6 @@ bool rbEndGpio(const rbGpioTable_t * gpioInfo)
                 disabled = true;
             }
         }
-    }
-    return disabled;
-}
-
-bool rbBeginHat(const int timeout)
-{
-    bool enabled = false;
-    if (rbBeginGpio(PI_HAT_PATH, &gpioTable, timeout))
-    {
-        enabled = true;
-    }
-    return enabled;
-}
-
-bool rbEndHat(void)
-{
-    bool disabled = false;
-    if (rbEndGpio(&gpioTable))
-    {
-        disabled = true;
     }
     return disabled;
 }
@@ -154,7 +132,7 @@ static bool setApi(void)
 {
     bool set = false;
     jsprResponse_t response;
-    for(int i = 0; i < 2; i++) //if modem is sleeping it may need not catch first command, use first loop to wake
+    for(int i = 0; i < 2; i++)
     {
 #ifdef ARDUINO
         delay(5);
@@ -170,7 +148,7 @@ static bool setApi(void)
                     jsprApiVersion_t apiVersion;
                     parseJsprGetApiVersion(response.json, &apiVersion);
                     if(!apiVersion.activeVersionSet)
-                    {   //HOW DO WE DECIDE WHICH VERSION TO USE IF THERE IS MORE THAN ONE AVAILABLE?
+                    {
                         jsprPutApiVersion(&apiVersion.supportedVersions[0]);
                         receiveJspr(&response, "apiVersion");
                     }
@@ -358,11 +336,10 @@ bool sendMessage(const char * data, const size_t length, const int timeout)
             {
                 if(appendCrc(imtMo[queuePosition].buffer, length))
                 {
-                    imtMo[queuePosition].readyToProcess = true; //This matters for the async approach
+                    imtMo[queuePosition].readyToProcess = true;
                     if(!sending)
                     {
-                        sent = sendMoFromQueue(timeout); //this is currently synchronous, will never be more than 1 message in que at one time.
-                                           //sendMoFromQueue() can be put in a separate thread to make it possible to que more messages.
+                        sent = sendMoFromQueue(timeout);
                     }
                 }
                 else
@@ -388,11 +365,10 @@ bool sendMessageCloudloop(cloudloopTopics_t topic, const char * data, const size
             {
                 if(appendCrc(imtMo[queuePosition].buffer, length))
                 {
-                    imtMo[queuePosition].readyToProcess = true; //This matters for the async approach
+                    imtMo[queuePosition].readyToProcess = true;
                     if(!sending)
                     {
-                        sent = sendMoFromQueue(timeout); //this is currently synchronous, will never be more than 1 message in que at one time.
-                                           //sendMoFromQueue() can be put in a separate thread to make it possible to que more messages.
+                        sent = sendMoFromQueue(timeout);
                     }
                 }
                 else
@@ -418,11 +394,10 @@ bool sendMessageAny(uint16_t topic, const char * data, const size_t length, cons
             {
                 if(appendCrc(imtMo[queuePosition].buffer, length))
                 {
-                    imtMo[queuePosition].readyToProcess = true; //This matters for the async approach
+                    imtMo[queuePosition].readyToProcess = true;
                     if(!sending)
                     {
-                        sent = sendMoFromQueue(timeout); //this is currently synchronous, will never be more than 1 message in que at one time.
-                                           //sendMoFromQueue() can be put in a separate thread to make it possible to que more messages.
+                        sent = sendMoFromQueue(timeout);
                     }
                 }
                 else
@@ -444,9 +419,7 @@ static bool sendMoFromQueue(const int timeout)
     int segmentStart;
     int segmentLength;
     int encodedBytes;
-    //JS TODO: Maybe add timeout, if message goes over timeout cancel it and break out of the loop
-    //iterate through queue //if we wanted to make asynchronous maybe make it a while loop as messages can enter the que at any point
-    sending = true; //for async approach
+    sending = true;
     for(size_t i = 0; i < MO_QUEUE_SIZE; i++)
     {
         if(imtMo[i].buffer != NULL && imtMo[i].length > 0 && imtMo[i].topic >= IMT_MIN_TOPIC_ID 
@@ -498,7 +471,6 @@ static bool sendMoFromQueue(const int timeout)
                                     {
                                         sent = true;
                                         removeMoFromQueue(i);
-                                        //if we increase the que a function to shift the messages up by one will be needed here
                                         break;
                                     }
                                 }
@@ -514,14 +486,14 @@ static bool sendMoFromQueue(const int timeout)
             }
         }
     }
-    sending = false; //for async approach
+    sending = false;
     return sent;
 }
 
 size_t receiveMessage(char ** buffer)
 {
     size_t length = 0;
-    if(listenForMt()) //keep like this for now, in an async approach this would operate in its own loop (thread)?
+    if(listenForMt())
     {
         if(buffer != NULL)
         {
@@ -540,7 +512,7 @@ size_t receiveMessage(char ** buffer)
 size_t receiveMessageWithTopic(char ** buffer, uint16_t topic)
 {
     size_t length = 0;
-    if(listenForMt()) //keep like this for now, in an async approach this would operate in its own loop (thread)?
+    if(listenForMt())
     {
         if(buffer != NULL)
         {
@@ -558,8 +530,8 @@ size_t receiveMessageWithTopic(char ** buffer, uint16_t topic)
     return length;
 }
 
-static bool listenForMt(void) //this needs to loop (listen for mt's) in a separate thread for queuing to work
-{                             //otherwise it'll never queue more than 1 at a time
+static bool listenForMt(void)
+{
     bool received = false;
     int8_t queuePosition = -1;
     jsprResponse_t response;
@@ -567,7 +539,6 @@ static bool listenForMt(void) //this needs to loop (listen for mt's) in a separa
     int segmentStart;
     int segmentLength;
     int messageLength = 0;
-    //JS TODO: Maybe add timeout, if message goes over timeout cancel it and break out of the loop
     if(receiveJspr(&response, "messageTerminate"))
     {
         if(JSPR_RC_UNSOLICITED_MESSAGE == response.code && strcmp(response.target, "messageTerminate") == 0)
@@ -587,8 +558,7 @@ static bool listenForMt(void) //this needs to loop (listen for mt's) in a separa
                         parseJsprUnsMessageTerminateSegment(response.json, &messageTerminateSegment);
                         segmentStart = messageTerminateSegment.segmentStart;
                         segmentLength = messageTerminateSegment.segmentLength;
-                        //JS TODO: Chance that second mt comes through early, need to deal with that
-                        if(imtMt[queuePosition].id == messageTerminateSegment.messageId) //make sure you're still dealing with the same message
+                        if(imtMt[queuePosition].id == messageTerminateSegment.messageId)
                         {
                             encodedBytes = decodeData(messageTerminateSegment.data, messageTerminateSegment.dataLength, 
                             imtMt[queuePosition].buffer + segmentStart, segmentLength);
@@ -638,7 +608,7 @@ int8_t getSignal(void)
             }
         }
     }
-    return signal; //potential option to show signalLevel and constellationVisible if we want to return structure?
+    return signal;
 }
 
 static bool getHwInfo(jsprHwInfo_t * hwInfo)

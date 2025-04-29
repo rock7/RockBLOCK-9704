@@ -14,7 +14,11 @@
 #endif
 
 /**
+ * This script will take a valid specified 9704 firmware file and proceed
+ * to update the modem on the specified port.
  * 
+ * Requirements:
+ * Valid 9704 FW file.
  * 
 */
 

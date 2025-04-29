@@ -7,8 +7,6 @@ RockBLOCK 9704
 
 - The source for this project can be found on https://github.com/rock7/RockBLOCK-9704.
 
-- For more information on the RockBLOCK 9704, see https://www.groundcontrol.com/product/rockblock-9704/
-
 - All Python examples can be found `here <https://github.com/rock7/RockBLOCK-9704/tree/master/examples/python>`_
 
 Requirements
@@ -16,7 +14,7 @@ Requirements
 
 - Python 3.8+
 
-- A RockBLOCK 9704
+- A `RockBLOCK 9704 <https://www.groundcontrol.com/product/rockblock-9704/>`_
 
 Installation
 ============

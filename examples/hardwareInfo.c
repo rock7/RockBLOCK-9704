@@ -12,11 +12,15 @@
 #include <unistd.h>
 #endif
 
+/**
+ * This script initialises a serial session with the RB9704, then requests 
+ * to get some hardware information (hardware version, serial number, imei, 
+ * board temp, card present, sim connected, iccid). Finally it will attempt
+ * to gracefully end the serial session.
+*/
+
 static char _serialDevice[PATH_MAX];
 static volatile bool _run = true;
-
-//example script which populates a hwInfo structure
-//with relevant modem information then prints it.
 
 typedef enum
 {

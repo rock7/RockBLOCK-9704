@@ -162,3 +162,18 @@ if (DEFINED FW_UPDATE AND FW_UPDATE STREQUAL "ON")
     endif()
 endif()
 
+# Doxygen documentation generation
+find_package(Doxygen)
+
+if(DOXYGEN_FOUND)
+    set(DOXYGEN_CONFIG_FILE "${CMAKE_CURRENT_SOURCE_DIR}/rockblock-9704-doxygen.config")
+
+    add_custom_target(docs
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_CONFIG_FILE}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Generating API documentation with Doxygen"
+        VERBATIM
+    )
+else()
+    message(STATUS "Doxygen not found. 'make docs' target will not be available.")
+endif()

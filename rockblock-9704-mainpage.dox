@@ -1,0 +1,31 @@
+/**
+ * @mainpage RockBLOCK 9704 Library
+ *
+ * @section intro_sec Introduction
+ *
+ * This is the official C library for the RockBLOCK 9704 satellite modem.
+ * It enables sending and receiving data via the Iridium network using the IMT
+ * service, and supports Linux, macOS, Windows, Raspberry Pi, and Arduino platforms.
+ *
+ * The main documentation for this project is available in the 
+ * <a href="https://github.com/rock7/RockBLOCK-9704/blob/master/README.md">README.md</a>
+ * of this repository. More specific documentation for the C library can be found below.
+ *
+ * This library also builds a shared library that powers the 
+ * <a href="https://pypi.org/project/rockblock9704/">rockblock9704 Python package</a> on PyPI.
+ *
+ * @section features_sec Features
+ *
+ * - Simple high-level API to configure and use the RockBLOCK 9704 via serial
+ * - Cloudloop topic support
+ * - Raspberry Pi GPIO control
+ * - Arduino compatible
+ *
+ * @section usage_sec Getting Started
+ *
+ * See the main API in <a href="rockblock__9704_8h.html">rockblock_9704.h</a>.
+ *
+ * @section license_sec License
+ *
+ * MIT License — maintained by <a href="https://www.groundcontrol.com/">Ground Control</a>.
+ */

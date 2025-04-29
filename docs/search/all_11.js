@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['raw_5ftopic_0',['RAW_TOPIC',['../rockblock__9704_8h.html#abba1a824edb46c8c944f5bf7b53ac09ca0551504c93e0a96e534cb5a873467390',1,'rockblock_9704.h']]],
+  ['rb9704_5fbaud_1',['RB9704_BAUD',['../rockblock__9704_8h.html#af79a63831651dc127235016bce24687d',1,'rockblock_9704.h']]],
+  ['rbbegin_2',['rbbegin',['../rockblock__9704_8c.html#ac0f3fc352eee205b427fff3543bcf806',1,'rbBegin(char *port):&#160;rockblock_9704.c'],['../rockblock__9704_8h.html#ac0f3fc352eee205b427fff3543bcf806',1,'rbBegin(char *port):&#160;rockblock_9704.c']]],
+  ['rbbegingpio_3',['rbbegingpio',['../rockblock__9704_8h.html#ac2d10808fdf6d5f0e8d0fcfd345010ee',1,'rbBeginGpio(char *port, const rbGpioTable_t *gpioInfo, const int timeout):&#160;rockblock_9704.c'],['../rockblock__9704_8c.html#ac2d10808fdf6d5f0e8d0fcfd345010ee',1,'rbBeginGpio(char *port, const rbGpioTable_t *gpioInfo, const int timeout):&#160;rockblock_9704.c']]],
+  ['rbend_4',['rbend',['../rockblock__9704_8h.html#a2b48c4a73a4301f31da944cabb14f5dc',1,'rbEnd(void):&#160;rockblock_9704.c'],['../rockblock__9704_8c.html#a2b48c4a73a4301f31da944cabb14f5dc',1,'rbEnd(void):&#160;rockblock_9704.c']]],
+  ['rbendgpio_5',['rbendgpio',['../rockblock__9704_8h.html#a57a20a5affb0fb1189c0349e019175dd',1,'rbEndGpio(const rbGpioTable_t *gpioInfo):&#160;rockblock_9704.c'],['../rockblock__9704_8c.html#a57a20a5affb0fb1189c0349e019175dd',1,'rbEndGpio(const rbGpioTable_t *gpioInfo):&#160;rockblock_9704.c']]],
+  ['rbgpiotable_5ft_6',['rbGpioTable_t',['../structrbGpioTable__t.html',1,'']]],
+  ['readytoprocess_7',['readyToProcess',['../structimt__t.html#a0d4d1b4e5367b2fae1119ec38871512d',1,'imt_t']]],
+  ['reason_8',['reason',['../structjsprOperationalState__t.html#a58e66b4b5e28801d283c4cabafb93560',1,'jsprOperationalState_t']]],
+  ['receivejspr_9',['receivejspr',['../jspr_8h.html#a0337c3cfcb899b998e8c95b968c933db',1,'receiveJspr(jsprResponse_t *response, const char *expectedTarget):&#160;jspr.c'],['../jspr_8c.html#a0337c3cfcb899b998e8c95b968c933db',1,'receiveJspr(jsprResponse_t *response, const char *expectedTarget):&#160;jspr.c']]],
+  ['receivemessage_10',['receivemessage',['../rockblock__9704_8h.html#ae1b5802a8833e4752223c92c28e64070',1,'receiveMessage(char **buffer):&#160;rockblock_9704.c'],['../rockblock__9704_8c.html#ae1b5802a8833e4752223c92c28e64070',1,'receiveMessage(char **buffer):&#160;rockblock_9704.c']]],
+  ['receivemessagewithtopic_11',['receivemessagewithtopic',['../rockblock__9704_8c.html#a8b7eda78bf08ac272e59129de302f43b',1,'receiveMessageWithTopic(char **buffer, uint16_t topic):&#160;rockblock_9704.c'],['../rockblock__9704_8h.html#a8b7eda78bf08ac272e59129de302f43b',1,'receiveMessageWithTopic(char **buffer, uint16_t topic):&#160;rockblock_9704.c']]],
+  ['red_5ftopic_12',['RED_TOPIC',['../rockblock__9704_8h.html#abba1a824edb46c8c944f5bf7b53ac09ca7180603f086c2e9b1dcb2055e1ada15e',1,'rockblock_9704.h']]],
+  ['remote_13',['REMOTE',['../jspr_8h.html#a072025eee1d7fa38f32237ce1161dda0a4ba7a18dad4c2b80d41444425fc4b818',1,'jspr.h']]],
+  ['removemofromqueue_14',['removemofromqueue',['../imt__queue_8c.html#a22f935a1be225ba2e833763e3ebb4882',1,'removeMoFromQueue(int8_t queuePosition):&#160;imt_queue.c'],['../imt__queue_8h.html#a22f935a1be225ba2e833763e3ebb4882',1,'removeMoFromQueue(int8_t queuePosition):&#160;imt_queue.c']]],
+  ['removemtfromqueue_15',['removemtfromqueue',['../imt__queue_8c.html#abb176a097b00c9f5833db0652ed6de2e',1,'removeMtFromQueue(int8_t queuePosition):&#160;imt_queue.c'],['../imt__queue_8h.html#abb176a097b00c9f5833db0652ed6de2e',1,'removeMtFromQueue(int8_t queuePosition):&#160;imt_queue.c']]],
+  ['requestreference_16',['requestReference',['../structjsprMessageOriginate__t.html#a527a1867027e49a62c692154d48e1dcb',1,'jsprMessageOriginate_t']]],
+  ['responsecodes_17',['responseCodes',['../jspr_8h.html#a8164e8ce1e90ba94e978c9ff477476ea',1,'jspr.h']]],
+  ['rf_5fpower_5fprotection_5ffault_18',['RF_POWER_PROTECTION_FAULT',['../jspr_8h.html#a82e59da59e4fb03da994ff7b5645b2b4ab6191fd506e8bbd1af37eae8726542dc',1,'jspr.h']]],
+  ['rf_5fscan_19',['RF_SCAN',['../jspr_8h.html#a7b94d36039cbe65d670e3308153f5f3ba1f099514d1c64a1e3b37005307ce76a6',1,'jspr.h']]],
+  ['rockblock_209704_20library_20',['RockBLOCK 9704 Library',['../index.html',1,'']]],
+  ['rockblock_2d9704_2dmainpage_2edox_21',['rockblock-9704-mainpage.dox',['../rockblock-9704-mainpage_8dox.html',1,'']]],
+  ['rockblock_5f9704_2ec_22',['rockblock_9704.c',['../rockblock__9704_8c.html',1,'']]],
+  ['rockblock_5f9704_2eh_23',['rockblock_9704.h',['../rockblock__9704_8h.html',1,'']]],
+  ['rx_5fbuffer_5fsize_24',['RX_BUFFER_SIZE',['../jspr_8h.html#a739a2a1a0047c98ac1b18ecd25dac092',1,'jspr.h']]]
+];

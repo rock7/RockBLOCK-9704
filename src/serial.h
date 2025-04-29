@@ -24,7 +24,7 @@ extern "C" {
     #include "serial_presets/serial_arduino/serial_arduino.h"
 #endif
 
-// Callback functions which will link to the interface
+// Callback functions which will link to the serial interface
 typedef bool(*serialInitFunc)();
 typedef bool(*serialDeInitFunc)();
 typedef int(*serialReadFunc)(char * bytes, const uint16_t length);
@@ -33,8 +33,8 @@ typedef int(*serialPeekFunc)(void);
 
 typedef struct
 {
-    serialInitFunc           serialInit; //internal?
-    serialDeInitFunc         serialDeInit; //internal??
+    serialInitFunc           serialInit;
+    serialDeInitFunc         serialDeInit;
     serialReadFunc           serialRead;
     serialWriteFunc          serialWrite;
     serialPeekFunc           serialPeek;

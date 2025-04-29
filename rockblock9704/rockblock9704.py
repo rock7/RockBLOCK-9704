@@ -74,29 +74,6 @@ class RockBlock9704:
         self.connected = not _rb.end()
         return not self.connected
 
-    def begin_hat(self, timeout: int) -> bool:
-        """
-        Drives pin 24 (power enable) low and pin 16
-        (iridium enable) high to initialise the RB9704
-        PiHat. Initialises the serial connection in the detected context
-        (or user defined), if successful continue to set the API, SIM & 
-        state of the modem in order to be ready for messaging.
-        :param timeout: in seconds
-        :return: boolean indicating success
-        """
-        self.connected = _rb.begin_hat(timeout)
-        return self.connected
-
-    def end_hat(self) -> bool:
-        """
-        Drives pin 24 (power enable) high and pin 16
-        (iridium enable) low to deinitialise the RB9704
-        PiHat. Uninitialises/closes the serial connection.
-        :return: boolean indicating success
-        """
-        self.connected = not _rb.end_hat()
-        return not self.connected
-
     def begin_gpio(self, port: str, gpio_config: GpioConfig, timeout: int) -> bool:
         """
         Drives user defined pin (power enable) low and user defined pin (iridium enable) high to 

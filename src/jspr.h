@@ -275,7 +275,6 @@ typedef struct
     char hwVersion[JSPR_HW_VERSION_MAX_LENGTH];
     char serialNumber[JSPR_SERIAL_NUMBER_MAX_LENGTH];
     char imei[JSPR_IMEI_MAX_LENGTH];
-    //uint8_t pa_temp; not supported by 9704?
     int8_t boardTemp;
 } jsprHwInfo_t;
 

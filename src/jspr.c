@@ -59,8 +59,8 @@ bool receiveJspr(jsprResponse_t * response, const char * expectedTarget)
                 bytesRead = context.serialRead(&jsprRxBuffer[pos], 1);
                 if (bytesRead <= 0)
                 {
-                    return received; //make function non-blocking
-                    //break;
+                    reading = false; //make function non-blocking
+                    break;
                 }
                 if (jsprRxBuffer[pos] == '\r' && pos > 2)
                 {
@@ -502,7 +502,7 @@ bool parseJsprPutMessageOriginate(char * jsprString, jsprMessageOriginate_t  * m
             cJSON * topicId = cJSON_GetObjectItem(root, "topic_id");
             if(cJSON_IsNumber(topicId))
             {
-                if(topicId->valueint >= 64 && topicId->valueint <= 65535) //valid range
+                if(topicId->valueint >= 64 && topicId->valueint <= 65535)
                 {
                     messageOriginate->topic = topicId->valueint;
                 }
@@ -510,7 +510,7 @@ bool parseJsprPutMessageOriginate(char * jsprString, jsprMessageOriginate_t  * m
             cJSON * requestReference = cJSON_GetObjectItem(root, "request_reference");
             if(cJSON_IsNumber(requestReference))
             {
-                if(requestReference->valueint >= 1 && requestReference->valueint <= 100) //valid range
+                if(requestReference->valueint >= 1 && requestReference->valueint <= 100)
                 {
                     messageOriginate->requestReference = requestReference->valueint;
                 }
@@ -537,7 +537,7 @@ bool parseJsprPutMessageOriginate(char * jsprString, jsprMessageOriginate_t  * m
                 cJSON * messageId = cJSON_GetObjectItem(root, "message_id");
                 if(cJSON_IsNumber(messageId))
                 {
-                    if(messageId->valueint >= 0 && messageId->valueint <= 255) //valid range
+                    if(messageId->valueint >= 0 && messageId->valueint <= 255)
                     {
                         messageOriginate->messageId = messageId->valueint;
                         messageOriginate->messageIdSet = true;
@@ -563,7 +563,7 @@ bool parseJsprUnsMessageOriginateSegment(char * jsprString, jsprMessageOriginate
             cJSON * topicId = cJSON_GetObjectItem(root, "topic_id");
             if(cJSON_IsNumber(topicId))
             {
-                if(topicId->valueint >= 64 && topicId->valueint <= 65535) //valid range
+                if(topicId->valueint >= 64 && topicId->valueint <= 65535)
                 {
                     messageOriginateSegment->topic = topicId->valueint;
                 }
@@ -571,7 +571,7 @@ bool parseJsprUnsMessageOriginateSegment(char * jsprString, jsprMessageOriginate
             cJSON * segmentLength = cJSON_GetObjectItem(root, "segment_length");
             if(cJSON_IsNumber(segmentLength))
             {
-                if(segmentLength->valueint >= 1 && segmentLength->valueint <= 1446) //valid range
+                if(segmentLength->valueint >= 1 && segmentLength->valueint <= 1446)
                 {
                     messageOriginateSegment->segmentLength = segmentLength->valueint;
                 }
@@ -579,7 +579,7 @@ bool parseJsprUnsMessageOriginateSegment(char * jsprString, jsprMessageOriginate
             cJSON * segmentStart = cJSON_GetObjectItem(root, "segment_start");
             if(cJSON_IsNumber(segmentStart))
             {
-                if(segmentStart->valueint >= 0 && segmentStart->valueint <= 100001) //valid range
+                if(segmentStart->valueint >= 0 && segmentStart->valueint <= 100001)
                 {
                     messageOriginateSegment->segmentStart = segmentStart->valueint;
                 }
@@ -587,7 +587,7 @@ bool parseJsprUnsMessageOriginateSegment(char * jsprString, jsprMessageOriginate
             cJSON * messageId = cJSON_GetObjectItem(root, "message_id");
             if(cJSON_IsNumber(messageId))
             {
-                if(messageId->valueint >= 0 && messageId->valueint <= 255) //valid range
+                if(messageId->valueint >= 0 && messageId->valueint <= 255)
                 {
                     messageOriginateSegment->messageId = messageId->valueint;
                 }
@@ -611,7 +611,7 @@ bool parseJsprUnsMessageTerminate(char * jsprString, jsprMessageTerminate_t * me
             cJSON * topicId = cJSON_GetObjectItem(root, "topic_id");
             if(cJSON_IsNumber(topicId))
             {
-                if(topicId->valueint >= 64 && topicId->valueint <= 65535) //valid range
+                if(topicId->valueint >= 64 && topicId->valueint <= 65535)
                 {
                     messageTerminate->topic = topicId->valueint;
                 }
@@ -619,7 +619,7 @@ bool parseJsprUnsMessageTerminate(char * jsprString, jsprMessageTerminate_t * me
             cJSON * messageLengthMax = cJSON_GetObjectItem(root, "message_length_max");
             if(cJSON_IsNumber(messageLengthMax))
             {
-                if(messageLengthMax->valueint >= 0 && messageLengthMax->valueint <= 100001) //valid range
+                if(messageLengthMax->valueint >= 0 && messageLengthMax->valueint <= 100001)
                 {
                     messageTerminate->messageLengthMax = messageLengthMax->valueint;
                 }
@@ -627,7 +627,7 @@ bool parseJsprUnsMessageTerminate(char * jsprString, jsprMessageTerminate_t * me
             cJSON * messageId = cJSON_GetObjectItem(root, "message_id");
             if(cJSON_IsNumber(messageId))
             {
-                if(messageId->valueint >= 0 && messageId->valueint <= 255) //valid range
+                if(messageId->valueint >= 0 && messageId->valueint <= 255)
                 {
                     messageTerminate->messageId = messageId->valueint;
                 }
@@ -651,7 +651,7 @@ bool parseJsprUnsMessageTerminateSegment(char * jsprString, jsprMessageTerminate
             cJSON * topicId = cJSON_GetObjectItem(root, "topic_id");
             if(cJSON_IsNumber(topicId))
             {
-                if(topicId->valueint >= 64 && topicId->valueint <= 65535) //valid range
+                if(topicId->valueint >= 64 && topicId->valueint <= 65535)
                 {
                     messageTerminateSegment->topic = topicId->valueint;
                 }
@@ -659,7 +659,7 @@ bool parseJsprUnsMessageTerminateSegment(char * jsprString, jsprMessageTerminate
             cJSON * segmentLength = cJSON_GetObjectItem(root, "segment_length");
             if(cJSON_IsNumber(segmentLength))
             {
-                if(segmentLength->valueint >= 1 && segmentLength->valueint <= 1446) //valid range
+                if(segmentLength->valueint >= 1 && segmentLength->valueint <= 1446)
                 {
                     messageTerminateSegment->segmentLength = segmentLength->valueint;
                 }
@@ -667,7 +667,7 @@ bool parseJsprUnsMessageTerminateSegment(char * jsprString, jsprMessageTerminate
             cJSON * segmentStart = cJSON_GetObjectItem(root, "segment_start");
             if(cJSON_IsNumber(segmentStart))
             {
-                if(segmentStart->valueint >= 0 && segmentStart->valueint <= 100001) //valid range
+                if(segmentStart->valueint >= 0 && segmentStart->valueint <= 100001)
                 {
                     messageTerminateSegment->segmentStart = segmentStart->valueint;
                 }
@@ -675,7 +675,7 @@ bool parseJsprUnsMessageTerminateSegment(char * jsprString, jsprMessageTerminate
             cJSON * messageId = cJSON_GetObjectItem(root, "message_id");
             if(cJSON_IsNumber(messageId))
             {
-                if(messageId->valueint >= 0 && messageId->valueint <= 255) //valid range
+                if(messageId->valueint >= 0 && messageId->valueint <= 255)
                 {
                     messageTerminateSegment->messageId = messageId->valueint;
                 }
@@ -719,7 +719,7 @@ bool parseJsprGetSignal(char * jsprString, jsprConstellationState_t * signal)
             cJSON * signalBars = cJSON_GetObjectItem(root, "signal_bars");
             if(cJSON_IsNumber(signalBars))
             {
-                if(signalBars->valueint >= 0 && signalBars->valueint <= 5) //valid range
+                if(signalBars->valueint >= 0 && signalBars->valueint <= 5)
                 {
                     signal->signalBars = signalBars->valueint;
                 }
@@ -743,7 +743,7 @@ bool parseJsprUnsMessageOriginateStatus(char * jsprString, jsprMessageOriginateS
             cJSON * topicId = cJSON_GetObjectItem(root, "topic_id");
             if(cJSON_IsNumber(topicId))
             {
-                if(topicId->valueint >= 64 && topicId->valueint <= 65535) //valid range
+                if(topicId->valueint >= 64 && topicId->valueint <= 65535)
                 {
                     messageOriginateStatus->topic = topicId->valueint;
                 }
@@ -751,7 +751,7 @@ bool parseJsprUnsMessageOriginateStatus(char * jsprString, jsprMessageOriginateS
             cJSON * messageId = cJSON_GetObjectItem(root, "message_id");
             if(cJSON_IsNumber(messageId))
             {
-                if(messageId->valueint >= 0 && messageId->valueint <= 255) //valid range
+                if(messageId->valueint >= 0 && messageId->valueint <= 255)
                 {
                     messageOriginateStatus->messageId = messageId->valueint;
                 }
@@ -835,7 +835,7 @@ bool parseJsprUnsMessageTerminateStatus(char * jsprString, jsprMessageTerminateS
             cJSON * topicId = cJSON_GetObjectItem(root, "topic_id");
             if(cJSON_IsNumber(topicId))
             {
-                if(topicId->valueint >= 64 && topicId->valueint <= 65535) //valid range
+                if(topicId->valueint >= 64 && topicId->valueint <= 65535)
                 {
                     messageTerminateStatus->topic = topicId->valueint;
                 }
@@ -843,7 +843,7 @@ bool parseJsprUnsMessageTerminateStatus(char * jsprString, jsprMessageTerminateS
             cJSON * messageId = cJSON_GetObjectItem(root, "message_id");
             if(cJSON_IsNumber(messageId))
             {
-                if(messageId->valueint >= 0 && messageId->valueint <= 255) //valid range
+                if(messageId->valueint >= 0 && messageId->valueint <= 255)
                 {
                     messageTerminateStatus->messageId = messageId->valueint;
                 }
@@ -897,7 +897,7 @@ bool parseJsprGetMessageProvisioning(char * jsprString, jsprMessageProvisioning_
                         cJSON * topicId = cJSON_GetObjectItem(topic, "topic_id");
                         if(cJSON_IsNumber(topicId))
                         {
-                            if(topicId->valueint >= 64 && topicId->valueint <= 65535) //valid range
+                            if(topicId->valueint >= 64 && topicId->valueint <= 65535)
                             {
                                 messageProvisioning->provisioning[i].topicId = topicId->valueint;
                             }
@@ -905,7 +905,7 @@ bool parseJsprGetMessageProvisioning(char * jsprString, jsprMessageProvisioning_
                         cJSON * topicName = cJSON_GetObjectItem(topic, "topic_name");
                         if(cJSON_IsString(topicName))
                         {
-                            if(strlen(topicName->valuestring) <= JSPR_TOPIC_NAME_MAX_LENGTH) //valid range
+                            if(strlen(topicName->valuestring) <= JSPR_TOPIC_NAME_MAX_LENGTH)
                             {
                                 memset(messageProvisioning->provisioning[i].topicName, 0, JSPR_TOPIC_NAME_MAX_LENGTH);
                                 memcpy(messageProvisioning->provisioning[i].topicName, topicName->valuestring, strlen(topicName->valuestring));
