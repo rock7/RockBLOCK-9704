@@ -8,7 +8,7 @@ readme = "README.rst"
 [project.urls]
 About = "https://www.groundcontrol.com/product/rockblock-9704/"
 Docs = "https://docs.groundcontrol.com/iot/rockblock-9704"
-Examples = "https://github.com/rock7/RockBLOCK-9704/tree/master/examples"
+Examples = "https://github.com/rock7/RockBLOCK-9704/tree/master/examples/python"
 
 [tool.cibuildwheel]
 build = "cp38* cp39* cp31*"
