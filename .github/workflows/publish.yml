@@ -11,7 +11,6 @@ jobs:
       name: Release
       url: https://pypi.org/p/rockblock9704
     permissions:
-      contents: read
       id-token: write
 
     steps:
