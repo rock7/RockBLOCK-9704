@@ -24,4 +24,5 @@ jobs:
     needs: release
     permissions:
       id-token: write
+      contents: read
     uses: './.github/workflows/publish.yml'
