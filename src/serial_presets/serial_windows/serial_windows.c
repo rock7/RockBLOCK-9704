@@ -81,7 +81,17 @@ bool configurePortWindows()
 
         if (SetCommState(serialConnection, &dcbSerialParams))
         {
-            configured = true;
+            COMMTIMEOUTS cto;
+            if(GetCommTimeouts(serialConnection, &cto))
+            {
+                cto.ReadIntervalTimeout = 0;
+                cto.ReadTotalTimeoutConstant = 500;
+                cto.ReadTotalTimeoutMultiplier = 0;
+                if(SetCommTimeouts(serialConnection, &cto))
+                {
+                    configured = true;
+                }
+            }
         }
         else
         {
