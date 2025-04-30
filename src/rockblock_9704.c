@@ -972,7 +972,7 @@ bool updateFirmware (const char * firmwareFile, updateProgressCallback progress)
     if (kermitDone == true)
     {
         // Wait for 299 bootInfo
-        if (waitForJsprMessage(&response, "bootInfo", JSPR_RC_NO_ERROR, 10) == true)
+        if (waitForJsprMessage(&response, "bootInfo", JSPR_RC_UNSOLICITED_MESSAGE, 10) == true)
         {
             firmwareUpdated = parseJsprBootInfo(response.json, &bootInfo);
             setApi(); // Set the API so it is possible to command JSPR after
