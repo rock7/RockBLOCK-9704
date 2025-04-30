@@ -26,8 +26,8 @@ Further documentation for hardware and specifications can be found on our docume
   - [🥧 Raspberry Pi](#-raspberry-pi)
   - [🤖 Arduino](#-arduino)
 - [🔌 Hardware Setup](#-hardware-setup)
-- [📚 Quick-start your own project](#-quick-start-your-own-project)
-  - [🪜 Quick-start step-by-step guide](#-quick-start-step-by-step-guide)
+- [📚 Kick-start your own project](#-kick-start-your-own-project)
+  - [🪜 Kick-start step-by-step guide](#-kick-start-step-by-step-guide)
   - [⚙️ Example `CMakeLists.txt`](#%EF%B8%8F-example-cmakeliststxt)
 - [❓ Frequently Imagined Questions (FIQ)](#-frequently-imagined-questions-fiq)
 - [⚖️ License](#%EF%B8%8F-license)
@@ -326,7 +326,7 @@ const rbGpioTable_t customGpioTable =
 
 ---
 
-## 📚 Quick-start your own project
+## 📚 Kick-start your own project
 
 **Dependencies:**
 
@@ -336,7 +336,7 @@ For dependencies refer to your specific target under the [🛠️ Building from 
 
 These steps will assume you have created a blank repository using git.
 
-### 🪜 Quick-start step-by-step guide
+### 🪜 Kick-start step-by-step guide
 1. In your blank repository, add this library as a submodule:
 ```
 git submodule add https://github.com/rock7/RockBLOCK-9704.git
