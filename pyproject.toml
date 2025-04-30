@@ -1,6 +1,6 @@
 [project]
 name="rockblock9704"
-version="0.1.15"
+version="0.1.16"
 requires-python=">=3.8"
 description="RockBLOCK 9704 serial tools"
 readme = "README.rst"
