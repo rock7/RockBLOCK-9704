@@ -17,8 +17,14 @@ extern "C" {
 
     char * stpncpy (char * dst, const char * src, size_t len);
 
-#endif
+    unsigned long millis(void);
+    void delay(uint32_t ms);
+#elif defined(__linux__) || defined(__APPLE__)
+    #include <stdint.h>
 
+    unsigned long millis(void);
+    void delay(uint32_t ms);
+#endif
 
 #ifdef __cplusplus
 }

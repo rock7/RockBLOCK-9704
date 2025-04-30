@@ -137,6 +137,34 @@ bool receiveJspr(jsprResponse_t * response, const char * expectedTarget)
     }
 }
 
+bool waitForJsprMessage(jsprResponse_t * response, const char * expectedTarget, const uint32_t expectedCode, const uint32_t timeoutSeconds)
+{
+    bool gotMessage = false;
+    unsigned long startTime = millis();
+
+    while (1)
+    {
+        receiveJspr(response, expectedTarget);
+
+        if (response->code == expectedCode &&
+            strncmp(response->target, expectedTarget, JSPR_MAX_TARGET_LENGTH) == 0)
+        {
+            gotMessage = true;
+            break;
+        }
+
+        if ((millis() - startTime) > timeoutSeconds * 1000)
+        {
+            gotMessage = false;
+            break;
+        }
+
+        delay(10);
+    }
+
+    return gotMessage;
+}
+
 void clearResponse(jsprResponse_t * response)
 {
     response->code = 0;

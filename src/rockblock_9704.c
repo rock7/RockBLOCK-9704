@@ -853,22 +853,24 @@ bool updateFirmware (const char * firmwareFile, updateProgressCallback progress)
 
     if(jsprGetOperationalState())
     {
-        if(receiveJspr(&response, "operationalState"))
+        // Wait for 200 Operational State
+        if (waitForJsprMessage(&response, "operationalState", JSPR_RC_NO_ERROR, 1) == true)
         {
-            if(JSPR_RC_NO_ERROR == response.code)
+            parseJsprGetOperationalState(response.json, &state);
+            if (state.operationalState != INACTIVE)
             {
-                parseJsprGetOperationalState(response.json, &state);
-                if (state.operationalState != INACTIVE)
+                putOperationalState(INACTIVE);
+                // Look for 299 Operational State, this indicates it is actually inactive
+                if (waitForJsprMessage(&response, "operationalState", JSPR_RC_UNSOLICITED_MESSAGE, 1) == true)
                 {
-                    putOperationalState(INACTIVE);
-                    receiveJspr(&response, "operationalState");
                     parseJsprGetOperationalState(response.json, &state);
-                }
-
-                if (state.operationalStateSet == true)
-                {
                     isInactive = state.operationalState == INACTIVE;
                 }
+            }
+
+            if (state.operationalStateSet == true)
+            {
+                isInactive = state.operationalState == INACTIVE;
             }
         }
     }
@@ -890,11 +892,8 @@ bool updateFirmware (const char * firmwareFile, updateProgressCallback progress)
     if (isInKermitMode == true)
     {;
         kermit_io_init_string();
-#ifdef ARDUINO
+
         delay(1000);
-#else
-        usleep(100000);
-#endif
 
         kermitData.xfermode = 0;                                         /* Automatic Mode  */
         kermitData.remote = 0;                                           /* Local */
@@ -972,15 +971,12 @@ bool updateFirmware (const char * firmwareFile, updateProgressCallback progress)
 
     if (kermitDone == true)
     {
-        // Look for bootInfo
-        do
+        // Wait for 299 bootInfo
+        if (waitForJsprMessage(&response, "bootInfo", JSPR_RC_NO_ERROR, 10) == true)
         {
-            receiveJspr(&response, "bootInfo");
-        } while ((JSPR_RC_UNSOLICITED_MESSAGE != response.code) &&
-                 (strncmp(response.target, "bootInfo", JSPR_MAX_TARGET_LENGTH) != 0));
-
-        firmwareUpdated = parseJsprBootInfo(response.json, &bootInfo);
-        setApi(); // Set the API so it is possible to command JSPR after
+            firmwareUpdated = parseJsprBootInfo(response.json, &bootInfo);
+            setApi(); // Set the API so it is possible to command JSPR after
+        }
     }
 
     return firmwareUpdated;

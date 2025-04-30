@@ -288,6 +288,7 @@ typedef struct
 //internal functions
 int sendJspr(const char * buffer, size_t length);
 bool receiveJspr(jsprResponse_t * response, const char * expectedTarget);
+bool waitForJsprMessage(jsprResponse_t * response, const char * expectedTarget, const uint32_t expectedCode, const uint32_t timeoutSeconds);
 void clearResponse(jsprResponse_t * response);
 bool parseJsprBootInfo(const char * jsprString, jsprBootInfo_t * bootInfo);
 bool parseJsprGetApiVersion(char * jsprString, jsprApiVersion_t * apiVersion);
