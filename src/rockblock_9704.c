@@ -186,13 +186,11 @@ static bool setSim(void)
                     {
                         parseJsprGetSimInterface(response.json, &simInterface);
 
-                        // Wait for simStatus to come back
-                        do
+                        // Wait for unsolicited simStatus to come back
+                        if (waitForJsprMessage(&response, "simStatus", JSPR_RC_UNSOLICITED_MESSAGE, 1) == true)
                         {
-                            receiveJspr(&response, "simStatus");
-                        } while ((JSPR_RC_UNSOLICITED_MESSAGE != response.code) &&
-                                 (strncmp(response.target, "simStatus", JSPR_MAX_TARGET_LENGTH) != 0));
-                        set = true;
+                            set = true;
+                        }
                     }
                 }
                 else if (JSPR_RC_NO_ERROR == response.code && simInterface.iface == INTERNAL)
