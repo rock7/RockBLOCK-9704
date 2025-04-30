@@ -186,13 +186,11 @@ static bool setSim(void)
                     {
                         parseJsprGetSimInterface(response.json, &simInterface);
 
-                        // Wait for simStatus to come back
-                        do
+                        // Wait for unsolicited simStatus to come back
+                        if (waitForJsprMessage(&response, "simStatus", JSPR_RC_UNSOLICITED_MESSAGE, 1) == true)
                         {
-                            receiveJspr(&response, "simStatus");
-                        } while ((JSPR_RC_UNSOLICITED_MESSAGE != response.code) &&
-                                 (strncmp(response.target, "simStatus", JSPR_MAX_TARGET_LENGTH) != 0));
-                        set = true;
+                            set = true;
+                        }
                     }
                 }
                 else if (JSPR_RC_NO_ERROR == response.code && simInterface.iface == INTERNAL)
@@ -853,22 +851,24 @@ bool updateFirmware (const char * firmwareFile, updateProgressCallback progress)
 
     if(jsprGetOperationalState())
     {
-        if(receiveJspr(&response, "operationalState"))
+        // Wait for 200 Operational State
+        if (waitForJsprMessage(&response, "operationalState", JSPR_RC_NO_ERROR, 1) == true)
         {
-            if(JSPR_RC_NO_ERROR == response.code)
+            parseJsprGetOperationalState(response.json, &state);
+            if (state.operationalState != INACTIVE)
             {
-                parseJsprGetOperationalState(response.json, &state);
-                if (state.operationalState != INACTIVE)
+                putOperationalState(INACTIVE);
+                // Look for 299 Operational State, this indicates it is actually inactive
+                if (waitForJsprMessage(&response, "operationalState", JSPR_RC_UNSOLICITED_MESSAGE, 1) == true)
                 {
-                    putOperationalState(INACTIVE);
-                    receiveJspr(&response, "operationalState");
                     parseJsprGetOperationalState(response.json, &state);
-                }
-
-                if (state.operationalStateSet == true)
-                {
                     isInactive = state.operationalState == INACTIVE;
                 }
+            }
+
+            if (state.operationalStateSet == true)
+            {
+                isInactive = state.operationalState == INACTIVE;
             }
         }
     }
@@ -890,11 +890,8 @@ bool updateFirmware (const char * firmwareFile, updateProgressCallback progress)
     if (isInKermitMode == true)
     {;
         kermit_io_init_string();
-#ifdef ARDUINO
+
         delay(1000);
-#else
-        usleep(100000);
-#endif
 
         kermitData.xfermode = 0;                                         /* Automatic Mode  */
         kermitData.remote = 0;                                           /* Local */
@@ -972,15 +969,11 @@ bool updateFirmware (const char * firmwareFile, updateProgressCallback progress)
 
     if (kermitDone == true)
     {
-        // Look for bootInfo
-        do
-        {
-            receiveJspr(&response, "bootInfo");
-        } while ((JSPR_RC_UNSOLICITED_MESSAGE != response.code) &&
-                 (strncmp(response.target, "bootInfo", JSPR_MAX_TARGET_LENGTH) != 0));
-
-        firmwareUpdated = parseJsprBootInfo(response.json, &bootInfo);
-        setApi(); // Set the API so it is possible to command JSPR after
+        // Since board revision 2 (note that board revision 1 was never publicly available)
+        // When kermit is done, the 9704 modem will reboot, as a result the USB
+        // serial driver will disabled then re-enable, so we will need to re-enable
+        // the library for the new usb port, it might be different.
+        firmwareUpdated = true;
     }
 
     return firmwareUpdated;

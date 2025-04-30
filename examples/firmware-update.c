@@ -153,7 +153,7 @@ int main(int argc, char * argv[])
 
             if (updateFirmware (_firmwareFile, progressCallback) == true)
             {
-                printf("Successfully update the firmware to %s\n", getFirmwareVersion());
+                printf("Successfully update the firmware, wait for the RockBLOCK 9704 to reboot\n");
             }
             else
             {
