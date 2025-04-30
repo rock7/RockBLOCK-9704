@@ -8,6 +8,7 @@ extern "C" {
 #if defined(_WIN32)
     #include <windows.h>
     #include <string.h>
+    #include <stdint.h>
 
     #ifndef PATH_MAX
         #define PATH_MAX MAX_PATH
