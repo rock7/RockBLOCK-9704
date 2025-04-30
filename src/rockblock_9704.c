@@ -969,12 +969,11 @@ bool updateFirmware (const char * firmwareFile, updateProgressCallback progress)
 
     if (kermitDone == true)
     {
-        // Wait for 299 bootInfo
-        if (waitForJsprMessage(&response, "bootInfo", JSPR_RC_UNSOLICITED_MESSAGE, 10) == true)
-        {
-            firmwareUpdated = parseJsprBootInfo(response.json, &bootInfo);
-            setApi(); // Set the API so it is possible to command JSPR after
-        }
+        // Since board revision 2 (note that board revision 1 was never publicly available)
+        // When kermit is done, the 9704 modem will reboot, as a result the USB
+        // serial driver will disabled then re-enable, so we will need to re-enable
+        // the library for the new usb port, it might be different.
+        firmwareUpdated = true;
     }
 
     return firmwareUpdated;
