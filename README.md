@@ -15,6 +15,7 @@ Further documentation for hardware and specifications can be found on our docume
 
 - [📖 About](#-about)
 - [🚀 Quick Start](#-quick-start)
+  - [📜 High Level API Calls](#-high-level-api-calls)
   - [Simple Send/Receive Example](#simple-sendreceive-example)
 - [💡 Examples](#-examples)
 - [🛠️ Building from Source](#%EF%B8%8F-building-from-source)
@@ -41,11 +42,11 @@ This project provides easy-to-use C and Python libraries to send and receive dat
 - **Supports** Linux, macOS, Windows, Raspberry Pi, Arduino
 - **Available on PyPI** for easy Python installation: [rockblock9704](https://pypi.org/project/rockblock9704/)
 
-### 📜 Function List
-
-The high level API functions can be seen in the generated Doxygen documentation [here](https://rock7.github.io/RockBLOCK-9704/) or the `rockblock_9704.h` header file.
-
 ---
+
+### 📜 High Level API Calls
+
+The high level API calls can be seen in the generated Doxygen documentation [here](https://rock7.github.io/RockBLOCK-9704/) or the `rockblock_9704.h` header file.
 
 ## 🚀 Quick Start
 
@@ -102,7 +103,7 @@ int main(void)
 ```bash
 linux@laptop:~/Documents/RockBLOCK-9704/build$ ./simpleSendReceive
 Sent message: Ground Control to Major Tom...
-Received message: Major Tom to Ground Control...
+Received message: Ground Control to Major Tom...
 Ended connection successfully
 ```
 
