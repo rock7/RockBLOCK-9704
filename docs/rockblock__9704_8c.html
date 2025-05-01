@@ -188,9 +188,9 @@ Functions</h2></td></tr>
 <tr class="separator:a2b48c4a73a4301f31da944cabb14f5dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4383e5f9960cc720f581cd18a765bb42" id="r_a4383e5f9960cc720f581cd18a765bb42"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a4383e5f9960cc720f581cd18a765bb42">checkProvisioning</a> (uint16_t topic)</td></tr>
 <tr class="separator:a4383e5f9960cc720f581cd18a765bb42"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f7c38381d6bca5ae32b863b1acee9c2" id="r_a1f7c38381d6bca5ae32b863b1acee9c2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a1f7c38381d6bca5ae32b863b1acee9c2">updateFirmware</a> (const char *firmwareFile, <a class="el" href="rockblock__9704_8h.html#abca7b3065abe8137218f323c089c0da3">updateProgressCallback</a> progress)</td></tr>
-<tr class="memdesc:a1f7c38381d6bca5ae32b863b1acee9c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update 9704 firmware. This is a blocking call and will take approximately 10 minutes to upgrade, the updateProgressCallback is recommended.  <br /></td></tr>
-<tr class="separator:a1f7c38381d6bca5ae32b863b1acee9c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb5896c5d354942ccf5ca47b3ed801ee" id="r_abb5896c5d354942ccf5ca47b3ed801ee"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#abb5896c5d354942ccf5ca47b3ed801ee">updateFirmware</a> (const char *firmwareFile, <a class="el" href="rockblock__9704_8h.html#af8a784ef775cad6e0fcd0b8a249d8dc8">updateProgressCallback</a> progress, void *<a class="el" href="jspr_8c.html#aa38b725755619d237e2299c353eadedb">context</a>)</td></tr>
+<tr class="memdesc:abb5896c5d354942ccf5ca47b3ed801ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update 9704 firmware. This is a blocking call and will take approximately 10 minutes to upgrade, the updateProgressCallback is recommended.  <br /></td></tr>
+<tr class="separator:abb5896c5d354942ccf5ca47b3ed801ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -1230,8 +1230,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a1f7c38381d6bca5ae32b863b1acee9c2" name="a1f7c38381d6bca5ae32b863b1acee9c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1f7c38381d6bca5ae32b863b1acee9c2">&#9670;&#160;</a></span>updateFirmware()</h2>
+<a id="abb5896c5d354942ccf5ca47b3ed801ee" name="abb5896c5d354942ccf5ca47b3ed801ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb5896c5d354942ccf5ca47b3ed801ee">&#9670;&#160;</a></span>updateFirmware()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1245,8 +1245,14 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="rockblock__9704_8h.html#abca7b3065abe8137218f323c089c0da3">updateProgressCallback</a>&#160;</td>
-          <td class="paramname"><em>progress</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="rockblock__9704_8h.html#af8a784ef775cad6e0fcd0b8a249d8dc8">updateProgressCallback</a>&#160;</td>
+          <td class="paramname"><em>progress</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>context</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1261,6 +1267,7 @@ Variables</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">firmwareFile</td><td>path to the sxbin firmware files from Iridium </td></tr>
     <tr><td class="paramname">progress</td><td>pointer to the update progress callback, this can be NULL. </td></tr>
+    <tr><td class="paramname">context</td><td>pointer to to some shared memory to pass to progress, this can be NULL. </td></tr>
   </table>
   </dd>
 </dl>

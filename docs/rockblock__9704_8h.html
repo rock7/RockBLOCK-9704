@@ -117,9 +117,9 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:abca7b3065abe8137218f323c089c0da3" id="r_abca7b3065abe8137218f323c089c0da3"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8h.html#abca7b3065abe8137218f323c089c0da3">updateProgressCallback</a>) (const unsigned long sofar, const unsigned long total)</td></tr>
-<tr class="memdesc:abca7b3065abe8137218f323c089c0da3"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callback definition for the kermit transfer.  <br /></td></tr>
-<tr class="separator:abca7b3065abe8137218f323c089c0da3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8a784ef775cad6e0fcd0b8a249d8dc8" id="r_af8a784ef775cad6e0fcd0b8a249d8dc8"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8h.html#af8a784ef775cad6e0fcd0b8a249d8dc8">updateProgressCallback</a>) (void *<a class="el" href="jspr_8c.html#aa38b725755619d237e2299c353eadedb">context</a>, const unsigned long sofar, const unsigned long total)</td></tr>
+<tr class="memdesc:af8a784ef775cad6e0fcd0b8a249d8dc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callback definition for the kermit transfer.  <br /></td></tr>
+<tr class="separator:af8a784ef775cad6e0fcd0b8a249d8dc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -186,9 +186,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a21a618591808502901dce8b3b2f15a73" id="r_a21a618591808502901dce8b3b2f15a73"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8h.html#a21a618591808502901dce8b3b2f15a73">getFirmwareVersion</a> (void)</td></tr>
 <tr class="memdesc:a21a618591808502901dce8b3b2f15a73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the Iridium modem firmware version as vX.Y.X with X being the major number, Y being the minor number and X being the patch number.  <br /></td></tr>
 <tr class="separator:a21a618591808502901dce8b3b2f15a73"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f7c38381d6bca5ae32b863b1acee9c2" id="r_a1f7c38381d6bca5ae32b863b1acee9c2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8h.html#a1f7c38381d6bca5ae32b863b1acee9c2">updateFirmware</a> (const char *firmwareFile, <a class="el" href="rockblock__9704_8h.html#abca7b3065abe8137218f323c089c0da3">updateProgressCallback</a> progress)</td></tr>
-<tr class="memdesc:a1f7c38381d6bca5ae32b863b1acee9c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update 9704 firmware. This is a blocking call and will take approximately 10 minutes to upgrade, the updateProgressCallback is recommended.  <br /></td></tr>
-<tr class="separator:a1f7c38381d6bca5ae32b863b1acee9c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb5896c5d354942ccf5ca47b3ed801ee" id="r_abb5896c5d354942ccf5ca47b3ed801ee"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8h.html#abb5896c5d354942ccf5ca47b3ed801ee">updateFirmware</a> (const char *firmwareFile, <a class="el" href="rockblock__9704_8h.html#af8a784ef775cad6e0fcd0b8a249d8dc8">updateProgressCallback</a> progress, void *<a class="el" href="jspr_8c.html#aa38b725755619d237e2299c353eadedb">context</a>)</td></tr>
+<tr class="memdesc:abb5896c5d354942ccf5ca47b3ed801ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update 9704 firmware. This is a blocking call and will take approximately 10 minutes to upgrade, the updateProgressCallback is recommended.  <br /></td></tr>
+<tr class="separator:abb5896c5d354942ccf5ca47b3ed801ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2d10808fdf6d5f0e8d0fcfd345010ee" id="r_ac2d10808fdf6d5f0e8d0fcfd345010ee"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8h.html#ac2d10808fdf6d5f0e8d0fcfd345010ee">rbBeginGpio</a> (char *port, const <a class="el" href="structrbGpioTable__t.html">rbGpioTable_t</a> *gpioInfo, const int timeout)</td></tr>
 <tr class="memdesc:ac2d10808fdf6d5f0e8d0fcfd345010ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Drives user defined pin (power enable) low and user defined pin (iridium enable) high to initialise the RB9704 PiHat. Initialise the serial connection in the detected context (or user defined), if successful continue to set the API, SIM &amp; state of the modem in order to be ready for messaging.  <br /></td></tr>
 <tr class="separator:ac2d10808fdf6d5f0e8d0fcfd345010ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -269,14 +269,14 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a id="abca7b3065abe8137218f323c089c0da3" name="abca7b3065abe8137218f323c089c0da3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abca7b3065abe8137218f323c089c0da3">&#9670;&#160;</a></span>updateProgressCallback</h2>
+<a id="af8a784ef775cad6e0fcd0b8a249d8dc8" name="af8a784ef775cad6e0fcd0b8a249d8dc8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8a784ef775cad6e0fcd0b8a249d8dc8">&#9670;&#160;</a></span>updateProgressCallback</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef void(* updateProgressCallback) (const unsigned long sofar, const unsigned long total)</td>
+          <td class="memname">typedef void(* updateProgressCallback) (void *<a class="el" href="jspr_8c.html#aa38b725755619d237e2299c353eadedb">context</a>, const unsigned long sofar, const unsigned long total)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -284,6 +284,7 @@ Functions</h2></td></tr>
 <p>A callback definition for the kermit transfer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramname">context</td><td>a pointer to some shared context given in updateFirmware. </td></tr>
     <tr><td class="paramname">sofar</td><td>the number of bytes transferred so far. </td></tr>
     <tr><td class="paramname">total</td><td>the total number of bytes to transfer. </td></tr>
   </table>
@@ -1344,8 +1345,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a1f7c38381d6bca5ae32b863b1acee9c2" name="a1f7c38381d6bca5ae32b863b1acee9c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1f7c38381d6bca5ae32b863b1acee9c2">&#9670;&#160;</a></span>updateFirmware()</h2>
+<a id="abb5896c5d354942ccf5ca47b3ed801ee" name="abb5896c5d354942ccf5ca47b3ed801ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb5896c5d354942ccf5ca47b3ed801ee">&#9670;&#160;</a></span>updateFirmware()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1359,8 +1360,14 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="rockblock__9704_8h.html#abca7b3065abe8137218f323c089c0da3">updateProgressCallback</a>&#160;</td>
-          <td class="paramname"><em>progress</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="rockblock__9704_8h.html#af8a784ef775cad6e0fcd0b8a249d8dc8">updateProgressCallback</a>&#160;</td>
+          <td class="paramname"><em>progress</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>context</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1375,6 +1382,7 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">firmwareFile</td><td>path to the sxbin firmware files from Iridium </td></tr>
     <tr><td class="paramname">progress</td><td>pointer to the update progress callback, this can be NULL. </td></tr>
+    <tr><td class="paramname">context</td><td>pointer to to some shared memory to pass to progress, this can be NULL. </td></tr>
   </table>
   </dd>
 </dl>

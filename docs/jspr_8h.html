@@ -312,6 +312,8 @@ Functions</h2></td></tr>
 <tr class="separator:afc8b2bb2a27ed113e3f82c3c621fa621"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0337c3cfcb899b998e8c95b968c933db" id="r_a0337c3cfcb899b998e8c95b968c933db"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="jspr_8h.html#a0337c3cfcb899b998e8c95b968c933db">receiveJspr</a> (<a class="el" href="structjsprResponse__t.html">jsprResponse_t</a> *response, const char *expectedTarget)</td></tr>
 <tr class="separator:a0337c3cfcb899b998e8c95b968c933db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3370838186900080b1aac15be9e0237c" id="r_a3370838186900080b1aac15be9e0237c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="jspr_8h.html#a3370838186900080b1aac15be9e0237c">waitForJsprMessage</a> (<a class="el" href="structjsprResponse__t.html">jsprResponse_t</a> *response, const char *expectedTarget, const uint32_t expectedCode, const uint32_t timeoutSeconds)</td></tr>
+<tr class="separator:a3370838186900080b1aac15be9e0237c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d0c1eba116c4baaf50252675634a9b1" id="r_a0d0c1eba116c4baaf50252675634a9b1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="jspr_8h.html#a0d0c1eba116c4baaf50252675634a9b1">clearResponse</a> (<a class="el" href="structjsprResponse__t.html">jsprResponse_t</a> *response)</td></tr>
 <tr class="separator:a0d0c1eba116c4baaf50252675634a9b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a91b3c252aae87547be74925f809bfe54" id="r_a91b3c252aae87547be74925f809bfe54"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="jspr_8h.html#a91b3c252aae87547be74925f809bfe54">parseJsprBootInfo</a> (const char *jsprString, <a class="el" href="structjsprBootInfo__t.html">jsprBootInfo_t</a> *bootInfo)</td></tr>
@@ -1314,6 +1316,46 @@ Functions</h2></td></tr>
           <td></td>
           <td class="paramtype">size_t&#160;</td>
           <td class="paramname"><em>length</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3370838186900080b1aac15be9e0237c" name="a3370838186900080b1aac15be9e0237c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3370838186900080b1aac15be9e0237c">&#9670;&#160;</a></span>waitForJsprMessage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool waitForJsprMessage </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structjsprResponse__t.html">jsprResponse_t</a> *&#160;</td>
+          <td class="paramname"><em>response</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>expectedTarget</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint32_t&#160;</td>
+          <td class="paramname"><em>expectedCode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint32_t&#160;</td>
+          <td class="paramname"><em>timeoutSeconds</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
