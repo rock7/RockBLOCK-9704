@@ -4,6 +4,9 @@
 PyAPI_FUNC(int)
 _PyArg_ParseTuple_SizeT(PyObject *args, const char *format, ...);
 
+PyAPI_FUNC(PyObject *)
+_Py_BuildValue_SizeT(const char *, ...);
+
 static PyObject *py_getSignal(PyObject *self, PyObject *args) {
 
     int result = getSignal();
@@ -200,7 +203,7 @@ static PyObject *py_receiveMessage(PyObject *self, PyObject *args) {
 
     if ((mtLength > 0) && (mtBuffer != NULL)) {
 
-        PyObject* res = Py_BuildValue("y#", mtBuffer, mtLength);
+        PyObject* res = _Py_BuildValue_SizeT("y#", mtBuffer, mtLength);
 
         return res;
 
@@ -226,7 +229,7 @@ static PyObject *py_receiveMessageWithTopic(PyObject *self, PyObject *args) {
 
     if ((mtLength > 0) && (mtBuffer != NULL)) {
 
-        PyObject* res = Py_BuildValue("y#", mtBuffer, mtLength);
+        PyObject* res = _Py_BuildValue_SizeT("y#", mtBuffer, mtLength);
 
         return res;
 
