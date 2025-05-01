@@ -63,8 +63,10 @@ static void signal_handler(int sig)
 #endif
 }
 
-static void progressCallback(const unsigned long sofar, const unsigned long total)
+static void progressCallback(void * context, const unsigned long sofar, const unsigned long total)
 {
+    (void)context;
+
     if ((sofar > 0 ) && (total > 0))
     {
         const float progress = (float)sofar / (float)total;
@@ -151,7 +153,7 @@ int main(int argc, char * argv[])
         {
             printf("Current Firmware Version: %s\n", getFirmwareVersion());
 
-            if (updateFirmware (_firmwareFile, progressCallback) == true)
+            if (updateFirmware (_firmwareFile, progressCallback, NULL) == true)
             {
                 printf("Successfully update the firmware, wait for the RockBLOCK 9704 to reboot\n");
             }

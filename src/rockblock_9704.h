@@ -209,12 +209,13 @@ char *  getFirmwareVersion(void);
 /**
  * @brief A callback definition for the kermit transfer
  * 
+ * @param context a pointer to some shared context given in updateFirmware.
  * @param sofar the number of bytes transferred so far.
  * @param total the total number of bytes to transfer.
  * @return void
  * * @note This is only defined if KERMIT was defined during the build.
  */
-typedef void(*updateProgressCallback)(const unsigned long sofar, const unsigned long total);
+typedef void(*updateProgressCallback)(void * context, const unsigned long sofar, const unsigned long total);
 
 /**
  * @brief Update 9704 firmware. This is a blocking call and will take approximately
@@ -222,10 +223,11 @@ typedef void(*updateProgressCallback)(const unsigned long sofar, const unsigned 
  * 
  * @param firmwareFile path to the sxbin firmware files from Iridium
  * @param progress pointer to the update progress callback, this can be NULL.
+ * @param context pointer to to some shared memory to pass to progress, this can be NULL.
  * @return bool true if the upgrade was successful.
  * * @note This is only defined if KERMIT was defined during the build.
  */
-bool updateFirmware (const char * firmwareFile, updateProgressCallback progress);
+bool updateFirmware (const char * firmwareFile, updateProgressCallback progress, void * context);
 #endif
 
 #ifdef RB_GPIO

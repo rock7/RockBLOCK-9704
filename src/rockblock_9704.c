@@ -822,12 +822,13 @@ struct k_response kermitResponse;
 int kermitStatus = 0;
 unsigned char i_buf[IBUFLEN+8];
 
-bool updateFirmware (const char * firmwareFile, updateProgressCallback progress)
+bool updateFirmware (const char * firmwareFile, updateProgressCallback progress, void * context)
 {
     const char * firmwareFileList[2] = {firmwareFile, NULL};
     unsigned char *inputBufferPtr = (unsigned char *)0; // E-Kermit doesn't like NULL
     short receiveSlot = 0;
     int kermitRxLength = 0;
+    void * contextPtr = context;
 
     jsprResponse_t response;
     jsprOperationalState_t state;
@@ -952,7 +953,7 @@ bool updateFirmware (const char * firmwareFile, updateProgressCallback progress)
                         case X_RC_OK:
                             if ((kermitResponse.status == S_DATA) && (progress != NULL))
                             {
-                                progress(kermitResponse.sofar, kermitResponse.filesize);
+                                progress(contextPtr, kermitResponse.sofar, kermitResponse.filesize);
                             }
                         break;
                         case X_RC_DONE:
