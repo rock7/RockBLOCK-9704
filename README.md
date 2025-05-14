@@ -26,9 +26,14 @@ Further documentation for hardware and specifications can be found on our docume
   - [🥧 Raspberry Pi](#-raspberry-pi)
   - [🤖 Arduino](#-arduino)
 - [🔌 Hardware Setup](#-hardware-setup)
-- [📚 Kick-start your own project](#-kick-start-your-own-project)
+- [📖 Kick-start your own project](#-kick-start-your-own-project)
   - [🪜 Kick-start step-by-step guide](#-kick-start-step-by-step-guide)
   - [⚙️ Example `CMakeLists.txt`](#%EF%B8%8F-example-cmakeliststxt)
+- [📚 Using the Library](#-using-the-library)
+  - [📡 Antenna Placement and Signal Quality](#-antenna-placement-and-signal-quality)
+  - [⚠️ Blocking Behavior](#%EF%B8%8F-blocking-behavior)
+  - [⬆️ Sending Mobile-Originated (MO) Messages](#%EF%B8%8F-sending-mobile-originated-mo-messages)
+  - [⬇️ Receiving Mobile-Terminated (MT) Messages](#%EF%B8%8F-receiving-mobile-terminated-mt-messages)
 - [❓ Frequently Imagined Questions (FIQ)](#-frequently-imagined-questions-fiq)
 - [⚖️ License](#%EF%B8%8F-license)
 
@@ -326,7 +331,7 @@ const rbGpioTable_t customGpioTable =
 
 ---
 
-## 📚 Kick-start your own project
+## 📖 Kick-start your own project
 
 **Dependencies:**
 
@@ -381,6 +386,49 @@ target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC ${RB9704_INCLUDES})
 target_link_libraries(${CMAKE_PROJECT_NAME} ${RB9704_LIB})
 
 ```
+
+---
+
+## 📚 Using the Library
+
+This library provides a simple blocking API for communicating with the RockBLOCK 9704 modem over serial. Here are some important considerations when integrating it into your application:
+
+### 📡 Antenna Placement and Signal Quality
+
+#### **Clear Sky Visibility Required**  
+  The RockBLOCK 9704 modem requires a **clear view of the sky** to reliably connect to Iridium satellites.
+
+#### **Before Communication**  
+  Always **check signal strength** before attempting to send or receive data. Poor placement (e.g., indoors, under cover, or near obstructions) can cause timeouts or message failures.
+
+#### **Recommended Practice**  
+  Ensure the antenna has **an unobstructed view of the sky** during operation to improve signal strength and reduce message latency.
+
+### ⚠️ Blocking Behavior
+
+#### **Synchronous Operations**  
+  The library is **not currently asynchronous**. All functions block until the modem responds or a timeout occurs.
+
+#### **Most Operations**  
+  Most API calls involve sending and receiving small command sequences over serial at **230400 baud**, and generally return quickly. Exceptions for sending and receiving messages explained below.
+
+### ⬆️ Sending Mobile-Originated (MO) Messages
+
+#### **Blocking Transmit**
+  Sending an full payload MO message (up to 100 kB + 2 B CRC) may take **around 2 minutes** under good conditions. In areas with **poor signal**, this could take longer. **Use timeouts of several minutes**, not seconds.
+
+  Only transmit when:
+  - You have good signal and a clear view of the sky
+  - You handle it in a way blocking does not impact your the main application flow.
+
+### ⬇️ Receiving Mobile-Terminated (MT) Messages
+
+#### **Non-Blocking Receive**
+  Calling the listen function will not block until a message is received, it can timeout listening for unsolicited MT message, so it is advised to wrap this call in receive loop/thread, refer to our examples showing this.
+
+  Only call listen when:
+  - You have good signal and a clear view of the sky
+  - You handle it in a way you keep calling it until you have a message.
 
 ---
 
