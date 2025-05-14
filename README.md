@@ -31,9 +31,9 @@ Further documentation for hardware and specifications can be found on our docume
   - [⚙️ Example `CMakeLists.txt`](#%EF%B8%8F-example-cmakeliststxt)
 - [📚 Using the Library](#-using-the-library)
   - [📡 Antenna Placement and Signal Quality](#-antenna-placement-and-signal-quality)
-  - [⚠️ Blocking Behavior](#-blocking-behavior)
-  - [⬆️ Sending Mobile-Originated (MO) Messages](#-sending-mobile-originated-mo-messages)
-  - [⬇️ Receiving Mobile-Terminated (MT) Messages](#-receving-mobile-terminated-mt-messages)
+  - [⚠️ Blocking Behavior](#%EF%B8%8F-blocking-behavior)
+  - [⬆️ Sending Mobile-Originated (MO) Messages](#%EF%B8%8F-sending-mobile-originated-mo-messages)
+  - [⬇️ Receiving Mobile-Terminated (MT) Messages](#%EF%B8%8F-receiving-mobile-terminated-mt-messages)
 - [❓ Frequently Imagined Questions (FIQ)](#-frequently-imagined-questions-fiq)
 - [⚖️ License](#%EF%B8%8F-license)
 
