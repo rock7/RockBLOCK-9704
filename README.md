@@ -271,11 +271,19 @@ make
 **Getting Started:**
 
 - Download [Arduino IDE](https://www.arduino.cc/en/software/)
-- Copy the library to `/Arduino/libraries`
-- Include it in your sketch:
+- Install `RockBLOCK-9704` from the IDE library manager
 
 ```cpp
 #include "rockblock_9704.h"
+```
+
+When using the Arduino send/receive [example](examples/ArduinoBasicSendandReceive/ArduinoBasicSendandReceive.ino) you may need to specify the GPIO pins to 
+be used by `Serial1`.
+
+e.g. if using pins 11 (Rx) and 12 (Tx)
+
+```cpp
+Serial1.begin(230400, SERIAL_8N1, D11, D12);
 ```
 
 **Notes:**
@@ -287,7 +295,7 @@ make
 
 - MKR 1010 (~5KB limit).
 - UNO R4 (~2KB limit).
-
+- NANO ESP32 (~5KB limit).
 ---
 
 ## 🔌 Hardware Setup
