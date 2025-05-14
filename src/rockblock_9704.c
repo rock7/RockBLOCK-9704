@@ -92,7 +92,7 @@ bool rbEndGpio(const rbGpioTable_t * gpioInfo)
 }
 #endif
 
-static const unsigned short CRC16Table[256] =
+static const uint16_t CRC16Table[256] =
 {
   0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50a5, 0x60c6, 0x70e7,
   0x8108, 0x9129, 0xa14a, 0xb16b, 0xc18c, 0xd1ad, 0xe1ce, 0xf1ef,
@@ -309,7 +309,7 @@ static size_t decodeData(const char * srcBuffer, const size_t srcLength, char * 
 static bool appendCrc(uint8_t * buffer, size_t length)
 {
     bool appended = false;
-    int crc = calculateCrc(buffer, length, 0);
+    uint16_t crc = calculateCrc(buffer, length, 0);
     if (crc > 0)
     {
         crcBuffer[0] = (crc >> 8) & 0xFFU;
@@ -752,22 +752,21 @@ char * getFirmwareVersion(void)
     return firmwareVersion;
 }
 
-static int calculateCrc(const void * buffer, int bufferLength, int initialCRC)
+static uint16_t calculateCrc(const uint8_t * buffer, const size_t bufferLength, const uint16_t initialCRC)
 {
-  int crc = initialCRC;
-
-  if (buffer != 0)
-  {
-    for (int i = 0; i < bufferLength; i++)
+    uint16_t crc = (uint16_t)initialCRC;
+    uint8_t data = 0;
+    size_t tableIndex = 0;
+    if (buffer != 0)
     {
-      unsigned char data = ((unsigned char *)buffer)[i];
-
-      int tableIndex = (((crc >> 8) ^ data) & 0xFF);
-      crc = (((crc << 8) ^ CRC16Table[tableIndex]) & 0xFFFF);
+        for (size_t i = 0; i < bufferLength; i++)
+        {
+            data = ((uint8_t *)buffer)[i];
+            tableIndex = (((crc >> 8) ^ data) & 0xFF);
+            crc = (((crc << 8) ^ CRC16Table[tableIndex]) & 0xFFFF);
+        }
     }
-  }
-
-  return (crc);
+    return (crc);
 }
 
 bool rbEnd(void)

@@ -250,7 +250,7 @@ bool rbBeginGpio(char * port, const rbGpioTable_t * gpioInfo, const int timeout)
 /**
  * @brief Drives user defined pin (power enable) high and another
  * user defined pin (iridium enable) low to deinitialise the RB9704
- * PiHat. Uninitialises/closes the the serial connection.
+ * PiHat. Deinitialises/closes the the serial connection.
  * 
  * @param gpioInfo structure containing a valid chip & pin for powerEnable, IridiumEnable and booted.
  * @return bool depicting success or failure.
@@ -264,9 +264,9 @@ bool rbEndGpio(const rbGpioTable_t * gpioInfo);
  * @param buffer Pointer to the data buffer.
  * @param bufferLength Length of the buffer in bytes.
  * @param initialCRC Initial CRC value to start from.
- * @return Calculated CRC as an integer.
+ * @return Calculated CRC as an uint16_t.
  */
-static int calculateCrc(const void * buffer, int bufferLength, int initialCRC);
+static uint16_t calculateCrc(const uint8_t * buffer, const size_t bufferLength, const uint16_t initialCRC);
 
 /**
  * @brief Append CRC to the end of a buffer.
