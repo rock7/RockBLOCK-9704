@@ -97,7 +97,7 @@ int main(int argc, char * argv[])
         {
             printf("Successfully started serial session with RB9704\r\n");
             //define structure and populate
-            char *hwVersion = getHwVersion();
+            char *hwVersion = rbGetHwVersion();
             if(hwVersion != NULL)
             {
                 printf("9704 Hardware Version: %s\r\n", hwVersion);
@@ -109,7 +109,7 @@ int main(int argc, char * argv[])
                 _run = false;
             }
 
-            char *serialNumber = getSerialNumber();
+            char *serialNumber = rbGetSerialNumber();
             if(serialNumber != NULL)
             {
                 printf("9704 Serial Number: %s\r\n", serialNumber);
@@ -121,7 +121,7 @@ int main(int argc, char * argv[])
                 _run = false;
             }
 
-            char *imei = getImei();
+            char *imei = rbGetImei();
             if(imei != NULL)
             {
                 printf("9704 Imei: %s\r\n", imei);
@@ -133,7 +133,7 @@ int main(int argc, char * argv[])
                 _run = false;
             }
 
-            int8_t boardTemp = getBoardTemp();
+            int8_t boardTemp = rbGetBoardTemp();
             if(boardTemp != -100)
             {
                 printf("9704 Board Temp: %d\r\n", boardTemp);
@@ -145,7 +145,7 @@ int main(int argc, char * argv[])
                 _run = false;
             }
 
-            bool cardPresent = getCardPresent();
+            bool cardPresent = rbGetCardPresent();
             if(cardPresent != false)
             {
                 printf("9704 card present: %s\r\n", cardPresent ? "true" : "false");
@@ -157,7 +157,7 @@ int main(int argc, char * argv[])
                 _run = false;
             }
 
-            bool simConnected = getSimConnected();
+            bool simConnected = rbGetSimConnected();
             if(simConnected != false)
             {
                 printf("9704 SIM connected: %s\r\n", simConnected ? "true" : "false");
@@ -169,7 +169,7 @@ int main(int argc, char * argv[])
                 _run = false;
             }
 
-            char *iccid = getIccid();
+            char *iccid = rbGetIccid();
             if(iccid != NULL)
             {
                 printf("9704 iccid: %s\r\n", iccid);

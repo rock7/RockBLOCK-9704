@@ -85,7 +85,7 @@ bool rbEnd(void);
  * @param timeout in seconds.
  * @return bool depicting success or failure.
  */
-bool sendMessage(const char * data, const size_t length, const int timeout);
+bool rbSendMessage(const char * data, const size_t length, const int timeout);
 
 /**
  * @brief Send a mobile originated message from the modem on a cloudloop topic of choice.
@@ -96,7 +96,7 @@ bool sendMessage(const char * data, const size_t length, const int timeout);
  * @param timeout in seconds.
  * @return bool depicting success or failure.
  */
-bool sendMessageCloudloop(cloudloopTopics_t topic, const char * data, const size_t length, const int timeout);
+bool rbSendMessageCloudloop(cloudloopTopics_t topic, const char * data, const size_t length, const int timeout);
 
 /**
  * @brief Send a mobile originated message from the modem on any topic.
@@ -107,7 +107,7 @@ bool sendMessageCloudloop(cloudloopTopics_t topic, const char * data, const size
  * @param timeout in seconds.
  * @return bool depicting success or failure.
  */
-bool sendMessageAny(uint16_t topic, const char * data, const size_t length, const int timeout);
+bool rbSendMessageAny(uint16_t topic, const char * data, const size_t length, const int timeout);
 
 /**
  * @brief Listen for a mobile terminated message from the modem.
@@ -119,7 +119,7 @@ bool sendMessageAny(uint16_t topic, const char * data, const size_t length, cons
  * it may be reused to store another MT. It must be copied if the application 
  * code needs to preserve it for a period of time.
  */
-size_t receiveMessage(char ** buffer);
+size_t rbReceiveMessage(char ** buffer);
 
 /**
  * @brief Listen for a mobile terminated message from the modem.
@@ -132,7 +132,7 @@ size_t receiveMessage(char ** buffer);
  * it may be reused to store another MT. It must be copied if the application 
  * code needs to preserve it for a period of time.
  */
-size_t receiveMessageWithTopic(char ** buffer, uint16_t topic);
+size_t rbReceiveMessageWithTopic(char ** buffer, uint16_t topic);
 
 /**
  * @brief Get the current signal strength from the modem.
@@ -146,35 +146,35 @@ size_t receiveMessageWithTopic(char ** buffer, uint16_t topic);
  *
  * @return int8_t Signal strength in bars (0–5), or -1 on error.
  */
-int8_t getSignal(void);
+int8_t rbGetSignal(void);
 
 /**
  * @brief Get the hardware version.
  * 
  * @return char pointer to hwVersion string.
  */
-char * getHwVersion(void);
+char * rbGetHwVersion(void);
 
 /**
  * @brief Get the serial number.
  * 
  * @return char pointer to serial number string.
  */
-char * getSerialNumber(void);
+char * rbGetSerialNumber(void);
 
 /**
  * @brief Get the imei.
  * 
  * @return char pointer to imei string.
  */
-char * getImei(void);
+char * rbGetImei(void);
 
 /**
  * @brief Get the board temperature.
  * 
  * @return int8_t of the current temperature (-100 on error).
  */
-int8_t getBoardTemp(void);
+int8_t rbGetBoardTemp(void);
 
 /**
  * @brief Check if SIM presence is currently asserted.
@@ -183,7 +183,7 @@ int8_t getBoardTemp(void);
  * * @note This function will return false either if it received
  * it from the modem or the function failed.
  */
-bool getCardPresent(void);
+bool rbGetCardPresent(void);
 
 /**
  * @brief Check if SIM card is present, communicating properly with,
@@ -194,14 +194,14 @@ bool getCardPresent(void);
  * * @note This function will return false either if it received
  * it from the modem or the function failed.
  */
-bool getSimConnected(void);
+bool rbGetSimConnected(void);
 
 /**
  * @brief Get the iccid.
  * 
  * @return char pointer to iccid string.
  */
-char * getIccid(void);
+char * rbGetIccid(void);
 
 /**
  * @brief Get the Iridium modem firmware version as vX.Y.X
@@ -210,13 +210,13 @@ char * getIccid(void);
  * 
  * @return char pointer to firmware version
  */
-char *  getFirmwareVersion(void);
+char *  rbGetFirmwareVersion(void);
 
 #if defined(KERMIT)
 /**
  * @brief A callback definition for the kermit transfer
  * 
- * @param context a pointer to some shared context given in updateFirmware.
+ * @param context a pointer to some shared context given in rbUpdateFirmware.
  * @param sofar the number of bytes transferred so far.
  * @param total the total number of bytes to transfer.
  * @return void
@@ -234,7 +234,7 @@ typedef void(*updateProgressCallback)(void * context, const unsigned long sofar,
  * @return bool true if the upgrade was successful.
  * * @note This is only defined if KERMIT was defined during the build.
  */
-bool updateFirmware (const char * firmwareFile, updateProgressCallback progress, void * context);
+bool rbUpdateFirmware (const char * firmwareFile, updateProgressCallback progress, void * context);
 #endif
 
 #ifdef RB_GPIO

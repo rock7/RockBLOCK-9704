@@ -155,15 +155,15 @@ int main(int argc, char * argv[])
             char *message = loadFile(_filepath, &size);
             if(message)
             {
-                if(sendMessageAny(_topic, message, size, 600))
+                if(rbSendMessageAny(_topic, message, size, 600))
                 {
                     printf("Sent MO file: %s\r\n", _filepath);
                     //Start listening for MT
-                    oldSignal = getSignal();
+                    oldSignal = rbGetSignal();
                     printf("Current Signal: %d\r\n", oldSignal);
                     while(_run)
                     {
-                        const size_t mtLength = receiveMessage(&mtBuffer);
+                        const size_t mtLength = rbReceiveMessage(&mtBuffer);
                         if ((mtLength > 0) && (mtBuffer != NULL))
                         {
                             printf("Received MT: ");
@@ -183,7 +183,7 @@ int main(int argc, char * argv[])
                             break; //Break out of loop if MT is found
                         }
 
-                        newSignal = getSignal();
+                        newSignal = rbGetSignal();
                         if(oldSignal != newSignal)
                         {
                             printf("Current Signal: %d\r\n", newSignal);

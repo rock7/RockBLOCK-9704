@@ -321,7 +321,7 @@ static bool appendCrc(uint8_t * buffer, size_t length)
     return appended;
 }
 
-bool sendMessage(const char * data, const size_t length, const int timeout)
+bool rbSendMessage(const char * data, const size_t length, const int timeout)
 {
     bool sent = false;
     int8_t queuePosition = -1;
@@ -350,7 +350,7 @@ bool sendMessage(const char * data, const size_t length, const int timeout)
     return sent;
 }
 
-bool sendMessageCloudloop(cloudloopTopics_t topic, const char * data, const size_t length, const int timeout)
+bool rbSendMessageCloudloop(cloudloopTopics_t topic, const char * data, const size_t length, const int timeout)
 {
     bool sent = false;
     int8_t queuePosition = -1;
@@ -379,7 +379,7 @@ bool sendMessageCloudloop(cloudloopTopics_t topic, const char * data, const size
     return sent;
 }
 
-bool sendMessageAny(uint16_t topic, const char * data, const size_t length, const int timeout)
+bool rbSendMessageAny(uint16_t topic, const char * data, const size_t length, const int timeout)
 {
     bool sent = false;
     int8_t queuePosition = -1;
@@ -488,7 +488,7 @@ static bool sendMoFromQueue(const int timeout)
     return sent;
 }
 
-size_t receiveMessage(char ** buffer)
+size_t rbReceiveMessage(char ** buffer)
 {
     size_t length = 0;
     if(listenForMt())
@@ -507,7 +507,7 @@ size_t receiveMessage(char ** buffer)
     return length;
 }
 
-size_t receiveMessageWithTopic(char ** buffer, uint16_t topic)
+size_t rbReceiveMessageWithTopic(char ** buffer, uint16_t topic)
 {
     size_t length = 0;
     if(listenForMt())
@@ -589,7 +589,7 @@ static bool listenForMt(void)
     return received;
 }
 
-int8_t getSignal(void)
+int8_t rbGetSignal(void)
 {
     int8_t signal = -1;
     jsprResponse_t response;
@@ -625,7 +625,7 @@ static bool getHwInfo(jsprHwInfo_t * hwInfo)
     return populated;
 }
 
-char * getImei(void)
+char * rbGetImei(void)
 {
     char * imei = NULL;
     if(getHwInfo(&hwInfo))
@@ -635,7 +635,7 @@ char * getImei(void)
     return imei;
 }
 
-char * getHwVersion(void)
+char * rbGetHwVersion(void)
 {
     char * hwVersion = NULL;
     if(getHwInfo(&hwInfo))
@@ -645,7 +645,7 @@ char * getHwVersion(void)
     return hwVersion;
 }
 
-char * getSerialNumber(void)
+char * rbGetSerialNumber(void)
 {
     char * serialNumber = NULL;
     if(getHwInfo(&hwInfo))
@@ -655,7 +655,7 @@ char * getSerialNumber(void)
     return serialNumber;
 }
 
-int8_t getBoardTemp(void)
+int8_t rbGetBoardTemp(void)
 {
     int8_t boardTemp = -100; //needs to be some value that the temp can't be
     jsprHwInfo_t hwInfo;
@@ -682,7 +682,7 @@ static bool getSimStatus(jsprSimStatus_t * simStatus)
     return populated;
 }
 
-bool getCardPresent(void)
+bool rbGetCardPresent(void)
 {
     bool cardPresent = false;
     if(getSimStatus(&simStatus))
@@ -692,7 +692,7 @@ bool getCardPresent(void)
     return cardPresent;
 }
 
-bool getSimConnected(void)
+bool rbGetSimConnected(void)
 {
     bool simConnected = false;
     if(getSimStatus(&simStatus))
@@ -702,7 +702,7 @@ bool getSimConnected(void)
     return simConnected;
 }
 
-char * getIccid(void)
+char * rbGetIccid(void)
 {
     char * iccid = NULL;
     if(getSimStatus(&simStatus))
@@ -732,7 +732,7 @@ static bool getFirmwareInfo(jsprFirmwareInfo_t * fwInfo)
     return populated;
 }
 
-char * getFirmwareVersion(void)
+char * rbGetFirmwareVersion(void)
 {
     static char firmwareVersion [FIRMWARE_VERSION_STRING_LEN];
     jsprFirmwareInfo_t firmwareInfo;
@@ -821,7 +821,7 @@ struct k_response kermitResponse;
 int kermitStatus = 0;
 unsigned char i_buf[IBUFLEN+8];
 
-bool updateFirmware (const char * firmwareFile, updateProgressCallback progress, void * context)
+bool rbUpdateFirmware (const char * firmwareFile, updateProgressCallback progress, void * context)
 {
     const char * firmwareFileList[2] = {firmwareFile, NULL};
     unsigned char *inputBufferPtr = (unsigned char *)0; // E-Kermit doesn't like NULL

@@ -74,12 +74,12 @@ int main(void)
 
     if (rbBegin("/dev/ttyUSB2"))
     {
-        if (sendMessage(message, strlen(message), 600))
+        if (rbSendMessage(message, strlen(message), 600))
         {
             printf("Sent message: %s\r\n", message);
             while (true)
             {
-                size_t mtLength = receiveMessage(&mtBuffer);
+                size_t mtLength = rbReceiveMessage(&mtBuffer);
                 if ((mtLength > 0) && (mtBuffer != NULL))
                 {
                     printf("Received message: %s\r\n", mtBuffer);
