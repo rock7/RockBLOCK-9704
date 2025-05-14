@@ -112,7 +112,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:ac2d10808fdf6d5f0e8d0fcfd345010ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Drives user defined pin (power enable) low and user defined pin (iridium enable) high to initialise the RB9704 PiHat. Initialise the serial connection in the detected context (or user defined), if successful continue to set the API, SIM &amp; state of the modem in order to be ready for messaging.  <br /></td></tr>
 <tr class="separator:ac2d10808fdf6d5f0e8d0fcfd345010ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57a20a5affb0fb1189c0349e019175dd" id="r_a57a20a5affb0fb1189c0349e019175dd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a57a20a5affb0fb1189c0349e019175dd">rbEndGpio</a> (const <a class="el" href="structrbGpioTable__t.html">rbGpioTable_t</a> *gpioInfo)</td></tr>
-<tr class="memdesc:a57a20a5affb0fb1189c0349e019175dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Drives user defined pin (power enable) high and another user defined pin (iridium enable) low to deinitialise the RB9704 PiHat. Uninitialises/closes the the serial connection.  <br /></td></tr>
+<tr class="memdesc:a57a20a5affb0fb1189c0349e019175dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Drives user defined pin (power enable) high and another user defined pin (iridium enable) low to deinitialise the RB9704 PiHat. Deinitialises/closes the the serial connection.  <br /></td></tr>
 <tr class="separator:a57a20a5affb0fb1189c0349e019175dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff6d96e3fefc29b6a58e89640b959eb2" id="r_aff6d96e3fefc29b6a58e89640b959eb2"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#aff6d96e3fefc29b6a58e89640b959eb2">setApi</a> (void)</td></tr>
 <tr class="separator:aff6d96e3fefc29b6a58e89640b959eb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -129,68 +129,68 @@ Functions</h2></td></tr>
 <tr class="separator:a7ddd0b60dbdc2cb7e5b8ea5b301463c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f23909945feab2130ae9f60d3666886" id="r_a8f23909945feab2130ae9f60d3666886"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a8f23909945feab2130ae9f60d3666886">appendCrc</a> (uint8_t *buffer, size_t length)</td></tr>
 <tr class="separator:a8f23909945feab2130ae9f60d3666886"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae2172e9ecc9b64e734717d39b43245bc" id="r_ae2172e9ecc9b64e734717d39b43245bc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#ae2172e9ecc9b64e734717d39b43245bc">sendMessage</a> (const char *data, const size_t length, const int timeout)</td></tr>
-<tr class="memdesc:ae2172e9ecc9b64e734717d39b43245bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a mobile originated message from the modem on the default topic (244).  <br /></td></tr>
-<tr class="separator:ae2172e9ecc9b64e734717d39b43245bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6422c54b3a6ef138fa7b84664412d8d2" id="r_a6422c54b3a6ef138fa7b84664412d8d2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a6422c54b3a6ef138fa7b84664412d8d2">sendMessageCloudloop</a> (<a class="el" href="rockblock__9704_8h.html#abba1a824edb46c8c944f5bf7b53ac09c">cloudloopTopics_t</a> topic, const char *data, const size_t length, const int timeout)</td></tr>
-<tr class="memdesc:a6422c54b3a6ef138fa7b84664412d8d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a mobile originated message from the modem on a cloudloop topic of choice.  <br /></td></tr>
-<tr class="separator:a6422c54b3a6ef138fa7b84664412d8d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a826ab2f440d51504af601ac0545ac455" id="r_a826ab2f440d51504af601ac0545ac455"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a826ab2f440d51504af601ac0545ac455">sendMessageAny</a> (uint16_t topic, const char *data, const size_t length, const int timeout)</td></tr>
-<tr class="memdesc:a826ab2f440d51504af601ac0545ac455"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a mobile originated message from the modem on any topic.  <br /></td></tr>
-<tr class="separator:a826ab2f440d51504af601ac0545ac455"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ff99031bfc2f2a17c8179ce326891c8" id="r_a9ff99031bfc2f2a17c8179ce326891c8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a9ff99031bfc2f2a17c8179ce326891c8">rbSendMessage</a> (const char *data, const size_t length, const int timeout)</td></tr>
+<tr class="memdesc:a9ff99031bfc2f2a17c8179ce326891c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a mobile originated message from the modem on the default topic (244).  <br /></td></tr>
+<tr class="separator:a9ff99031bfc2f2a17c8179ce326891c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1db6349f6c5b989155c13c814f56671" id="r_af1db6349f6c5b989155c13c814f56671"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#af1db6349f6c5b989155c13c814f56671">rbSendMessageCloudloop</a> (<a class="el" href="rockblock__9704_8h.html#abba1a824edb46c8c944f5bf7b53ac09c">cloudloopTopics_t</a> topic, const char *data, const size_t length, const int timeout)</td></tr>
+<tr class="memdesc:af1db6349f6c5b989155c13c814f56671"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a mobile originated message from the modem on a cloudloop topic of choice.  <br /></td></tr>
+<tr class="separator:af1db6349f6c5b989155c13c814f56671"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a277dafa73f54b5e9508279eff5e56b03" id="r_a277dafa73f54b5e9508279eff5e56b03"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a277dafa73f54b5e9508279eff5e56b03">rbSendMessageAny</a> (uint16_t topic, const char *data, const size_t length, const int timeout)</td></tr>
+<tr class="memdesc:a277dafa73f54b5e9508279eff5e56b03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a mobile originated message from the modem on any topic.  <br /></td></tr>
+<tr class="separator:a277dafa73f54b5e9508279eff5e56b03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a06583320e6524b3f57eed8b7bc02f7a1" id="r_a06583320e6524b3f57eed8b7bc02f7a1"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a06583320e6524b3f57eed8b7bc02f7a1">sendMoFromQueue</a> (const int timeout)</td></tr>
 <tr class="separator:a06583320e6524b3f57eed8b7bc02f7a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1b5802a8833e4752223c92c28e64070" id="r_ae1b5802a8833e4752223c92c28e64070"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#ae1b5802a8833e4752223c92c28e64070">receiveMessage</a> (char **buffer)</td></tr>
-<tr class="memdesc:ae1b5802a8833e4752223c92c28e64070"><td class="mdescLeft">&#160;</td><td class="mdescRight">Listen for a mobile terminated message from the modem.  <br /></td></tr>
-<tr class="separator:ae1b5802a8833e4752223c92c28e64070"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b7eda78bf08ac272e59129de302f43b" id="r_a8b7eda78bf08ac272e59129de302f43b"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a8b7eda78bf08ac272e59129de302f43b">receiveMessageWithTopic</a> (char **buffer, uint16_t topic)</td></tr>
-<tr class="memdesc:a8b7eda78bf08ac272e59129de302f43b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Listen for a mobile terminated message from the modem.  <br /></td></tr>
-<tr class="separator:a8b7eda78bf08ac272e59129de302f43b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02fecafee9043c858324a0b2e7380399" id="r_a02fecafee9043c858324a0b2e7380399"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a02fecafee9043c858324a0b2e7380399">rbReceiveMessage</a> (char **buffer)</td></tr>
+<tr class="memdesc:a02fecafee9043c858324a0b2e7380399"><td class="mdescLeft">&#160;</td><td class="mdescRight">Listen for a mobile terminated message from the modem.  <br /></td></tr>
+<tr class="separator:a02fecafee9043c858324a0b2e7380399"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7eeadc83a3aecc76640adee2e34aa2d1" id="r_a7eeadc83a3aecc76640adee2e34aa2d1"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a7eeadc83a3aecc76640adee2e34aa2d1">rbReceiveMessageWithTopic</a> (char **buffer, uint16_t topic)</td></tr>
+<tr class="memdesc:a7eeadc83a3aecc76640adee2e34aa2d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Listen for a mobile terminated message from the modem.  <br /></td></tr>
+<tr class="separator:a7eeadc83a3aecc76640adee2e34aa2d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e4aaa0648b082de608fc0b052eebd1f" id="r_a7e4aaa0648b082de608fc0b052eebd1f"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a7e4aaa0648b082de608fc0b052eebd1f">listenForMt</a> (void)</td></tr>
 <tr class="separator:a7e4aaa0648b082de608fc0b052eebd1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae54958ffcb65d1e56222f3246d75da0c" id="r_ae54958ffcb65d1e56222f3246d75da0c"><td class="memItemLeft" align="right" valign="top">int8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#ae54958ffcb65d1e56222f3246d75da0c">getSignal</a> (void)</td></tr>
-<tr class="memdesc:ae54958ffcb65d1e56222f3246d75da0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current signal strength (0-5) from the modem.  <br /></td></tr>
-<tr class="separator:ae54958ffcb65d1e56222f3246d75da0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12098b0414fdec01407dc8cc14655bfd" id="r_a12098b0414fdec01407dc8cc14655bfd"><td class="memItemLeft" align="right" valign="top">int8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a12098b0414fdec01407dc8cc14655bfd">rbGetSignal</a> (void)</td></tr>
+<tr class="memdesc:a12098b0414fdec01407dc8cc14655bfd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current signal strength from the modem.  <br /></td></tr>
+<tr class="separator:a12098b0414fdec01407dc8cc14655bfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1dde1592c5343f7a1e82b7f94c4a6081" id="r_a1dde1592c5343f7a1e82b7f94c4a6081"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a1dde1592c5343f7a1e82b7f94c4a6081">getHwInfo</a> (<a class="el" href="structjsprHwInfo__t.html">jsprHwInfo_t</a> *<a class="el" href="rockblock__9704_8c.html#ae9b8de61d921bc96ddf422275f2646f6">hwInfo</a>)</td></tr>
 <tr class="separator:a1dde1592c5343f7a1e82b7f94c4a6081"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d8f95a386a0fd20acb095bd216e2146" id="r_a2d8f95a386a0fd20acb095bd216e2146"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a2d8f95a386a0fd20acb095bd216e2146">getImei</a> (void)</td></tr>
-<tr class="memdesc:a2d8f95a386a0fd20acb095bd216e2146"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the imei.  <br /></td></tr>
-<tr class="separator:a2d8f95a386a0fd20acb095bd216e2146"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a8798a2e83cd3abec4232d5f29d4782" id="r_a4a8798a2e83cd3abec4232d5f29d4782"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a4a8798a2e83cd3abec4232d5f29d4782">getHwVersion</a> (void)</td></tr>
-<tr class="memdesc:a4a8798a2e83cd3abec4232d5f29d4782"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the hardware version.  <br /></td></tr>
-<tr class="separator:a4a8798a2e83cd3abec4232d5f29d4782"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adbe0b607b5677521de9ea03230d0f261" id="r_adbe0b607b5677521de9ea03230d0f261"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#adbe0b607b5677521de9ea03230d0f261">getSerialNumber</a> (void)</td></tr>
-<tr class="memdesc:adbe0b607b5677521de9ea03230d0f261"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the serial number.  <br /></td></tr>
-<tr class="separator:adbe0b607b5677521de9ea03230d0f261"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3cea641e75cfb942919309c81b59afe7" id="r_a3cea641e75cfb942919309c81b59afe7"><td class="memItemLeft" align="right" valign="top">int8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a3cea641e75cfb942919309c81b59afe7">getBoardTemp</a> (void)</td></tr>
-<tr class="memdesc:a3cea641e75cfb942919309c81b59afe7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the board temperature.  <br /></td></tr>
-<tr class="separator:a3cea641e75cfb942919309c81b59afe7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5a9696c28487bc5232d27852782cf74" id="r_ad5a9696c28487bc5232d27852782cf74"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#ad5a9696c28487bc5232d27852782cf74">rbGetImei</a> (void)</td></tr>
+<tr class="memdesc:ad5a9696c28487bc5232d27852782cf74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the imei.  <br /></td></tr>
+<tr class="separator:ad5a9696c28487bc5232d27852782cf74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abdf4519fbacff216f807dc52fd4ca2b7" id="r_abdf4519fbacff216f807dc52fd4ca2b7"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#abdf4519fbacff216f807dc52fd4ca2b7">rbGetHwVersion</a> (void)</td></tr>
+<tr class="memdesc:abdf4519fbacff216f807dc52fd4ca2b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the hardware version.  <br /></td></tr>
+<tr class="separator:abdf4519fbacff216f807dc52fd4ca2b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad346faaa126d1ff9c6deb4b3fb24f5a7" id="r_ad346faaa126d1ff9c6deb4b3fb24f5a7"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#ad346faaa126d1ff9c6deb4b3fb24f5a7">rbGetSerialNumber</a> (void)</td></tr>
+<tr class="memdesc:ad346faaa126d1ff9c6deb4b3fb24f5a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the serial number.  <br /></td></tr>
+<tr class="separator:ad346faaa126d1ff9c6deb4b3fb24f5a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7638577577718ea368331aa30d10134c" id="r_a7638577577718ea368331aa30d10134c"><td class="memItemLeft" align="right" valign="top">int8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a7638577577718ea368331aa30d10134c">rbGetBoardTemp</a> (void)</td></tr>
+<tr class="memdesc:a7638577577718ea368331aa30d10134c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the board temperature.  <br /></td></tr>
+<tr class="separator:a7638577577718ea368331aa30d10134c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3574fa644c640a6439fb52e594b17320" id="r_a3574fa644c640a6439fb52e594b17320"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a3574fa644c640a6439fb52e594b17320">getSimStatus</a> (<a class="el" href="structjsprSimStatus__t.html">jsprSimStatus_t</a> *<a class="el" href="rockblock__9704_8c.html#a7a1773db64ec42bb57bd008860df16af">simStatus</a>)</td></tr>
 <tr class="separator:a3574fa644c640a6439fb52e594b17320"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e76bff79997d7511ab41af57d5297ad" id="r_a7e76bff79997d7511ab41af57d5297ad"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a7e76bff79997d7511ab41af57d5297ad">getCardPresent</a> (void)</td></tr>
-<tr class="memdesc:a7e76bff79997d7511ab41af57d5297ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if SIM presence is currently asserted.  <br /></td></tr>
-<tr class="separator:a7e76bff79997d7511ab41af57d5297ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4932a17536ec0aa11b3534034e0c3a0e" id="r_a4932a17536ec0aa11b3534034e0c3a0e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a4932a17536ec0aa11b3534034e0c3a0e">getSimConnected</a> (void)</td></tr>
-<tr class="memdesc:a4932a17536ec0aa11b3534034e0c3a0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if SIM card is present, communicating properly with, and has presented no errors in SIM transactions with the transceiver.  <br /></td></tr>
-<tr class="separator:a4932a17536ec0aa11b3534034e0c3a0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ca4279225824f5ddcc54962e645ae61" id="r_a1ca4279225824f5ddcc54962e645ae61"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a1ca4279225824f5ddcc54962e645ae61">getIccid</a> (void)</td></tr>
-<tr class="memdesc:a1ca4279225824f5ddcc54962e645ae61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the iccid.  <br /></td></tr>
-<tr class="separator:a1ca4279225824f5ddcc54962e645ae61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57bf37a3f39b5b99bcc6bb942a902b3c" id="r_a57bf37a3f39b5b99bcc6bb942a902b3c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a57bf37a3f39b5b99bcc6bb942a902b3c">rbGetCardPresent</a> (void)</td></tr>
+<tr class="memdesc:a57bf37a3f39b5b99bcc6bb942a902b3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if SIM presence is currently asserted.  <br /></td></tr>
+<tr class="separator:a57bf37a3f39b5b99bcc6bb942a902b3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c665fdb2a499fba38135acbf4a806aa" id="r_a2c665fdb2a499fba38135acbf4a806aa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a2c665fdb2a499fba38135acbf4a806aa">rbGetSimConnected</a> (void)</td></tr>
+<tr class="memdesc:a2c665fdb2a499fba38135acbf4a806aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if SIM card is present, communicating properly with, and has presented no errors in SIM transactions with the transceiver.  <br /></td></tr>
+<tr class="separator:a2c665fdb2a499fba38135acbf4a806aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed6491da640582fd3ec27e28705f188a" id="r_aed6491da640582fd3ec27e28705f188a"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#aed6491da640582fd3ec27e28705f188a">rbGetIccid</a> (void)</td></tr>
+<tr class="memdesc:aed6491da640582fd3ec27e28705f188a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the iccid.  <br /></td></tr>
+<tr class="separator:aed6491da640582fd3ec27e28705f188a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29e7e4c6e86aa707132d3945d25fe60f" id="r_a29e7e4c6e86aa707132d3945d25fe60f"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a29e7e4c6e86aa707132d3945d25fe60f">getFirmwareInfo</a> (<a class="el" href="structjsprFirmwareInfo__t.html">jsprFirmwareInfo_t</a> *fwInfo)</td></tr>
 <tr class="separator:a29e7e4c6e86aa707132d3945d25fe60f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a21a618591808502901dce8b3b2f15a73" id="r_a21a618591808502901dce8b3b2f15a73"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a21a618591808502901dce8b3b2f15a73">getFirmwareVersion</a> (void)</td></tr>
-<tr class="memdesc:a21a618591808502901dce8b3b2f15a73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the Iridium modem firmware version as vX.Y.X with X being the major number, Y being the minor number and X being the patch number.  <br /></td></tr>
-<tr class="separator:a21a618591808502901dce8b3b2f15a73"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9d7a7d649a6b0b57397bf26391690898" id="r_a9d7a7d649a6b0b57397bf26391690898"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a9d7a7d649a6b0b57397bf26391690898">calculateCrc</a> (const void *buffer, int bufferLength, int initialCRC)</td></tr>
-<tr class="separator:a9d7a7d649a6b0b57397bf26391690898"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6b9b0469532eab4359694470cb0ab8e" id="r_ad6b9b0469532eab4359694470cb0ab8e"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#ad6b9b0469532eab4359694470cb0ab8e">rbGetFirmwareVersion</a> (void)</td></tr>
+<tr class="memdesc:ad6b9b0469532eab4359694470cb0ab8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the Iridium modem firmware version as vX.Y.X with X being the major number, Y being the minor number and X being the patch number.  <br /></td></tr>
+<tr class="separator:ad6b9b0469532eab4359694470cb0ab8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89016da84698387751b56df8e8d09af0" id="r_a89016da84698387751b56df8e8d09af0"><td class="memItemLeft" align="right" valign="top">static uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a89016da84698387751b56df8e8d09af0">calculateCrc</a> (const uint8_t *buffer, const size_t bufferLength, const uint16_t initialCRC)</td></tr>
+<tr class="separator:a89016da84698387751b56df8e8d09af0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b48c4a73a4301f31da944cabb14f5dc" id="r_a2b48c4a73a4301f31da944cabb14f5dc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a2b48c4a73a4301f31da944cabb14f5dc">rbEnd</a> (void)</td></tr>
 <tr class="memdesc:a2b48c4a73a4301f31da944cabb14f5dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uninitialise/close the the serial connection.  <br /></td></tr>
 <tr class="separator:a2b48c4a73a4301f31da944cabb14f5dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4383e5f9960cc720f581cd18a765bb42" id="r_a4383e5f9960cc720f581cd18a765bb42"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a4383e5f9960cc720f581cd18a765bb42">checkProvisioning</a> (uint16_t topic)</td></tr>
 <tr class="separator:a4383e5f9960cc720f581cd18a765bb42"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb5896c5d354942ccf5ca47b3ed801ee" id="r_abb5896c5d354942ccf5ca47b3ed801ee"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#abb5896c5d354942ccf5ca47b3ed801ee">updateFirmware</a> (const char *firmwareFile, <a class="el" href="rockblock__9704_8h.html#af8a784ef775cad6e0fcd0b8a249d8dc8">updateProgressCallback</a> progress, void *<a class="el" href="jspr_8c.html#aa38b725755619d237e2299c353eadedb">context</a>)</td></tr>
-<tr class="memdesc:abb5896c5d354942ccf5ca47b3ed801ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update 9704 firmware. This is a blocking call and will take approximately 10 minutes to upgrade, the updateProgressCallback is recommended.  <br /></td></tr>
-<tr class="separator:abb5896c5d354942ccf5ca47b3ed801ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad547e4026bc017147f3c595a1bb6fee2" id="r_ad547e4026bc017147f3c595a1bb6fee2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#ad547e4026bc017147f3c595a1bb6fee2">rbUpdateFirmware</a> (const char *firmwareFile, <a class="el" href="rockblock__9704_8h.html#af8a784ef775cad6e0fcd0b8a249d8dc8">updateProgressCallback</a> progress, void *<a class="el" href="jspr_8c.html#aa38b725755619d237e2299c353eadedb">context</a>)</td></tr>
+<tr class="memdesc:ad547e4026bc017147f3c595a1bb6fee2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update 9704 firmware. This is a blocking call and will take approximately 10 minutes to upgrade, the updateProgressCallback is recommended.  <br /></td></tr>
+<tr class="separator:ad547e4026bc017147f3c595a1bb6fee2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -214,8 +214,8 @@ Variables</h2></td></tr>
 <tr class="separator:ae9b8de61d921bc96ddf422275f2646f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a1773db64ec42bb57bd008860df16af" id="r_a7a1773db64ec42bb57bd008860df16af"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structjsprSimStatus__t.html">jsprSimStatus_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a7a1773db64ec42bb57bd008860df16af">simStatus</a></td></tr>
 <tr class="separator:a7a1773db64ec42bb57bd008860df16af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0885abbfd048596d9b74277c999e93d4" id="r_a0885abbfd048596d9b74277c999e93d4"><td class="memItemLeft" align="right" valign="top">static const unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a0885abbfd048596d9b74277c999e93d4">CRC16Table</a> [256]</td></tr>
-<tr class="separator:a0885abbfd048596d9b74277c999e93d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad58c9a5782e86aaccebd930df0d69c8e" id="r_ad58c9a5782e86aaccebd930df0d69c8e"><td class="memItemLeft" align="right" valign="top">static const uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#ad58c9a5782e86aaccebd930df0d69c8e">CRC16Table</a> [256]</td></tr>
+<tr class="separator:ad58c9a5782e86aaccebd930df0d69c8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a999cdb53fc486a4a235ae4927e39605b" id="r_a999cdb53fc486a4a235ae4927e39605b"><td class="memItemLeft" align="right" valign="top">struct k_data&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a999cdb53fc486a4a235ae4927e39605b">kermitData</a></td></tr>
 <tr class="separator:a999cdb53fc486a4a235ae4927e39605b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a145b214c32e1f8ddd5a913017765ae73" id="r_a145b214c32e1f8ddd5a913017765ae73"><td class="memItemLeft" align="right" valign="top">struct k_response&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a145b214c32e1f8ddd5a913017765ae73">kermitResponse</a></td></tr>
@@ -319,8 +319,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a9d7a7d649a6b0b57397bf26391690898" name="a9d7a7d649a6b0b57397bf26391690898"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9d7a7d649a6b0b57397bf26391690898">&#9670;&#160;</a></span>calculateCrc()</h2>
+<a id="a89016da84698387751b56df8e8d09af0" name="a89016da84698387751b56df8e8d09af0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89016da84698387751b56df8e8d09af0">&#9670;&#160;</a></span>calculateCrc()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -329,21 +329,21 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static int calculateCrc </td>
+          <td class="memname">static uint16_t calculateCrc </td>
           <td>(</td>
-          <td class="paramtype">const void *&#160;</td>
+          <td class="paramtype">const uint8_t *&#160;</td>
           <td class="paramname"><em>buffer</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">const size_t&#160;</td>
           <td class="paramname"><em>bufferLength</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">const uint16_t&#160;</td>
           <td class="paramname"><em>initialCRC</em>&#160;</td>
         </tr>
         <tr>
@@ -483,52 +483,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a3cea641e75cfb942919309c81b59afe7" name="a3cea641e75cfb942919309c81b59afe7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3cea641e75cfb942919309c81b59afe7">&#9670;&#160;</a></span>getBoardTemp()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int8_t getBoardTemp </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the board temperature. </p>
-<dl class="section return"><dt>Returns</dt><dd>int8_t of the current temperature (-100 on error). </dd></dl>
-
-</div>
-</div>
-<a id="a7e76bff79997d7511ab41af57d5297ad" name="a7e76bff79997d7511ab41af57d5297ad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e76bff79997d7511ab41af57d5297ad">&#9670;&#160;</a></span>getCardPresent()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool getCardPresent </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Check if SIM presence is currently asserted. </p>
-<dl class="section return"><dt>Returns</dt><dd>bool depicting SIM presence.<ul>
-<li></li>
-</ul>
-</dd></dl>
-<dl class="section note"><dt>Note</dt><dd>This function will return false either if it received it from the modem or the function failed. </dd></dl>
-
-</div>
-</div>
 <a id="a29e7e4c6e86aa707132d3945d25fe60f" name="a29e7e4c6e86aa707132d3945d25fe60f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a29e7e4c6e86aa707132d3945d25fe60f">&#9670;&#160;</a></span>getFirmwareInfo()</h2>
 
@@ -555,27 +509,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a21a618591808502901dce8b3b2f15a73" name="a21a618591808502901dce8b3b2f15a73"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a21a618591808502901dce8b3b2f15a73">&#9670;&#160;</a></span>getFirmwareVersion()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">char * getFirmwareVersion </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the Iridium modem firmware version as vX.Y.X with X being the major number, Y being the minor number and X being the patch number. </p>
-<dl class="section return"><dt>Returns</dt><dd>char pointer to firmware version </dd></dl>
-
-</div>
-</div>
 <a id="a1dde1592c5343f7a1e82b7f94c4a6081" name="a1dde1592c5343f7a1e82b7f94c4a6081"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1dde1592c5343f7a1e82b7f94c4a6081">&#9670;&#160;</a></span>getHwInfo()</h2>
 
@@ -599,136 +532,6 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-</div>
-</div>
-<a id="a4a8798a2e83cd3abec4232d5f29d4782" name="a4a8798a2e83cd3abec4232d5f29d4782"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4a8798a2e83cd3abec4232d5f29d4782">&#9670;&#160;</a></span>getHwVersion()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">char * getHwVersion </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the hardware version. </p>
-<dl class="section return"><dt>Returns</dt><dd>char pointer to hwVersion string. </dd></dl>
-
-</div>
-</div>
-<a id="a1ca4279225824f5ddcc54962e645ae61" name="a1ca4279225824f5ddcc54962e645ae61"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1ca4279225824f5ddcc54962e645ae61">&#9670;&#160;</a></span>getIccid()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">char * getIccid </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the iccid. </p>
-<dl class="section return"><dt>Returns</dt><dd>char pointer to iccid string. </dd></dl>
-
-</div>
-</div>
-<a id="a2d8f95a386a0fd20acb095bd216e2146" name="a2d8f95a386a0fd20acb095bd216e2146"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2d8f95a386a0fd20acb095bd216e2146">&#9670;&#160;</a></span>getImei()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">char * getImei </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the imei. </p>
-<dl class="section return"><dt>Returns</dt><dd>char pointer to imei string. </dd></dl>
-
-</div>
-</div>
-<a id="adbe0b607b5677521de9ea03230d0f261" name="adbe0b607b5677521de9ea03230d0f261"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adbe0b607b5677521de9ea03230d0f261">&#9670;&#160;</a></span>getSerialNumber()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">char * getSerialNumber </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the serial number. </p>
-<dl class="section return"><dt>Returns</dt><dd>char pointer to serial number string. </dd></dl>
-
-</div>
-</div>
-<a id="ae54958ffcb65d1e56222f3246d75da0c" name="ae54958ffcb65d1e56222f3246d75da0c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae54958ffcb65d1e56222f3246d75da0c">&#9670;&#160;</a></span>getSignal()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int8_t getSignal </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the current signal strength (0-5) from the modem. </p>
-<dl class="section return"><dt>Returns</dt><dd>uint8_t of the signal strength from the modem (-1 on error). </dd></dl>
-
-</div>
-</div>
-<a id="a4932a17536ec0aa11b3534034e0c3a0e" name="a4932a17536ec0aa11b3534034e0c3a0e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4932a17536ec0aa11b3534034e0c3a0e">&#9670;&#160;</a></span>getSimConnected()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool getSimConnected </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Check if SIM card is present, communicating properly with, and has presented no errors in SIM transactions with the transceiver. </p>
-<dl class="section return"><dt>Returns</dt><dd>bool depicting SIM communicating correctly.<ul>
-<li></li>
-</ul>
-</dd></dl>
-<dl class="section note"><dt>Note</dt><dd>This function will return false either if it received it from the modem or the function failed. </dd></dl>
 
 </div>
 </div>
@@ -893,7 +696,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Drives user defined pin (power enable) high and another user defined pin (iridium enable) low to deinitialise the RB9704 PiHat. Uninitialises/closes the the serial connection. </p>
+<p>Drives user defined pin (power enable) high and another user defined pin (iridium enable) low to deinitialise the RB9704 PiHat. Deinitialises/closes the the serial connection. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">gpioInfo</td><td>structure containing a valid chip &amp; pin for powerEnable, IridiumEnable and booted. </td></tr>
@@ -904,14 +707,216 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ae1b5802a8833e4752223c92c28e64070" name="ae1b5802a8833e4752223c92c28e64070"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae1b5802a8833e4752223c92c28e64070">&#9670;&#160;</a></span>receiveMessage()</h2>
+<a id="a7638577577718ea368331aa30d10134c" name="a7638577577718ea368331aa30d10134c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7638577577718ea368331aa30d10134c">&#9670;&#160;</a></span>rbGetBoardTemp()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">size_t receiveMessage </td>
+          <td class="memname">int8_t rbGetBoardTemp </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the board temperature. </p>
+<dl class="section return"><dt>Returns</dt><dd>int8_t of the current temperature (-100 on error). </dd></dl>
+
+</div>
+</div>
+<a id="a57bf37a3f39b5b99bcc6bb942a902b3c" name="a57bf37a3f39b5b99bcc6bb942a902b3c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a57bf37a3f39b5b99bcc6bb942a902b3c">&#9670;&#160;</a></span>rbGetCardPresent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool rbGetCardPresent </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if SIM presence is currently asserted. </p>
+<dl class="section return"><dt>Returns</dt><dd>bool depicting SIM presence.<ul>
+<li></li>
+</ul>
+</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This function will return false either if it received it from the modem or the function failed. </dd></dl>
+
+</div>
+</div>
+<a id="ad6b9b0469532eab4359694470cb0ab8e" name="ad6b9b0469532eab4359694470cb0ab8e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6b9b0469532eab4359694470cb0ab8e">&#9670;&#160;</a></span>rbGetFirmwareVersion()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char * rbGetFirmwareVersion </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the Iridium modem firmware version as vX.Y.X with X being the major number, Y being the minor number and X being the patch number. </p>
+<dl class="section return"><dt>Returns</dt><dd>char pointer to firmware version </dd></dl>
+
+</div>
+</div>
+<a id="abdf4519fbacff216f807dc52fd4ca2b7" name="abdf4519fbacff216f807dc52fd4ca2b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abdf4519fbacff216f807dc52fd4ca2b7">&#9670;&#160;</a></span>rbGetHwVersion()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char * rbGetHwVersion </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the hardware version. </p>
+<dl class="section return"><dt>Returns</dt><dd>char pointer to hwVersion string. </dd></dl>
+
+</div>
+</div>
+<a id="aed6491da640582fd3ec27e28705f188a" name="aed6491da640582fd3ec27e28705f188a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed6491da640582fd3ec27e28705f188a">&#9670;&#160;</a></span>rbGetIccid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char * rbGetIccid </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the iccid. </p>
+<dl class="section return"><dt>Returns</dt><dd>char pointer to iccid string. </dd></dl>
+
+</div>
+</div>
+<a id="ad5a9696c28487bc5232d27852782cf74" name="ad5a9696c28487bc5232d27852782cf74"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5a9696c28487bc5232d27852782cf74">&#9670;&#160;</a></span>rbGetImei()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char * rbGetImei </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the imei. </p>
+<dl class="section return"><dt>Returns</dt><dd>char pointer to imei string. </dd></dl>
+
+</div>
+</div>
+<a id="ad346faaa126d1ff9c6deb4b3fb24f5a7" name="ad346faaa126d1ff9c6deb4b3fb24f5a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad346faaa126d1ff9c6deb4b3fb24f5a7">&#9670;&#160;</a></span>rbGetSerialNumber()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char * rbGetSerialNumber </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the serial number. </p>
+<dl class="section return"><dt>Returns</dt><dd>char pointer to serial number string. </dd></dl>
+
+</div>
+</div>
+<a id="a12098b0414fdec01407dc8cc14655bfd" name="a12098b0414fdec01407dc8cc14655bfd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12098b0414fdec01407dc8cc14655bfd">&#9670;&#160;</a></span>rbGetSignal()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int8_t rbGetSignal </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the current signal strength from the modem. </p>
+<p>The signal strength is returned in signal bars from 0 to 5:</p><ul>
+<li>0: No signal</li>
+<li>5: Maximum signal strength</li>
+</ul>
+<dl class="section note"><dt>Note</dt><dd>A return value of -1 indicates an error occurred while communicating with the modem to retrieve the signal strength.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>int8_t Signal strength in bars (0–5), or -1 on error. </dd></dl>
+
+</div>
+</div>
+<a id="a2c665fdb2a499fba38135acbf4a806aa" name="a2c665fdb2a499fba38135acbf4a806aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c665fdb2a499fba38135acbf4a806aa">&#9670;&#160;</a></span>rbGetSimConnected()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool rbGetSimConnected </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if SIM card is present, communicating properly with, and has presented no errors in SIM transactions with the transceiver. </p>
+<dl class="section return"><dt>Returns</dt><dd>bool depicting SIM communicating correctly.<ul>
+<li></li>
+</ul>
+</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This function will return false either if it received it from the modem or the function failed. </dd></dl>
+
+</div>
+</div>
+<a id="a02fecafee9043c858324a0b2e7380399" name="a02fecafee9043c858324a0b2e7380399"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a02fecafee9043c858324a0b2e7380399">&#9670;&#160;</a></span>rbReceiveMessage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t rbReceiveMessage </td>
           <td>(</td>
           <td class="paramtype">char **&#160;</td>
           <td class="paramname"><em>buffer</em></td><td>)</td>
@@ -935,14 +940,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a8b7eda78bf08ac272e59129de302f43b" name="a8b7eda78bf08ac272e59129de302f43b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8b7eda78bf08ac272e59129de302f43b">&#9670;&#160;</a></span>receiveMessageWithTopic()</h2>
+<a id="a7eeadc83a3aecc76640adee2e34aa2d1" name="a7eeadc83a3aecc76640adee2e34aa2d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7eeadc83a3aecc76640adee2e34aa2d1">&#9670;&#160;</a></span>rbReceiveMessageWithTopic()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">size_t receiveMessageWithTopic </td>
+          <td class="memname">size_t rbReceiveMessageWithTopic </td>
           <td>(</td>
           <td class="paramtype">char **&#160;</td>
           <td class="paramname"><em>buffer</em>, </td>
@@ -977,14 +982,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ae2172e9ecc9b64e734717d39b43245bc" name="ae2172e9ecc9b64e734717d39b43245bc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae2172e9ecc9b64e734717d39b43245bc">&#9670;&#160;</a></span>sendMessage()</h2>
+<a id="a9ff99031bfc2f2a17c8179ce326891c8" name="a9ff99031bfc2f2a17c8179ce326891c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ff99031bfc2f2a17c8179ce326891c8">&#9670;&#160;</a></span>rbSendMessage()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool sendMessage </td>
+          <td class="memname">bool rbSendMessage </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>data</em>, </td>
@@ -1022,14 +1027,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a826ab2f440d51504af601ac0545ac455" name="a826ab2f440d51504af601ac0545ac455"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a826ab2f440d51504af601ac0545ac455">&#9670;&#160;</a></span>sendMessageAny()</h2>
+<a id="a277dafa73f54b5e9508279eff5e56b03" name="a277dafa73f54b5e9508279eff5e56b03"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a277dafa73f54b5e9508279eff5e56b03">&#9670;&#160;</a></span>rbSendMessageAny()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool sendMessageAny </td>
+          <td class="memname">bool rbSendMessageAny </td>
           <td>(</td>
           <td class="paramtype">uint16_t&#160;</td>
           <td class="paramname"><em>topic</em>, </td>
@@ -1074,14 +1079,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a6422c54b3a6ef138fa7b84664412d8d2" name="a6422c54b3a6ef138fa7b84664412d8d2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6422c54b3a6ef138fa7b84664412d8d2">&#9670;&#160;</a></span>sendMessageCloudloop()</h2>
+<a id="af1db6349f6c5b989155c13c814f56671" name="af1db6349f6c5b989155c13c814f56671"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1db6349f6c5b989155c13c814f56671">&#9670;&#160;</a></span>rbSendMessageCloudloop()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool sendMessageCloudloop </td>
+          <td class="memname">bool rbSendMessageCloudloop </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="rockblock__9704_8h.html#abba1a824edb46c8c944f5bf7b53ac09c">cloudloopTopics_t</a>&#160;</td>
           <td class="paramname"><em>topic</em>, </td>
@@ -1123,6 +1128,55 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>bool depicting success or failure. </dd></dl>
+
+</div>
+</div>
+<a id="ad547e4026bc017147f3c595a1bb6fee2" name="ad547e4026bc017147f3c595a1bb6fee2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad547e4026bc017147f3c595a1bb6fee2">&#9670;&#160;</a></span>rbUpdateFirmware()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool rbUpdateFirmware </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>firmwareFile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="rockblock__9704_8h.html#af8a784ef775cad6e0fcd0b8a249d8dc8">updateProgressCallback</a>&#160;</td>
+          <td class="paramname"><em>progress</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>context</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Update 9704 firmware. This is a blocking call and will take approximately 10 minutes to upgrade, the updateProgressCallback is recommended. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">firmwareFile</td><td>path to the sxbin firmware files from Iridium </td></tr>
+    <tr><td class="paramname">progress</td><td>pointer to the update progress callback, this can be NULL. </td></tr>
+    <tr><td class="paramname">context</td><td>pointer to to some shared memory to pass to progress, this can be NULL. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool true if the upgrade was successful.<ul>
+<li></li>
+</ul>
+</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This is only defined if KERMIT was defined during the build. </dd></dl>
 
 </div>
 </div>
@@ -1230,55 +1284,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="abb5896c5d354942ccf5ca47b3ed801ee" name="abb5896c5d354942ccf5ca47b3ed801ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb5896c5d354942ccf5ca47b3ed801ee">&#9670;&#160;</a></span>updateFirmware()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool updateFirmware </td>
-          <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>firmwareFile</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="rockblock__9704_8h.html#af8a784ef775cad6e0fcd0b8a249d8dc8">updateProgressCallback</a>&#160;</td>
-          <td class="paramname"><em>progress</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>context</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Update 9704 firmware. This is a blocking call and will take approximately 10 minutes to upgrade, the updateProgressCallback is recommended. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">firmwareFile</td><td>path to the sxbin firmware files from Iridium </td></tr>
-    <tr><td class="paramname">progress</td><td>pointer to the update progress callback, this can be NULL. </td></tr>
-    <tr><td class="paramname">context</td><td>pointer to to some shared memory to pass to progress, this can be NULL. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>bool true if the upgrade was successful.<ul>
-<li></li>
-</ul>
-</dd></dl>
-<dl class="section note"><dt>Note</dt><dd>This is only defined if KERMIT was defined during the build. </dd></dl>
-
-</div>
-</div>
 <h2 class="groupheader">Variable Documentation</h2>
 <a id="a20265b04c81a37327b55ceb556201361" name="a20265b04c81a37327b55ceb556201361"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a20265b04c81a37327b55ceb556201361">&#9670;&#160;</a></span>base64Buffer</h2>
@@ -1324,8 +1329,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a0885abbfd048596d9b74277c999e93d4" name="a0885abbfd048596d9b74277c999e93d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0885abbfd048596d9b74277c999e93d4">&#9670;&#160;</a></span>CRC16Table</h2>
+<a id="ad58c9a5782e86aaccebd930df0d69c8e" name="ad58c9a5782e86aaccebd930df0d69c8e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad58c9a5782e86aaccebd930df0d69c8e">&#9670;&#160;</a></span>CRC16Table</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1334,7 +1339,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const unsigned short CRC16Table[256]</td>
+          <td class="memname">const uint16_t CRC16Table[256]</td>
         </tr>
       </table>
   </td>

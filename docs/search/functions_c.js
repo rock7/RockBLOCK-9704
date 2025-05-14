@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['updatefirmware_0',['updatefirmware',['../rockblock__9704_8c.html#abb5896c5d354942ccf5ca47b3ed801ee',1,'updateFirmware(const char *firmwareFile, updateProgressCallback progress, void *context):&#160;rockblock_9704.c'],['../rockblock__9704_8h.html#abb5896c5d354942ccf5ca47b3ed801ee',1,'updateFirmware(const char *firmwareFile, updateProgressCallback progress, void *context):&#160;rockblock_9704.c']]]
+  ['waitforjsprmessage_0',['waitforjsprmessage',['../jspr_8c.html#a3370838186900080b1aac15be9e0237c',1,'waitForJsprMessage(jsprResponse_t *response, const char *expectedTarget, const uint32_t expectedCode, const uint32_t timeoutSeconds):&#160;jspr.c'],['../jspr_8h.html#a3370838186900080b1aac15be9e0237c',1,'waitForJsprMessage(jsprResponse_t *response, const char *expectedTarget, const uint32_t expectedCode, const uint32_t timeoutSeconds):&#160;jspr.c']]]
 ];
