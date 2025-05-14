@@ -79,7 +79,7 @@ int main(int argc, char * argv[])
         printf("Iridium modem has booted and is ready to use\r\n");
         printf("Successfully started serial session with RB9704\r\n");
 
-        char *imei = getImei();
+        char *imei = rbGetImei();
         if(imei != NULL)
         {
             printf("9704 Imei: %s\r\n", imei);

@@ -151,9 +151,9 @@ int main(int argc, char * argv[])
         //Begin serial connection and initialise the modem
         if(rbBegin(_serialDevice))
         {
-            printf("Current Firmware Version: %s\n", getFirmwareVersion());
+            printf("Current Firmware Version: %s\n", rbGetFirmwareVersion());
 
-            if (updateFirmware (_firmwareFile, progressCallback, NULL) == true)
+            if (rbUpdateFirmware (_firmwareFile, progressCallback, NULL) == true)
             {
                 printf("Successfully update the firmware, wait for the RockBLOCK 9704 to reboot\n");
             }

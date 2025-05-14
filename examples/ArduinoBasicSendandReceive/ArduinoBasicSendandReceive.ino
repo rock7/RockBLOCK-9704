@@ -31,12 +31,12 @@ void setup() {
       Serial.println("Successfully started serial session with RB9704\r\n");
       //Queue and send MO
       const char *message = "Reflected Hello World!";
-      if(sendMessageAny(80, message, strlen(message), 600))
+      if(rbSendMessageAny(80, message, strlen(message), 600))
       {
           Serial.print("Sent MO: ");
           Serial.println(message);
           //Start listening for MT
-          int oldSignal = getSignal();
+          int oldSignal = rbGetSignal();
           Serial.print("Current Signal: ");
           Serial.println(oldSignal);
       }
@@ -57,7 +57,7 @@ void loop() {
     delay(1000);
     if(!ended)
     {
-      const size_t mtLength = receiveMessage(&mtBuffer);
+      const size_t mtLength = rbReceiveMessage(&mtBuffer);
       if ((mtLength > 0) && (mtBuffer != NULL))
       {
           Serial.print("Received MT: ");
@@ -74,7 +74,7 @@ void loop() {
               Serial.println("Failed to end connection\r\n");           
           }
       }
-      int newSignal = getSignal();
+      int newSignal = rbGetSignal();
       if(oldSignal != newSignal)
       {
           Serial.print("Current Signal: ");

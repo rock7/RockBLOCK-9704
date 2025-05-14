@@ -121,15 +121,15 @@ int main(int argc, char * argv[])
         {
             printf("Successfully started serial session with RB9704\r\n");
             //Queue and send MO
-            if(sendMessageAny(_topic, _message, strlen(_message), 600))
+            if(rbSendMessageAny(_topic, _message, strlen(_message), 600))
             {
                 printf("Sent MO: %s\r\n", _message);
                 //Start listening for MT
-                oldSignal = getSignal();
+                oldSignal = rbGetSignal();
                 printf("Current Signal: %d\r\n", oldSignal);
                 while(_run)
                 {
-                    const size_t mtLength = receiveMessage(&mtBuffer);
+                    const size_t mtLength = rbReceiveMessage(&mtBuffer);
                     if ((mtLength > 0) && (mtBuffer != NULL))
                     {
                         printf("Received MT: ");
@@ -149,7 +149,7 @@ int main(int argc, char * argv[])
                         break; //Break out of loop if MT is found
                     }
 
-                    newSignal = getSignal();
+                    newSignal = rbGetSignal();
                     if(oldSignal != newSignal)
                     {
                         printf("Current Signal: %d\r\n", newSignal);

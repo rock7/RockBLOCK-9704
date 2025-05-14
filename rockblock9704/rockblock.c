@@ -9,7 +9,7 @@ _Py_BuildValue_SizeT(const char *, ...);
 
 static PyObject *py_getSignal(PyObject *self, PyObject *args) {
 
-    int result = getSignal();
+    int result = rbGetSignal();
 
     return Py_BuildValue("i", result);
 
@@ -170,7 +170,7 @@ static PyObject *py_sendMessage(PyObject *self, PyObject *args) {
 
     }
 
-    result = sendMessage(data, length, timeout);
+    result = rbSendMessage(data, length, timeout);
 
     return Py_BuildValue("i", result);
 
@@ -189,7 +189,7 @@ static PyObject *py_sendMessageAny(PyObject *self, PyObject *args) {
 
     }
 
-    result = sendMessageAny(topic, data, length, timeout);
+    result = rbSendMessageAny(topic, data, length, timeout);
 
     return Py_BuildValue("i", result);
 
@@ -199,7 +199,7 @@ static PyObject *py_receiveMessage(PyObject *self, PyObject *args) {
 
     char* mtBuffer;
 
-    const size_t mtLength = receiveMessage(&mtBuffer);
+    const size_t mtLength = rbReceiveMessage(&mtBuffer);
 
     if ((mtLength > 0) && (mtBuffer != NULL)) {
 
@@ -225,7 +225,7 @@ static PyObject *py_receiveMessageWithTopic(PyObject *self, PyObject *args) {
 
     char* mtBuffer;
 
-    const size_t mtLength = receiveMessageWithTopic(&mtBuffer, topic);
+    const size_t mtLength = rbReceiveMessageWithTopic(&mtBuffer, topic);
 
     if ((mtLength > 0) && (mtBuffer != NULL)) {
 
@@ -241,56 +241,56 @@ static PyObject *py_receiveMessageWithTopic(PyObject *self, PyObject *args) {
 
 static PyObject *py_getHardwareVersion(PyObject *self, PyObject *args) {
 
-    char * result = getHwVersion();
+    char * result = rbGetHwVersion();
     return Py_BuildValue("s", result);
 
 }
 
 static PyObject *py_getSerialNumber(PyObject *self, PyObject *args) {
 
-    char * result = getSerialNumber();
+    char * result = rbGetSerialNumber();
     return Py_BuildValue("s", result);
 
 }
 
 static PyObject *py_getImei(PyObject *self, PyObject *args) {
 
-    char * result = getImei();
+    char * result = rbGetImei();
     return Py_BuildValue("s", result);
 
 }
 
 static PyObject *py_getBoardTemp(PyObject *self, PyObject *args) {
 
-    int result = getBoardTemp();
+    int result = rbGetBoardTemp();
     return Py_BuildValue("i", result);
 
 }
 
 static PyObject *py_getCardPresent(PyObject *self, PyObject *args) {
 
-  int result = getCardPresent();
+  int result = rbGetCardPresent();
   return Py_BuildValue("i", result);
 
 }
 
 static PyObject *py_getSimConnected(PyObject *self, PyObject *args) {
 
-  int result = getSimConnected();
+  int result = rbGetSimConnected();
   return Py_BuildValue("i", result);
 
 }
 
 static PyObject *py_getIccid(PyObject *self, PyObject *args) {
 
-  char * result = getIccid();
+  char * result = rbGetIccid();
   return Py_BuildValue("s", result);
 
 }
 
 static PyObject *py_getFirmwareVersion(PyObject *self, PyObject *args) {
 
-  char * result = getFirmwareVersion();
+  char * result = rbGetFirmwareVersion();
   return Py_BuildValue("s", result);
 
 }
