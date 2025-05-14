@@ -423,13 +423,12 @@ This library provides a simple blocking API for communicating with the RockBLOCK
 
 ### ⬇️ Receiving Mobile-Terminated (MT) Messages
 
-#### **Blocking Receive**  
-  Calling the listen function will **block until a message is received**. This means the call will not return until the modem return a MT status.
+#### **Non-Blocking Receive**
+  Calling the listen function will not block until a message is received, it can timeout listening for unsolicited MT message, so it is advised to wrap this call in receive loop/thread, refer to our examples showing this.
 
   Only call listen when:
   - You have good signal and a clear view of the sky
-  - You expect a message
-  - You handle it in a way blocking does not impact your the main application flow.
+  - You handle it in a way you keep calling it until you have a message.
 
 ---
 
