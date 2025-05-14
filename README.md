@@ -418,7 +418,7 @@ This library provides a simple blocking API for communicating with the RockBLOCK
   Sending an full payload MO message (up to 100 kB + 2 B CRC) may take **around 2 minutes** under good conditions. In areas with **poor signal**, this could take longer. **Use timeouts of several minutes**, not seconds.
 
   Only transmit when:
-  - You have good signal a clear view fo the sky
+  - You have good signal and a clear view of the sky
   - You handle it in a way blocking does not impact your the main application flow.
 
 ### ⬇️ Receiving Mobile-Terminated (MT) Messages
@@ -427,7 +427,7 @@ This library provides a simple blocking API for communicating with the RockBLOCK
   Calling the listen function will **block until a message is received**. This means the call will not return until the modem return a MT status.
 
   Only call listen when:
-  - You have good signal a clear view fo the sky
+  - You have good signal and a clear view of the sky
   - You expect a message
   - You handle it in a way blocking does not impact your the main application flow.
 
