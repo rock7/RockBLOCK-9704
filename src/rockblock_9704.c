@@ -310,7 +310,7 @@ static bool appendCrc(uint8_t * buffer, size_t length)
 {
     bool appended = false;
     int crc = calculateCrc(buffer, length, 0);
-    if (calculateCrc > 0)
+    if (crc > 0)
     {
         crcBuffer[0] = (crc >> 8) & 0xFFU;
         crcBuffer[1] = crc & 0xFFU;
