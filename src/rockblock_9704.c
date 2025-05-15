@@ -594,7 +594,7 @@ int8_t rbGetSignal(void)
     int8_t signal = -1;
     jsprResponse_t response;
     jsprGetSignal();
-    receiveJspr(&response, "constellationState");
+    waitForJsprMessage(&response, "constellationState", JSPR_RC_NO_ERROR, 1);
     if(JSPR_RC_NO_ERROR == response.code && strcmp(response.target, "constellationState") == 0)
     {
         jsprConstellationState_t conState;
