@@ -135,9 +135,16 @@ size_t rbReceiveMessage(char ** buffer);
 size_t rbReceiveMessageWithTopic(char ** buffer, uint16_t topic);
 
 /**
- * @brief Get the current signal strength (0-5) from the modem.
- * 
- * @return uint8_t of the signal strength from the modem (-1 on error).
+ * @brief Get the current signal strength from the modem.
+ *
+ * The signal strength is returned in signal bars from 0 to 5:
+ * - 0: No signal
+ * - 5: Maximum signal strength
+ *
+ * @note A return value of -1 indicates an error occurred while communicating 
+ * with the modem to retrieve the signal strength.
+ *
+ * @return int8_t Signal strength in bars (0–5), or -1 on error.
  */
 int8_t rbGetSignal(void);
 
