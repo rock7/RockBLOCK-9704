@@ -33,8 +33,11 @@ static bool sending = false;
 extern imt_t imtMo[MO_QUEUE_SIZE];
 extern imt_t imtMt[MT_QUEUE_SIZE];
 
+static char firmwareVersion [FIRMWARE_VERSION_STRING_LEN];
+
 jsprHwInfo_t hwInfo;
 jsprSimStatus_t simStatus;
+jsprFirmwareInfo_t firmwareInfo;
 
 #ifdef __linux__
     #define SERIAL_CONTEXT_SETUP_FUNC setContextLinux
@@ -734,9 +737,6 @@ static bool getFirmwareInfo(jsprFirmwareInfo_t * fwInfo)
 
 char * rbGetFirmwareVersion(void)
 {
-    static char firmwareVersion [FIRMWARE_VERSION_STRING_LEN];
-    jsprFirmwareInfo_t firmwareInfo;
-
     if(getFirmwareInfo(&firmwareInfo))
     {
         snprintf(firmwareVersion, FIRMWARE_VERSION_STRING_LEN,"v%u.%u.%u",
