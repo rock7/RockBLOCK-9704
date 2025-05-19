@@ -967,6 +967,22 @@ bool parseJsprGetMessageProvisioning(char * jsprString, jsprMessageProvisioning_
                                 messageProvisioning->provisioning[i].priority = LOW_PRIORITY;
                             }
                         }
+                        cJSON * discardTimeSeconds = cJSON_GetObjectItem(topic, "discard_time_seconds");
+                        if(cJSON_IsNumber(discardTimeSeconds))
+                        {
+                            if(discardTimeSeconds->valueint >= 15 && discardTimeSeconds->valueint <= 604800)
+                            {
+                                messageProvisioning->provisioning[i].discardTimeSeconds = discardTimeSeconds->valueint;
+                            }
+                        }
+                        cJSON * maxQueueDepth = cJSON_GetObjectItem(topic, "max_queue_depth");
+                        if(cJSON_IsNumber(maxQueueDepth))
+                        {
+                            if(maxQueueDepth->valueint >= 1 && maxQueueDepth->valueint <= 99)
+                            {
+                                messageProvisioning->provisioning[i].maxQueueDepth = maxQueueDepth->valueint;
+                            }
+                        }
                     }
                 }
             }
