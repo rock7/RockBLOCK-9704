@@ -146,6 +146,11 @@ else()
     target_link_libraries(${CUSTOM_FILE_BIN} PRIVATE ${IRIDIUM_IMT_LIB})
 endif()
 
+
+if (DEFINED TESTING AND TESTING STREQUAL "ON")
+    add_subdirectory(tests)
+endif()
+
 if (DEFINED FW_UPDATE AND FW_UPDATE STREQUAL "ON")
     add_compile_definitions(KERMIT)
     add_library(${KERMIT_LIB} ${KERMIT_IO_DIR}/kermit_io.c ${KERMIT_DIR}/kermit.c)
