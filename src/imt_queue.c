@@ -3,8 +3,8 @@
 imt_t imtMo[MO_QUEUE_SIZE] = { {0, NULL, 0, 0, false} };
 imt_t imtMt[MT_QUEUE_SIZE] = { {0, NULL, 0, 0, false} };
 
-static uint8_t imtMoBuffer[MO_QUEUE_SIZE][IMT_PAYLOAD_SIZE];
-static uint8_t imtMtBuffer[MT_QUEUE_SIZE][IMT_PAYLOAD_SIZE];
+uint8_t imtMoBuffer[MO_QUEUE_SIZE][IMT_PAYLOAD_SIZE];
+uint8_t imtMtBuffer[MT_QUEUE_SIZE][IMT_PAYLOAD_SIZE];
 
 int8_t addMoToQueue(uint16_t topic, const char * data, const size_t length)
 {
@@ -89,7 +89,7 @@ void imtQueueInit (void) //zero out all queue buffers
 
     for (size_t i = 0; i < MT_QUEUE_SIZE; i++)
     {
-        imtMt[i].buffer = imtMoBuffer[i];
+        imtMt[i].buffer = imtMtBuffer[i];
         memset(imtMt[i].buffer, 0, IMT_PAYLOAD_SIZE);
     }
 }
