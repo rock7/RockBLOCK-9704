@@ -75,7 +75,7 @@ int testSerialInterface_serialReadFunc (char * bytes, const uint16_t length)
 int testSerialInterface_serialWriteFunc (const char * data, const uint16_t length)
 {
     int bytesWritten = 0;
-    while (*data != '\0' && g_outputIndex < BUFFER_SIZE)
+    while (*data != '\0' && g_outputIndex < BUFFER_SIZE && g_outputIndex < length)
     {
         g_outputBuffer[g_outputIndex++] = *data++;
         bytesWritten++;

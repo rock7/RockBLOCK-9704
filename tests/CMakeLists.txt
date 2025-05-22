@@ -28,6 +28,7 @@ add_executable(
     tests
     test-jspr-parse.cpp
     test-imt-queue.cpp
+    test-jspr-command.cpp
     )
 
 target_link_libraries(
