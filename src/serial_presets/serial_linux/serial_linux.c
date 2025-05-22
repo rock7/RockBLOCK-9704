@@ -191,17 +191,29 @@ int writeLinux(const char * data, const uint16_t length)
 {
     int rc = -1;
     bool retry = false;
-
+    size_t bytesSent = 0;
+    size_t toSend = length;
     if(serialState == OPEN)
     {
         do
         {
             retry = false;
-            rc = write(serialConnection, data, length);
-            if (rc < 0)
+            toSend = length - bytesSent;
+            rc = write(serialConnection, &data[bytesSent], toSend);
+            if(rc > 0)
+            {
+                bytesSent += rc;
+            }
+            else
             {
                 retry = (errno == EAGAIN) ? true : false;
             }
+
+            if (bytesSent < length)
+            {
+                retry = true;
+            }
+            
         } while (retry == true);
 
         if (rc < 0)
