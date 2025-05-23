@@ -47,6 +47,8 @@ jsprFirmwareInfo_t firmwareInfo;
     #define SERIAL_CONTEXT_SETUP_FUNC setContextWindows
 #elif ARDUINO
     #define SERIAL_CONTEXT_SETUP_FUNC setContextArduino
+#elif RB_CUSTOM_CONTEXT
+    #define SERIAL_CONTEXT_SETUP_FUNC setContextCustom
 #else
     #define SERIAL_CONTEXT_SETUP_FUNC //Custom approach
     #error A serial context is needed
