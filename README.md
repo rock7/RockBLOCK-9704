@@ -3,6 +3,7 @@
 [![Build](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/rock7/rockblock-9704/actions)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![PyPI](https://img.shields.io/pypi/v/rockblock9704)](https://pypi.org/project/rockblock9704/)
+[![arduino-library-badge](https://www.ardu-badge.com/badge/RockBLOCK-9704.svg)](https://docs.arduino.cc/libraries/rockblock-9704/)
 
 Official C and Python libraries for the [RockBLOCK 9704](https://www.groundcontrol.com/product/rockblock-9704/) satellite modem, maintained by [Ground Control](https://www.groundcontrol.com).
 
