@@ -35,6 +35,7 @@ Further documentation for hardware and specifications can be found on our docume
   - [⚠️ Blocking Behavior](#%EF%B8%8F-blocking-behavior)
   - [⬆️ Sending Mobile-Originated (MO) Messages](#%EF%B8%8F-sending-mobile-originated-mo-messages)
   - [⬇️ Receiving Mobile-Terminated (MT) Messages](#%EF%B8%8F-receiving-mobile-terminated-mt-messages)
+- [📑 Tests](#-tests)
 - [❓ Frequently Imagined Questions (FIQ)](#-frequently-imagined-questions-fiq)
 - [⚖️ License](#%EF%B8%8F-license)
 
@@ -438,6 +439,39 @@ This library provides a simple blocking API for communicating with the RockBLOCK
   Only call listen when:
   - You have good signal and a clear view of the sky
   - You handle it in a way you keep calling it until you have a message.
+
+---
+
+## 📑 Tests
+
+A wide assortment of unit tests have been written to confirm the functionality of this library. It is recommended to run these tests when making changes to the existing code base and to add your own tests (following the existing format) where applicable. Find below the build and run steps:
+
+#### **Dependencies**
+- [googletest](https://github.com/google/googletest.git)
+
+```bash
+git clone https://github.com/google/googletest.git
+mkdir build
+cd build
+cmake ..
+make
+```
+
+#### **Build**
+
+```bash
+mkdir build
+cd build
+cmake -DTESTING=ON ..
+make
+```
+
+#### **Run**
+
+```bash
+cd tests
+./tests
+```
 
 ---
 
