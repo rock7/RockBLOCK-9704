@@ -114,6 +114,9 @@ Macros</h2></td></tr>
 <tr class="memitem:af79a63831651dc127235016bce24687d" id="r_af79a63831651dc127235016bce24687d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8h.html#af79a63831651dc127235016bce24687d">RB9704_BAUD</a>&#160;&#160;&#160;230400U</td></tr>
 <tr class="memdesc:af79a63831651dc127235016bce24687d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fixed serial baud rate for communication with the RockBLOCK 9704 modem.  <br /></td></tr>
 <tr class="separator:af79a63831651dc127235016bce24687d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f747b119512888d3b90759ada2244ca" id="r_a9f747b119512888d3b90759ada2244ca"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8h.html#a9f747b119512888d3b90759ada2244ca">SERIAL_CONTEXT_SETUP_FUNC</a>&#160;&#160;&#160;setContextLinux</td></tr>
+<tr class="memdesc:a9f747b119512888d3b90759ada2244ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Platform-specific macro to define the serial context setup function.  <br /></td></tr>
+<tr class="separator:a9f747b119512888d3b90759ada2244ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -266,6 +269,29 @@ Functions</h2></td></tr>
 <p>Fixed serial baud rate for communication with the RockBLOCK 9704 modem. </p>
 <p>This value should not be changed, as it is required by the modem hardware. </p>
 
+</div>
+</div>
+<a id="a9f747b119512888d3b90759ada2244ca" name="a9f747b119512888d3b90759ada2244ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f747b119512888d3b90759ada2244ca">&#9670;&#160;</a></span>SERIAL_CONTEXT_SETUP_FUNC</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SERIAL_CONTEXT_SETUP_FUNC&#160;&#160;&#160;setContextLinux</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Platform-specific macro to define the serial context setup function. </p>
+<p>This macro resolves to a platform-appropriate function used to configure the serial context. By default, it maps to:</p><ul>
+<li><code>setContextLinux</code> on Linux and macOS</li>
+<li><code>setContextWindows</code> on Windows</li>
+<li><code>setContextArduino</code> on Arduino platforms</li>
+</ul>
+<p>You can override this macro by defining <code>SERIAL_CONTEXT_SETUP_FUNC</code> manually <b>before</b> including this library, allowing for custom serial context initialisation logic.</p>
+<p>Example: </p><div class="fragment"><div class="line"><span class="preprocessor">#define SERIAL_CONTEXT_SETUP_FUNC myCustomSerialSetup</span></div>
+</div><!-- fragment --> 
 </div>
 </div>
 <h2 class="groupheader">Typedef Documentation</h2>

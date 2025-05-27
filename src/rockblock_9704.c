@@ -22,6 +22,10 @@
 #define IMT_MAX_TOPIC_ID 65535U
 #define FIRMWARE_VERSION_STRING_LEN 13U
 
+#ifndef SERIAL_CONTEXT_SETUP_FUNC
+    #error A serial context function is needed
+#endif
+
 extern int messageReference;
 extern serialContext context;
 extern enum serialState serialState;
@@ -38,24 +42,6 @@ static char firmwareVersion [FIRMWARE_VERSION_STRING_LEN];
 jsprHwInfo_t hwInfo;
 jsprSimStatus_t simStatus;
 jsprFirmwareInfo_t firmwareInfo;
-
-#ifdef __linux__
-    #define SERIAL_CONTEXT_SETUP_FUNC setContextLinux
-#elif __APPLE__
-    #define SERIAL_CONTEXT_SETUP_FUNC setContextLinux
-#elif _WIN32
-    #define SERIAL_CONTEXT_SETUP_FUNC setContextWindows
-#elif ARDUINO
-    #define SERIAL_CONTEXT_SETUP_FUNC setContextArduino
-#else
-    #define SERIAL_CONTEXT_SETUP_FUNC //Custom approach
-    #error A serial context is needed
-#endif
-
-#ifndef SERIAL_CONTEXT_SETUP_FUNC
-    #error A serial context function is needed
-#endif
-
 
 #ifdef RB_GPIO
 bool rbBeginGpio(char * port, const rbGpioTable_t * gpioInfo, const int timeout)
