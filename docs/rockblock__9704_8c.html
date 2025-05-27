@@ -103,8 +103,6 @@ Macros</h2></td></tr>
 <tr class="separator:ae1127d3fe07f199e8374c438b6f75bd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4bd1659041ca64ead6444117164402b" id="r_ae4bd1659041ca64ead6444117164402b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#ae4bd1659041ca64ead6444117164402b">FIRMWARE_VERSION_STRING_LEN</a>&#160;&#160;&#160;13U</td></tr>
 <tr class="separator:ae4bd1659041ca64ead6444117164402b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f747b119512888d3b90759ada2244ca" id="r_a9f747b119512888d3b90759ada2244ca"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a9f747b119512888d3b90759ada2244ca">SERIAL_CONTEXT_SETUP_FUNC</a></td></tr>
-<tr class="separator:a9f747b119512888d3b90759ada2244ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -200,20 +198,24 @@ Variables</h2></td></tr>
 <tr class="separator:aa38b725755619d237e2299c353eadedb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae62bd010bc76a0b096696cd95490d512" id="r_ae62bd010bc76a0b096696cd95490d512"><td class="memItemLeft" align="right" valign="top">enum <a class="el" href="serial_8h.html#a4a1f54577f7860805a311ce452a00c6c">serialState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#ae62bd010bc76a0b096696cd95490d512">serialState</a></td></tr>
 <tr class="separator:ae62bd010bc76a0b096696cd95490d512"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20265b04c81a37327b55ceb556201361" id="r_a20265b04c81a37327b55ceb556201361"><td class="memItemLeft" align="right" valign="top">static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a20265b04c81a37327b55ceb556201361">base64Buffer</a> [<a class="el" href="rockblock__9704_8h.html#a1a7cd410850bd003e40c5e91c4b6383b">BASE64_TEMP_BUFFER</a>]</td></tr>
-<tr class="separator:a20265b04c81a37327b55ceb556201361"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a259affed12195d327a1ddcc17a5f306b" id="r_a259affed12195d327a1ddcc17a5f306b"><td class="memItemLeft" align="right" valign="top">static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a259affed12195d327a1ddcc17a5f306b">crcBuffer</a> [<a class="el" href="imt__queue_8h.html#a3596d8201c385c09529130a60f337c95">IMT_CRC_SIZE</a>]</td></tr>
-<tr class="separator:a259affed12195d327a1ddcc17a5f306b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c62ddea5f9dd284289a37ffd6e17705" id="r_a8c62ddea5f9dd284289a37ffd6e17705"><td class="memItemLeft" align="right" valign="top">static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a8c62ddea5f9dd284289a37ffd6e17705">base64Buffer</a> [2048U]</td></tr>
+<tr class="separator:a8c62ddea5f9dd284289a37ffd6e17705"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d2eace3fa2bea551ecfff1e9e56aae4" id="r_a0d2eace3fa2bea551ecfff1e9e56aae4"><td class="memItemLeft" align="right" valign="top">static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a0d2eace3fa2bea551ecfff1e9e56aae4">crcBuffer</a> [2U]</td></tr>
+<tr class="separator:a0d2eace3fa2bea551ecfff1e9e56aae4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4a61f33453d494aff2ef03d6cf1d3221" id="r_a4a61f33453d494aff2ef03d6cf1d3221"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a4a61f33453d494aff2ef03d6cf1d3221">sending</a> = false</td></tr>
 <tr class="separator:a4a61f33453d494aff2ef03d6cf1d3221"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a85cfe31f7c2c8513bb60b97ad5cfc049" id="r_a85cfe31f7c2c8513bb60b97ad5cfc049"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structimt__t.html">imt_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a85cfe31f7c2c8513bb60b97ad5cfc049">imtMo</a> [<a class="el" href="imt__queue_8h.html#a206c3250f7f7d7f1bc47afa1bf1e870e">MO_QUEUE_SIZE</a>]</td></tr>
-<tr class="separator:a85cfe31f7c2c8513bb60b97ad5cfc049"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa42babb1e18ab70396e72cd807c09d41" id="r_aa42babb1e18ab70396e72cd807c09d41"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structimt__t.html">imt_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#aa42babb1e18ab70396e72cd807c09d41">imtMt</a> [<a class="el" href="imt__queue_8h.html#a2c5b5ec907fece97416be3205f589737">MT_QUEUE_SIZE</a>]</td></tr>
-<tr class="separator:aa42babb1e18ab70396e72cd807c09d41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78ab22cf0f7d73edf0be689a1fadf6dd" id="r_a78ab22cf0f7d73edf0be689a1fadf6dd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structimt__t.html">imt_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a78ab22cf0f7d73edf0be689a1fadf6dd">imtMo</a> [1U]</td></tr>
+<tr class="separator:a78ab22cf0f7d73edf0be689a1fadf6dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6cbc538aac365ae2a1a068531975e6ba" id="r_a6cbc538aac365ae2a1a068531975e6ba"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structimt__t.html">imt_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a6cbc538aac365ae2a1a068531975e6ba">imtMt</a> [1U]</td></tr>
+<tr class="separator:a6cbc538aac365ae2a1a068531975e6ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b5303f50999184fac92ebefb1f5aa10" id="r_a9b5303f50999184fac92ebefb1f5aa10"><td class="memItemLeft" align="right" valign="top">static char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a9b5303f50999184fac92ebefb1f5aa10">firmwareVersion</a> [13U]</td></tr>
+<tr class="separator:a9b5303f50999184fac92ebefb1f5aa10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae9b8de61d921bc96ddf422275f2646f6" id="r_ae9b8de61d921bc96ddf422275f2646f6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structjsprHwInfo__t.html">jsprHwInfo_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#ae9b8de61d921bc96ddf422275f2646f6">hwInfo</a></td></tr>
 <tr class="separator:ae9b8de61d921bc96ddf422275f2646f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a1773db64ec42bb57bd008860df16af" id="r_a7a1773db64ec42bb57bd008860df16af"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structjsprSimStatus__t.html">jsprSimStatus_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a7a1773db64ec42bb57bd008860df16af">simStatus</a></td></tr>
 <tr class="separator:a7a1773db64ec42bb57bd008860df16af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8ae92a0afbba9af5521df101fffee98" id="r_af8ae92a0afbba9af5521df101fffee98"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structjsprFirmwareInfo__t.html">jsprFirmwareInfo_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#af8ae92a0afbba9af5521df101fffee98">firmwareInfo</a></td></tr>
+<tr class="separator:af8ae92a0afbba9af5521df101fffee98"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad58c9a5782e86aaccebd930df0d69c8e" id="r_ad58c9a5782e86aaccebd930df0d69c8e"><td class="memItemLeft" align="right" valign="top">static const uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#ad58c9a5782e86aaccebd930df0d69c8e">CRC16Table</a> [256]</td></tr>
 <tr class="separator:ad58c9a5782e86aaccebd930df0d69c8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a999cdb53fc486a4a235ae4927e39605b" id="r_a999cdb53fc486a4a235ae4927e39605b"><td class="memItemLeft" align="right" valign="top">struct k_data&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8c.html#a999cdb53fc486a4a235ae4927e39605b">kermitData</a></td></tr>
@@ -262,20 +264,6 @@ Variables</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">#define IMT_MIN_TOPIC_ID&#160;&#160;&#160;64U</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a9f747b119512888d3b90759ada2244ca" name="a9f747b119512888d3b90759ada2244ca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9f747b119512888d3b90759ada2244ca">&#9670;&#160;</a></span>SERIAL_CONTEXT_SETUP_FUNC</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define SERIAL_CONTEXT_SETUP_FUNC</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1285,8 +1273,8 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
-<a id="a20265b04c81a37327b55ceb556201361" name="a20265b04c81a37327b55ceb556201361"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a20265b04c81a37327b55ceb556201361">&#9670;&#160;</a></span>base64Buffer</h2>
+<a id="a8c62ddea5f9dd284289a37ffd6e17705" name="a8c62ddea5f9dd284289a37ffd6e17705"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c62ddea5f9dd284289a37ffd6e17705">&#9670;&#160;</a></span>base64Buffer</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1295,7 +1283,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t base64Buffer[<a class="el" href="rockblock__9704_8h.html#a1a7cd410850bd003e40c5e91c4b6383b">BASE64_TEMP_BUFFER</a>]</td>
+          <td class="memname">uint8_t base64Buffer[2048U]</td>
         </tr>
       </table>
   </td>
@@ -1351,8 +1339,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a259affed12195d327a1ddcc17a5f306b" name="a259affed12195d327a1ddcc17a5f306b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a259affed12195d327a1ddcc17a5f306b">&#9670;&#160;</a></span>crcBuffer</h2>
+<a id="a0d2eace3fa2bea551ecfff1e9e56aae4" name="a0d2eace3fa2bea551ecfff1e9e56aae4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d2eace3fa2bea551ecfff1e9e56aae4">&#9670;&#160;</a></span>crcBuffer</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1361,7 +1349,43 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t crcBuffer[<a class="el" href="imt__queue_8h.html#a3596d8201c385c09529130a60f337c95">IMT_CRC_SIZE</a>]</td>
+          <td class="memname">uint8_t crcBuffer[2U]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af8ae92a0afbba9af5521df101fffee98" name="af8ae92a0afbba9af5521df101fffee98"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8ae92a0afbba9af5521df101fffee98">&#9670;&#160;</a></span>firmwareInfo</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structjsprFirmwareInfo__t.html">jsprFirmwareInfo_t</a> firmwareInfo</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9b5303f50999184fac92ebefb1f5aa10" name="a9b5303f50999184fac92ebefb1f5aa10"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b5303f50999184fac92ebefb1f5aa10">&#9670;&#160;</a></span>firmwareVersion</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">char firmwareVersion[13U]</td>
         </tr>
       </table>
   </td>
@@ -1401,8 +1425,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a85cfe31f7c2c8513bb60b97ad5cfc049" name="a85cfe31f7c2c8513bb60b97ad5cfc049"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a85cfe31f7c2c8513bb60b97ad5cfc049">&#9670;&#160;</a></span>imtMo</h2>
+<a id="a78ab22cf0f7d73edf0be689a1fadf6dd" name="a78ab22cf0f7d73edf0be689a1fadf6dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78ab22cf0f7d73edf0be689a1fadf6dd">&#9670;&#160;</a></span>imtMo</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1411,7 +1435,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structimt__t.html">imt_t</a> imtMo[<a class="el" href="imt__queue_8h.html#a206c3250f7f7d7f1bc47afa1bf1e870e">MO_QUEUE_SIZE</a>]</td>
+          <td class="memname"><a class="el" href="structimt__t.html">imt_t</a> imtMo[1U]</td>
         </tr>
       </table>
   </td>
@@ -1423,8 +1447,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aa42babb1e18ab70396e72cd807c09d41" name="aa42babb1e18ab70396e72cd807c09d41"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa42babb1e18ab70396e72cd807c09d41">&#9670;&#160;</a></span>imtMt</h2>
+<a id="a6cbc538aac365ae2a1a068531975e6ba" name="a6cbc538aac365ae2a1a068531975e6ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6cbc538aac365ae2a1a068531975e6ba">&#9670;&#160;</a></span>imtMt</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1433,7 +1457,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structimt__t.html">imt_t</a> imtMt[<a class="el" href="imt__queue_8h.html#a2c5b5ec907fece97416be3205f589737">MT_QUEUE_SIZE</a>]</td>
+          <td class="memname"><a class="el" href="structimt__t.html">imt_t</a> imtMt[1U]</td>
         </tr>
       </table>
   </td>
