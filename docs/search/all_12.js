@@ -12,7 +12,7 @@ var searchData=
   ['sendmofromqueue_9',['sendmofromqueue',['../rockblock__9704_8h.html#a06583320e6524b3f57eed8b7bc02f7a1',1,'sendMoFromQueue(const int timeout):&#160;rockblock_9704.h'],['../rockblock__9704_8c.html#a06583320e6524b3f57eed8b7bc02f7a1',1,'sendMoFromQueue(const int timeout):&#160;rockblock_9704.c']]],
   ['serial_2ec_10',['serial.c',['../serial_8c.html',1,'']]],
   ['serial_2eh_11',['serial.h',['../serial_8h.html',1,'']]],
-  ['serial_5fcontext_5fsetup_5ffunc_12',['SERIAL_CONTEXT_SETUP_FUNC',['../rockblock__9704_8c.html#a9f747b119512888d3b90759ada2244ca',1,'rockblock_9704.c']]],
+  ['serial_5fcontext_5fsetup_5ffunc_12',['SERIAL_CONTEXT_SETUP_FUNC',['../rockblock__9704_8h.html#a9f747b119512888d3b90759ada2244ca',1,'rockblock_9704.h']]],
   ['serialbaud_13',['serialBaud',['../serial_8c.html#ab5911dfe1cb08a4289d1d512c9da139e',1,'serial.c']]],
   ['serialconnection_14',['serialConnection',['../serial_8c.html#a86667cd4c54e677d062a3449ee53db4b',1,'serial.c']]],
   ['serialcontext_15',['serialContext',['../structserialContext.html',1,'']]],
@@ -20,7 +20,7 @@ var searchData=
   ['serialdeinitfunc_17',['serialDeInitFunc',['../serial_8h.html#aab47d0e404d0dc04aa978aa5798e4fd6',1,'serial.h']]],
   ['serialinit_18',['serialInit',['../structserialContext.html#a7fa1aa380ddf605edbce5c713f653837',1,'serialContext']]],
   ['serialinitfunc_19',['serialInitFunc',['../serial_8h.html#af36307848c206ab4b11062f687da7716',1,'serial.h']]],
-  ['serialnumber_20',['serialNumber',['../structjsprHwInfo__t.html#a3de625f20e2cf28ba6da4133cd054fa2',1,'jsprHwInfo_t']]],
+  ['serialnumber_20',['serialNumber',['../structjsprHwInfo__t.html#a40b8fa6fe51d549fc8815e5ec27fdec8',1,'jsprHwInfo_t']]],
   ['serialpeek_21',['serialPeek',['../structserialContext.html#a1472ad2a380afa1f719c9fe11759fce9',1,'serialContext']]],
   ['serialpeekfunc_22',['serialPeekFunc',['../serial_8h.html#a3500ae31ee79b2f49e690ccd56ef9679',1,'serial.h']]],
   ['serialport_23',['serialPort',['../serial_8c.html#ad774308e6665c5cbb3f30af01c046e7f',1,'serial.c']]],
@@ -41,5 +41,5 @@ var searchData=
   ['subscription_5finvalid_38',['SUBSCRIPTION_INVALID',['../jspr_8h.html#aa3260c56900fd5b214a1bba90dbd3ed8a1b76c489c083f6353b21adb343190547',1,'jspr.h']]],
   ['subscription_5finvalid_5fmos_39',['SUBSCRIPTION_INVALID_MOS',['../jspr_8h.html#aafd92c3577af7f102b6d46e5dfdf1340a49da4f411f4f2cdccbaf614a6918a698',1,'jspr.h']]],
   ['supportedversioncount_40',['supportedVersionCount',['../structjsprApiVersion__t.html#ae7cdb2880602d1f340286f19a647b22a',1,'jsprApiVersion_t']]],
-  ['supportedversions_41',['supportedVersions',['../structjsprApiVersion__t.html#a3fd75c9f789ac3e8ea3f69c816982703',1,'jsprApiVersion_t']]]
+  ['supportedversions_41',['supportedVersions',['../structjsprApiVersion__t.html#aa80d2c121fdffe585243ddfd780598a5',1,'jsprApiVersion_t']]]
 ];

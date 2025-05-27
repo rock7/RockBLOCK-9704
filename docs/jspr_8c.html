@@ -103,7 +103,7 @@ Functions</h2></td></tr>
 <tr class="separator:a91b3c252aae87547be74925f809bfe54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2df3ee0304851a1ab99c4abb90ec2a0" id="r_ab2df3ee0304851a1ab99c4abb90ec2a0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="jspr_8c.html#ab2df3ee0304851a1ab99c4abb90ec2a0">parseJsprGetApiVersion</a> (char *jsprString, <a class="el" href="structjsprApiVersion__t.html">jsprApiVersion_t</a> *apiVersion)</td></tr>
 <tr class="separator:ab2df3ee0304851a1ab99c4abb90ec2a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abd9299cbedfbd424efe2d52168dbb11f" id="r_abd9299cbedfbd424efe2d52168dbb11f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="jspr_8c.html#abd9299cbedfbd424efe2d52168dbb11f">parseJsprFirmwareInfo</a> (const char *jsprString, <a class="el" href="structjsprFirmwareInfo__t.html">jsprFirmwareInfo_t</a> *firmwareInfo)</td></tr>
+<tr class="memitem:abd9299cbedfbd424efe2d52168dbb11f" id="r_abd9299cbedfbd424efe2d52168dbb11f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="jspr_8c.html#abd9299cbedfbd424efe2d52168dbb11f">parseJsprFirmwareInfo</a> (const char *jsprString, <a class="el" href="structjsprFirmwareInfo__t.html">jsprFirmwareInfo_t</a> *<a class="el" href="rockblock__9704_8c.html#af8ae92a0afbba9af5521df101fffee98">firmwareInfo</a>)</td></tr>
 <tr class="separator:abd9299cbedfbd424efe2d52168dbb11f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c873696e58158c20535fde0f7952394" id="r_a2c873696e58158c20535fde0f7952394"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="jspr_8c.html#a2c873696e58158c20535fde0f7952394">parseJsprGetSimInterface</a> (char *jsprString, <a class="el" href="structjsprSimInterface__t.html">jsprSimInterface_t</a> *simInterface)</td></tr>
 <tr class="separator:a2c873696e58158c20535fde0f7952394"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -134,8 +134,8 @@ Functions</h2></td></tr>
 Variables</h2></td></tr>
 <tr class="memitem:a8e930b248784e8a722ae60c22be3ea3d" id="r_a8e930b248784e8a722ae60c22be3ea3d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="jspr_8c.html#a8e930b248784e8a722ae60c22be3ea3d">messageReference</a> = 1</td></tr>
 <tr class="separator:a8e930b248784e8a722ae60c22be3ea3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad47f1d0efc0499a4115bd6c35a7738e" id="r_aad47f1d0efc0499a4115bd6c35a7738e"><td class="memItemLeft" align="right" valign="top">static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="jspr_8c.html#aad47f1d0efc0499a4115bd6c35a7738e">jsprRxBuffer</a> [<a class="el" href="jspr_8h.html#a739a2a1a0047c98ac1b18ecd25dac092">RX_BUFFER_SIZE</a>]</td></tr>
-<tr class="separator:aad47f1d0efc0499a4115bd6c35a7738e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b1e8178c06ad78f0529ea8cd466a8e0" id="r_a1b1e8178c06ad78f0529ea8cd466a8e0"><td class="memItemLeft" align="right" valign="top">static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="jspr_8c.html#a1b1e8178c06ad78f0529ea8cd466a8e0">jsprRxBuffer</a> [8192U]</td></tr>
+<tr class="separator:a1b1e8178c06ad78f0529ea8cd466a8e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa38b725755619d237e2299c353eadedb" id="r_aa38b725755619d237e2299c353eadedb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structserialContext.html">serialContext</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="jspr_8c.html#aa38b725755619d237e2299c353eadedb">context</a></td></tr>
 <tr class="separator:aa38b725755619d237e2299c353eadedb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -697,8 +697,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aad47f1d0efc0499a4115bd6c35a7738e" name="aad47f1d0efc0499a4115bd6c35a7738e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aad47f1d0efc0499a4115bd6c35a7738e">&#9670;&#160;</a></span>jsprRxBuffer</h2>
+<a id="a1b1e8178c06ad78f0529ea8cd466a8e0" name="a1b1e8178c06ad78f0529ea8cd466a8e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b1e8178c06ad78f0529ea8cd466a8e0">&#9670;&#160;</a></span>jsprRxBuffer</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -707,7 +707,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t jsprRxBuffer[<a class="el" href="jspr_8h.html#a739a2a1a0047c98ac1b18ecd25dac092">RX_BUFFER_SIZE</a>]</td>
+          <td class="memname">uint8_t jsprRxBuffer[8192U]</td>
         </tr>
       </table>
   </td>

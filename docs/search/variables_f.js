@@ -7,7 +7,7 @@ var searchData=
   ['serialconnection_4',['serialConnection',['../serial_8c.html#a86667cd4c54e677d062a3449ee53db4b',1,'serial.c']]],
   ['serialdeinit_5',['serialDeInit',['../structserialContext.html#a17222a2c27f0caa66caa96eaca0640be',1,'serialContext']]],
   ['serialinit_6',['serialInit',['../structserialContext.html#a7fa1aa380ddf605edbce5c713f653837',1,'serialContext']]],
-  ['serialnumber_7',['serialNumber',['../structjsprHwInfo__t.html#a3de625f20e2cf28ba6da4133cd054fa2',1,'jsprHwInfo_t']]],
+  ['serialnumber_7',['serialNumber',['../structjsprHwInfo__t.html#a40b8fa6fe51d549fc8815e5ec27fdec8',1,'jsprHwInfo_t']]],
   ['serialpeek_8',['serialPeek',['../structserialContext.html#a1472ad2a380afa1f719c9fe11759fce9',1,'serialContext']]],
   ['serialport_9',['serialPort',['../serial_8c.html#ad774308e6665c5cbb3f30af01c046e7f',1,'serial.c']]],
   ['serialread_10',['serialRead',['../structserialContext.html#a3f94e7345e51eed4360478dd68275787',1,'serialContext']]],
@@ -19,5 +19,5 @@ var searchData=
   ['simstatus_16',['simStatus',['../rockblock__9704_8c.html#a7a1773db64ec42bb57bd008860df16af',1,'rockblock_9704.c']]],
   ['slot_17',['slot',['../structjsprFirmwareInfo__t.html#a2b244b645b5b8bc7b5fbbe503162fb12',1,'jsprFirmwareInfo_t']]],
   ['supportedversioncount_18',['supportedVersionCount',['../structjsprApiVersion__t.html#ae7cdb2880602d1f340286f19a647b22a',1,'jsprApiVersion_t']]],
-  ['supportedversions_19',['supportedVersions',['../structjsprApiVersion__t.html#a3fd75c9f789ac3e8ea3f69c816982703',1,'jsprApiVersion_t']]]
+  ['supportedversions_19',['supportedVersions',['../structjsprApiVersion__t.html#aa80d2c121fdffe585243ddfd780598a5',1,'jsprApiVersion_t']]]
 ];
