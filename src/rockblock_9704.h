@@ -31,6 +31,35 @@ extern "C" {
  */
 #define RB9704_BAUD 230400U
 
+/**
+ * @def SERIAL_CONTEXT_SETUP_FUNC
+ * @brief Platform-specific macro to define the serial context setup function.
+ *
+ * This macro resolves to a platform-appropriate function used to configure the serial context.
+ * By default, it maps to:
+ * - `setContextLinux` on Linux and macOS
+ * - `setContextWindows` on Windows
+ * - `setContextArduino` on Arduino platforms
+ *
+ * You can override this macro by defining `SERIAL_CONTEXT_SETUP_FUNC` manually **before**
+ * including this library, allowing for custom serial context initialisation logic.
+ *
+ * Example:
+ * @code
+ * #define SERIAL_CONTEXT_SETUP_FUNC myCustomSerialSetup
+ * @endcode
+ */
+#ifndef SERIAL_CONTEXT_SETUP_FUNC
+    #ifdef __linux__
+        #define SERIAL_CONTEXT_SETUP_FUNC setContextLinux
+    #elif __APPLE__
+        #define SERIAL_CONTEXT_SETUP_FUNC setContextLinux
+    #elif _WIN32
+        #define SERIAL_CONTEXT_SETUP_FUNC setContextWindows
+    #elif ARDUINO
+        #define SERIAL_CONTEXT_SETUP_FUNC setContextArduino
+    #endif
+#endif
 
 /**
  * @brief Predefined Cloudloop topic identifiers for RockBLOCK 9704.
