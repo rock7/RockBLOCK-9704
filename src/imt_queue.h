@@ -32,6 +32,7 @@ typedef struct
     size_t length;
     uint16_t topic;
     bool readyToProcess;
+    bool ready;
 } imt_t;
 
 int8_t addMoToQueue(uint16_t topic, const char * data, const size_t length);

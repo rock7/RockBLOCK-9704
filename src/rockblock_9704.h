@@ -19,6 +19,16 @@ extern "C" {
 #include <string.h>
 #include <stddef.h>
 
+
+typedef struct {
+    void (*messageProvisioning)(const jsprMessageProvisioning_t *messageProvisioning);
+    void (*moMessageComplete)(const unsigned int id, const int status);
+    void (*mtMessageComplete)(const unsigned int id, const int status);
+    void (*constellationState)(const jsprConstellationState_t *state);
+} rbCallbacks_t;
+
+void rbRegisterCallbacks(const rbCallbacks_t *callbacks);
+
 /**
  * @brief Temporary buffer size used for Base64 encoding/decoding of IMT messages.
  */
@@ -394,6 +404,11 @@ static bool getHwInfo(jsprHwInfo_t * hwInfo);
  * @return true on success, false on failure.
  */
 static bool getSimStatus(jsprSimStatus_t * simStatus);
+
+static bool sendMoFromQueueAsync(void);
+bool rbSendMessageAsync(const char * data, const size_t length);
+bool rbPoll(void);
+size_t rbReceiveMessageAsync(char ** buffer);
 
 #ifdef __cplusplus
 }
