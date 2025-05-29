@@ -970,6 +970,7 @@ bool parseJsprGetMessageProvisioning(char * jsprString, jsprMessageProvisioning_
                     }
                 }
             }
+        messageProvisioning->provisioningSet = true;
         parsed = true;
         cJSON_Delete(root);
         }

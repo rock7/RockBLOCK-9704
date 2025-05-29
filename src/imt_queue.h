@@ -11,11 +11,11 @@ extern "C" {
 #include <stdbool.h>
 
 #ifndef MO_QUEUE_SIZE
-    #define MO_QUEUE_SIZE 1U
+    #define MO_QUEUE_SIZE 5U
 #endif
 
 #ifndef MT_QUEUE_SIZE
-    #define MT_QUEUE_SIZE 1U
+    #define MT_QUEUE_SIZE 2U
 #endif
 
 #define IMT_CRC_SIZE 2U
@@ -40,6 +40,9 @@ int8_t addMtToQueue(uint16_t topic, uint16_t id, size_t length);
 void removeMoFromQueue(int8_t queuePosition);
 void removeMtFromQueue(int8_t queuePosition);
 void imtQueueInit (void);
+bool shiftMoQueueUp(void);
+bool shiftMtQueueUp(void);
+void shiftMtQueueDown(void);
 
 #ifdef __cplusplus
 }

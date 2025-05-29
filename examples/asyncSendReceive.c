@@ -15,6 +15,8 @@
 static char _serialDevice[PATH_MAX];
 static volatile bool _run = true;
 
+int messageSent = 0;
+
 typedef enum
 {
     SUCCESS = 0,
@@ -51,6 +53,10 @@ static void signal_handler(int sig)
 
 void onMoComplete(const unsigned int id, const int status) {
     printf("\033[1;32mMO Complete: ID = %u, Status = %d\033[0m\r\n", id, status);
+    if (status == 1)
+    {
+        messageSent += 1;
+    }
 }
 
 void onMtComplete(const unsigned int id, const int status) {
@@ -66,10 +72,9 @@ int main(int argc, char * argv[])
     returnCode_t rVal = SUCCESS;
     bool gotArgs = true;
     int opt = 0;
-    char * mtBuffer = NULL;
     _serialDevice[0] = '\0';
-    int oldSignal = 0;
-    int newSignal = 0;
+    char * mtBuffer = NULL;
+    char mtStore[100000];
     int messageQueued = 0;
     int messageReceived = 0;
     signal(SIGINT, signal_handler);
@@ -112,34 +117,36 @@ int main(int argc, char * argv[])
         {
             printf("Successfully started serial session with RB9704\r\n");
             //Queue and send MO
-            const char *message = "hello";
+            const char *message = "Hello";
             //Start listening for MT
             while(_run)
             {
                 rbPoll();
-                printf("\033[1;31mMessage Queued: %d\033[0m\r\n", messageQueued);
+                printf("\033[1;33mMessage Queued: %d\033[0m\r\n", messageQueued);
+                printf("\033[1;33mMessage Sent: %d\033[0m\r\n", messageSent);
                 if(messageQueued == 0)
                 {
                     if(rbSendMessageAsync(message, strlen(message)))
                     {
                         printf("\033[1;32mQueued MO: %s\033[0m\r\n", message);
-                        messageQueued = 1;
+                        messageQueued += 1;
                     }
                 }
-                printf("\033[1;31mMessage Received: %d\033[0m\r\n", messageReceived);
+                printf("\033[1;34mMessage Received: %d\033[0m\r\n", messageReceived);
                 if(messageReceived == 0)
                 {
                     const size_t mtLength = rbReceiveMessageAsync(&mtBuffer);
                     printf("\033[1;34mMessage length: %ld\033[0m\r\n", mtLength);
                     if ((mtLength > 0) && (mtBuffer != NULL))
                     {
+                        memcpy(mtStore, mtBuffer, mtLength);
                         printf("Received MT: ");
                         for (size_t i = 0; i < mtLength; i++)
                         {
                             // Print ascii characters
-                            if ((mtBuffer[i] >= 32) && (mtBuffer[i] <= 126))
+                            if ((mtStore[i] >= 32) && (mtStore[i] <= 126))
                             {
-                                printf("\033[1;32m%c\033[0m", mtBuffer[i]);
+                                printf("\033[1;32m%c\033[0m", mtStore[i]);
                             }
                             else
                             {
@@ -147,12 +154,17 @@ int main(int argc, char * argv[])
                             }
                         }
                         printf("\r\n");
-                        messageReceived = 1;
+                        memset(mtStore, 0, sizeof(mtStore));
+                        messageReceived += 1;
+                        if(rbAcknowledgeReceiveHeadAsync())
+                        {
+                            printf("\033[1;34mMessage acknowledged\033[0m\r\n");
+                        }
                     }
                 }
 
                 printf("\033[1;35mNon-Blocking!\033[0m\r\n");
-                usleep(100000);
+                usleep(10000);
             }
 
             //End serial connection

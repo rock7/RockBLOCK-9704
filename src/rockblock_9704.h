@@ -409,6 +409,10 @@ static bool sendMoFromQueueAsync(void);
 bool rbSendMessageAsync(const char * data, const size_t length);
 bool rbPoll(void);
 size_t rbReceiveMessageAsync(char ** buffer);
+static bool checkMoQueue(void);
+bool rbAcknowledgeReceiveHeadAsync(void);
+void rbReceiveUnlockAsync(void);
+void rbReceiveLockAsync(void);
 
 #ifdef __cplusplus
 }
