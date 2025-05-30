@@ -704,7 +704,7 @@ static bool checkMoQueue(void)
     return success;
 }
 
-bool rbPoll(void)
+void rbPoll(void)
 {
     jsprResponse_t response;
     int segmentStart;
