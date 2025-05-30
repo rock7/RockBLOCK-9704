@@ -62,12 +62,12 @@ int8_t addMtToQueue(uint16_t topic, uint16_t id, size_t length)
 bool shiftMoQueueUp(void)
 {
     bool success = false;
-    if(imtMo[0].buffer == NULL) //check that head of que is empty before shifting
+    if(imtMo[0].length == 0) //check that head of que is empty before shifting
     {
         for (size_t i = 1; i < MO_QUEUE_SIZE; i++)
         {
-            imtMo[i - 1] = imtMo[i];
             memcpy(imtMoBuffer[i - 1], imtMoBuffer[i], IMT_PAYLOAD_SIZE);
+            imtMo[i - 1] = imtMo[i];
             imtMo[i - 1].buffer = imtMoBuffer[i - 1];
         }
 
@@ -84,8 +84,8 @@ bool shiftMtQueueUp(void)
     {
         for (size_t i = 1; i < MT_QUEUE_SIZE; i++)
         {
-            imtMt[i - 1] = imtMt[i];
             memcpy(imtMtBuffer[i - 1], imtMtBuffer[i], IMT_PAYLOAD_SIZE);
+            imtMt[i - 1] = imtMt[i];
             imtMt[i - 1].buffer = imtMtBuffer[i - 1];
         }
 
@@ -97,15 +97,15 @@ bool shiftMtQueueUp(void)
 
 void shiftMtQueueDown(void)
 {
-    if(imtMt[MT_QUEUE_SIZE - 1].buffer != NULL) //check that the tail of que is empty before shifting
+    if(imtMt[MT_QUEUE_SIZE - 1].length != 0) //check that the tail of que is empty before shifting
     {
-        removeMtFromQueue(MT_QUEUE_SIZE); //clear oldest MT if queue full
+        removeMtFromQueue(MT_QUEUE_SIZE - 1); //clear oldest MT if queue full
     }
 
     for (size_t i = 1; i < MT_QUEUE_SIZE; i++)
     {
-        imtMt[i] = imtMt[i - 1];
         memcpy(imtMtBuffer[i], imtMtBuffer[i - 1], IMT_PAYLOAD_SIZE);
+        imtMt[i] = imtMt[i - 1];
         imtMt[i].buffer = imtMtBuffer[i];
     }
     removeMtFromQueue(0);
@@ -115,7 +115,6 @@ void removeMoFromQueue(int8_t queuePosition)
 {
     memset(imtMoBuffer[queuePosition], 0, IMT_PAYLOAD_SIZE);
     imtMo[queuePosition].id = 0;
-    imtMo[queuePosition].buffer = NULL;
     imtMo[queuePosition].topic = 0;
     imtMo[queuePosition].length = 0;
     imtMo[queuePosition].readyToProcess = false;
@@ -126,7 +125,6 @@ void removeMtFromQueue(int8_t queuePosition)
 {
     memset(imtMtBuffer[queuePosition], 0, IMT_PAYLOAD_SIZE);
     imtMt[queuePosition].id = 0;
-    imtMt[queuePosition].buffer = NULL;
     imtMt[queuePosition].topic = 0;
     imtMt[queuePosition].length = 0;
     imtMt[queuePosition].readyToProcess = false;
@@ -143,7 +141,7 @@ void imtQueueInit (void) //zero out all queue buffers
 
     for (size_t i = 0; i < MT_QUEUE_SIZE; i++)
     {
-        imtMt[i].buffer = imtMoBuffer[i];
+        imtMt[i].buffer = imtMtBuffer[i];
         memset(imtMt[i].buffer, 0, IMT_PAYLOAD_SIZE);
     }
 }
