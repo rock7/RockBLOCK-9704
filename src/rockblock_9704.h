@@ -260,6 +260,7 @@ void rbReceiveUnlockAsync(void);
 /**
  * @brief Queue a message to be sent.
  * 
+ * @param topic uint16_t topic.
  * @param data pointer to data (message).
  * @param length size_t of data length. (Max 100kB).
  * 
@@ -268,13 +269,13 @@ void rbReceiveUnlockAsync(void);
  * * @note This function will put a message in the outgoing queue to be
  *  handled by rbPoll().
  */
-bool rbSendMessageAsync(const char * data, const size_t length);
+bool rbSendMessageAsync(uint16_t topic, const char * data, const size_t length);
 
 /**
  * @brief Polling function that handles all incoming communication from the modem.
  * 
  * * @note This function is used in a asynchronous approach and will need to be 
- * called very frequently (10ms) as it is non-blocking. 
+ * called very frequently as it is non-blocking. 
  */
 void rbPoll(void);
 
