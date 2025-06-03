@@ -115,7 +115,7 @@ void onConstellationState(const jsprConstellationState_t *state)
 {
     if(state->signalBars != currentSignal)
     {
-        //printf("\033[1;34mCurrent Signal: %d\033[0m\r\n", state->signalBars);
+        printf("\033[1;34mCurrent Signal: %d\033[0m\r\n", state->signalBars);
         currentSignal = state->signalBars;
     }
 }
@@ -249,7 +249,7 @@ int main(int argc, char * argv[])
                 //put cool app stuff here!
                 
                 //rbPoll() needs to be called very frequently
-                usleep(100);
+                usleep(10000);
             }
 
             //End serial connection

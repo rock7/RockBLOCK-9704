@@ -11,11 +11,11 @@ extern "C" {
 #include <stdbool.h>
 
 #ifndef MO_QUEUE_SIZE
-    #define MO_QUEUE_SIZE 5U
+    #define MO_QUEUE_SIZE 1U
 #endif
 
 #ifndef MT_QUEUE_SIZE
-    #define MT_QUEUE_SIZE 2U
+    #define MT_QUEUE_SIZE 1U
 #endif
 
 #define IMT_CRC_SIZE 2U

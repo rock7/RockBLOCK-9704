@@ -682,23 +682,22 @@ void rbPoll(void)
                         messageOriginate.topic = imtMo[0].topic;
                         jsprPutMessageOriginateSegment(&messageOriginate, segmentLength, 
                         segmentStart, base64Buffer);
-                        receiveJspr(&response, "messageOriginateSegment");
-                        if(JSPR_RC_NO_ERROR != response.code)
-                        {
-                            if(rbCallbacks.moMessageComplete)
-                            {
-                                rbCallbacks.moMessageComplete(imtMo[0].id, -1);
-                            }
-                            else
-                            {
-                                moDropped = true;
-                            }
-                            removeMoFromQueue(0); //drop message
-                            moQueuedMessages -= 1;
-                            checkMoQueue();
-                        }
                     }
                 }
+            }
+            if(JSPR_RC_NO_ERROR != response.code && JSPR_RC_UNSOLICITED_MESSAGE != response.code && strcmp(response.target, "messageOriginateSegment") == 0)
+            {
+                if(rbCallbacks.moMessageComplete)
+                {
+                    rbCallbacks.moMessageComplete(imtMo[0].id, -1);
+                }
+                else
+                {
+                    moDropped = true;
+                }
+                removeMoFromQueue(0); //drop message
+                moQueuedMessages -= 1;
+                checkMoQueue();
             }
             if(JSPR_RC_UNSOLICITED_MESSAGE == response.code && strcmp(response.target, "messageOriginateStatus") == 0)
             {
