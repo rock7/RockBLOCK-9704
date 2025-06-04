@@ -215,7 +215,6 @@ int main(int argc, char * argv[])
                 //Wait for MT callback then get the message from the head of that queue
                 if(receivedNewMessage)
                 {
-                    printf("\033[1;33mMessages Received: %d\033[0m\r\n", messagesReceived);
                     receivedNewMessage = false;
                     const size_t mtLength = rbReceiveMessageAsync(&mtBuffer);
                     printf("\033[1;33mMessage length: %ld\033[0m\r\n", mtLength);
@@ -239,6 +238,7 @@ int main(int argc, char * argv[])
                         printf("\r\n");
                         memset(mtStore, 0, sizeof(mtStore));
                         messagesReceived += 1;
+                        printf("\033[1;33mMessages Received: %d\033[0m\r\n", messagesReceived);
                         //Clear the message from the queue to make space
                         if(rbAcknowledgeReceiveHeadAsync())
                         {

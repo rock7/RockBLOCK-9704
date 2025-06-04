@@ -80,7 +80,7 @@ bool shiftMoQueueUp(void)
 bool shiftMtQueueUp(void)
 {
     bool success = false;
-    if(imtMt[0].buffer == NULL) //check that head of que is empty before shifting
+    if(imtMt[0].length == 0) //check that head of que is empty before shifting
     {
         for (size_t i = 1; i < MT_QUEUE_SIZE; i++)
         {
