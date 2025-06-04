@@ -15,7 +15,7 @@
 /**
  * This script showcases the asynchronous and queuing capabilites of this library by setting
  * the necessary callbacks, queuing and sending 5 messages and listening for any incoming messages
- * without blocking.
+ * without blocking, quitting after receiving 5 successful messages.
  * 
  * At the start of the script we setup our 4 user defined callbacks to get message provisioning,
  * check if our queued messages have sent, check if we received any messages and finally check the
@@ -243,6 +243,10 @@ int main(int argc, char * argv[])
                         if(rbAcknowledgeReceiveHeadAsync())
                         {
                             printf("\033[1;34mMessage acknowledged\033[0m\r\n");
+                        }
+                        if(messagesReceived >= 5)
+                        {
+                            break; //quit
                         }
                     }
                 }
