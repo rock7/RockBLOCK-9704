@@ -55,8 +55,10 @@ bool mtReceived = false;
 
 static rbCallbacks_t rbCallbacks = {0};
 
-void rbRegisterCallbacks(const rbCallbacks_t *callbacks) {
-    if (callbacks) {
+void rbRegisterCallbacks(const rbCallbacks_t *callbacks) 
+{
+    if (callbacks) 
+    {
         rbCallbacks = *callbacks;
     }
 }
