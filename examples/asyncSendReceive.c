@@ -87,7 +87,7 @@ void onMessageProvisioning(const jsprMessageProvisioning_t *messageProvisioning)
         printf("\033[1;32mProvisioned topics:\033[0m\r\n");
         for(int i = 0; i < messageProvisioning->topicCount; i++)
         {
-            printf("\033[1;32mTopic name: %s Topic number: %d\033[0m\r\n", 
+            printf("\033[1;32mTopic name: %s, Topic number: %d\033[0m\r\n", 
             messageProvisioning->provisioning[i].topicName, messageProvisioning->provisioning[i].topicId);
         }
     }
@@ -99,6 +99,7 @@ void onMoComplete(const unsigned int id, const int status)
     if(status == 1)
     {
         messagesSent += 1;
+        printf("\033[1;33mMessage Sent: %d\033[0m\r\n", messagesSent);
     }
 }
 
@@ -210,7 +211,6 @@ int main(int argc, char * argv[])
                         messagesQueued += 1;
                     }
                     printf("\033[1;33mMessage Queued: %d\033[0m\r\n", messagesQueued);
-                    printf("\033[1;33mMessage Sent: %d\033[0m\r\n", messagesSent);
                 }
                 //Wait for MT callback then get the message from the head of that queue
                 if(receivedNewMessage)

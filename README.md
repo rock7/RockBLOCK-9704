@@ -451,6 +451,10 @@ This library provides a simple blocking API for communicating with the RockBLOCK
 #### **rbPoll()**  
   This function is responsible for all the messaging communication to and from the modem which normally blocks in the default functions. It needs to be called **very frequently**, at most every **50ms**, for reliability we recommend keeping that number as low as you can get it.
 
+#### **Warnings**
+  - Don't call any functions that aren't labeled with **Async** while `rbPoll()` is running.
+  - Any functions labeled with **Async** require `rbPoll()` to be called very frequently to function correctly.
+
 ### 📞 Callbacks
 
 #### **Overview**
