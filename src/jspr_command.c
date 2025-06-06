@@ -373,3 +373,24 @@ bool jsprGetSimStatus(void)
     }
     return rVal;
 }
+
+bool jsprPutServiceConfig(const bool resync)
+{
+    bool rVal = false;
+    int rc = 0;
+
+    rc = snprintf(jsprCommandBuffer, sizeof(jsprCommandBuffer), "PUT serviceConfig {\"resync\": %s}\r", resync ? "true" : "false");
+
+    if (rc > 0)
+    {
+        const size_t putServiceConfigLen = (const size_t)rc;
+        if (context.serialWrite != NULL)
+        {
+            if(sendJspr(jsprCommandBuffer, putServiceConfigLen) == putServiceConfigLen)
+            {
+                rVal = true;
+            }
+        }
+    }
+    return rVal;
+}

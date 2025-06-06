@@ -177,3 +177,10 @@ class RockBlock9704:
         :return: firmware version string
         """
         return _rb.get_firmware_version()
+
+    def resync_service_config(self) -> bool:
+        """
+        Requests a resynchronisation of the service configuration, the modem should be power cycled before issuing this command.
+        :return: bool depicting the serviceConfig command was sent successfully
+        """
+        return _rb.resync_service_config()

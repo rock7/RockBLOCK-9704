@@ -295,6 +295,11 @@ static PyObject *py_getFirmwareVersion(PyObject *self, PyObject *args) {
 
 }
 
+static PyObject *py_resyncServiceConfig(PyObject *self, PyObject *args) {
+  int result = rbResyncServiceConfig();
+  return Py_BuildValue("i", result);
+}
+
 static PyMethodDef rockblockMethods[] = {
     {"get_signal", py_getSignal, METH_VARARGS, "Function for getting the modem signal quality"},
     {"begin", py_rbBegin, METH_VARARGS, "Function for starting serial connection to modem"},
@@ -315,6 +320,7 @@ static PyMethodDef rockblockMethods[] = {
     {"get_sim_connected", py_getSimConnected, METH_VARARGS, "Function for getting sim connected"},
     {"get_iccid", py_getIccid, METH_VARARGS, "Function for getting iccid"},
     {"get_firmware_version", py_getFirmwareVersion, METH_VARARGS, "Function for getting firmware version"},
+    {"resync_service_config", py_resyncServiceConfig, METH_VARARGS, "Function for forcing service configuration resync"},
     {NULL, NULL, 0, NULL}
 };
 

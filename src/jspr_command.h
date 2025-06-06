@@ -25,6 +25,7 @@ bool jsprGetHwInfo(void);
 bool jsprGetFirmware(const jsprBootSource_t slot);
 bool jsprPutFirmware(const jsprBootSource_t slot);
 bool jsprGetSimStatus(void);
+bool jsprPutServiceConfig(const bool resync);
 
 bool putSimInterface(availableSimInterfaces_t iface);
 bool putOperationalState(availableOperationalStates_t state);

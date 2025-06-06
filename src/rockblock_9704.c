@@ -738,6 +738,65 @@ char * rbGetFirmwareVersion(void)
     return firmwareVersion;
 }
 
+bool rbResyncServiceConfig(void)
+{
+    bool rVal = false;
+    bool isInactive = false;
+    bool wasActive = false;
+    jsprResponse_t response;
+    jsprOperationalState_t state;
+
+    if(jsprGetOperationalState())
+    {
+        // Wait for 200 Operational State
+        if (waitForJsprMessage(&response, "operationalState", JSPR_RC_NO_ERROR, 1) == true)
+        {
+            parseJsprGetOperationalState(response.json, &state);
+            if (state.operationalState == INACTIVE)
+            {
+                isInactive = true;
+            }
+            else if (state.operationalState == ACTIVE)
+            {
+                wasActive = true;
+                putOperationalState(INACTIVE);
+                // Look for 299 Operational State, this indicates it is actually inactive
+                if (waitForJsprMessage(&response, "operationalState", JSPR_RC_UNSOLICITED_MESSAGE, 1) == true)
+                {
+                    parseJsprGetOperationalState(response.json, &state);
+                    isInactive = state.operationalState == INACTIVE;
+                }
+            }
+        }
+    }
+
+    if (isInactive == true)
+    {
+        if (jsprPutServiceConfig(true) == true)
+        {
+            if (waitForJsprMessage(&response, "serviceConfig", JSPR_RC_NO_ERROR, 1) == true)
+            {
+                if (wasActive != true)
+                {
+                    rVal = true;
+                }
+                else
+                {
+                    putOperationalState(ACTIVE);
+                    // Look for 299 Operational State, this indicates it is actually active again
+                    if (waitForJsprMessage(&response, "operationalState", JSPR_RC_UNSOLICITED_MESSAGE, 1) == true)
+                    {
+                        parseJsprGetOperationalState(response.json, &state);
+                        rVal = (state.operationalState == ACTIVE);
+                    }
+                }
+            }
+        }
+    }
+
+    return rVal;
+}
+
 static uint16_t calculateCrc(const uint8_t * buffer, const size_t bufferLength, const uint16_t initialCRC)
 {
     uint16_t crc = (uint16_t)initialCRC;
