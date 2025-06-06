@@ -70,6 +70,7 @@ set(CUSTOM_FILE_BIN customFileMessage)
 set(FW_UPDATE_BIN firmwareUpdate)
 set(GPIO_FILE_BIN gpioPiHat)
 set(GPIO_CUSTOM_BIN gpioCustom)
+set(ASYNC_SEND_RECEIVE_BIN asyncSendReceive)
 
 include_directories(${SRC_DIR}
     ${KERMIT_DIR}
@@ -112,12 +113,14 @@ add_executable(${CL_RAW_BIN} ${EXAMPLE_DIR}/cloudloopRaw.c)
 add_executable(${HARDWARE_INFO_BIN} ${EXAMPLE_DIR}/hardwareInfo.c)
 add_executable(${CUSTOM_MESSAGE_BIN} ${EXAMPLE_DIR}/customMessage.c)
 add_executable(${CUSTOM_FILE_BIN} ${EXAMPLE_DIR}/customFileMessage.c)
+add_executable(${ASYNC_SEND_RECEIVE_BIN} ${EXAMPLE_DIR}/asyncSendReceive.c)
 
 target_include_directories(${REFLECTED_BIN} PRIVATE ${SRC_DIR})
 target_include_directories(${CL_RAW_BIN} PRIVATE ${SRC_DIR})
 target_include_directories(${HARDWARE_INFO_BIN} PRIVATE ${SRC_DIR})
 target_include_directories(${CUSTOM_MESSAGE_BIN} PRIVATE ${SRC_DIR})
 target_include_directories(${CUSTOM_FILE_BIN} PRIVATE ${SRC_DIR})
+target_include_directories(${ASYNC_SEND_RECEIVE_BIN} PRIVATE ${SRC_DIR})
 
 
 if (GPIO_ENABLED)
@@ -138,12 +141,14 @@ if(WIN32)
     target_link_libraries(${HARDWARE_INFO_BIN} PRIVATE ${IRIDIUM_IMT_LIB} ${WINDOWS_GET_OPT_LIB})
     target_link_libraries(${CUSTOM_MESSAGE_BIN} PRIVATE ${IRIDIUM_IMT_LIB} ${WINDOWS_GET_OPT_LIB})
     target_link_libraries(${CUSTOM_FILE_BIN} PRIVATE ${IRIDIUM_IMT_LIB} ${WINDOWS_GET_OPT_LIB})
+    target_link_libraries(${ASYNC_SEND_RECEIVE_BIN} PRIVATE ${IRIDIUM_IMT_LIB} ${WINDOWS_GET_OPT_LIB})
 else()
     target_link_libraries(${REFLECTED_BIN} PRIVATE ${IRIDIUM_IMT_LIB})
     target_link_libraries(${CL_RAW_BIN} PRIVATE ${IRIDIUM_IMT_LIB})
     target_link_libraries(${HARDWARE_INFO_BIN} PRIVATE ${IRIDIUM_IMT_LIB})
     target_link_libraries(${CUSTOM_MESSAGE_BIN} PRIVATE ${IRIDIUM_IMT_LIB})
     target_link_libraries(${CUSTOM_FILE_BIN} PRIVATE ${IRIDIUM_IMT_LIB})
+    target_link_libraries(${ASYNC_SEND_RECEIVE_BIN} PRIVATE ${IRIDIUM_IMT_LIB})
 endif()
 
 if (DEFINED FW_UPDATE AND FW_UPDATE STREQUAL "ON")

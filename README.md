@@ -32,9 +32,13 @@ Further documentation for hardware and specifications can be found on our docume
   - [⚙️ Example `CMakeLists.txt`](#%EF%B8%8F-example-cmakeliststxt)
 - [📚 Using the Library](#-using-the-library)
   - [📡 Antenna Placement and Signal Quality](#-antenna-placement-and-signal-quality)
-  - [⚠️ Blocking Behavior](#%EF%B8%8F-blocking-behavior)
-  - [⬆️ Sending Mobile-Originated (MO) Messages](#%EF%B8%8F-sending-mobile-originated-mo-messages)
-  - [⬇️ Receiving Mobile-Terminated (MT) Messages](#%EF%B8%8F-receiving-mobile-terminated-mt-messages)
+  - [⚠️ Blocking Behavior (Sync)](#%EF%B8%8F-blocking-behavior-sync)
+    - [⬆️ Sending Mobile-Originated (MO) Messages (Sync)](#%EF%B8%8F-sending-mobile-originated-mo-messages-sync)
+    - [⬇️ Receiving Mobile-Terminated (MT) Messages (Sync)](#%EF%B8%8F-receiving-mobile-terminated-mt-messages-sync)
+  - [⚠️ Non-blocking Approach (Async)](#%EF%B8%8F-non-blocking-approach-async)
+    - [📞 Callbacks](#-callbacks)
+    - [⬆️ Sending Mobile-Originated (MO) Messages (Async)](#%EF%B8%8F-sending-mobile-originated-mo-messages-async)
+    - [⬇️ Receiving Mobile-Terminated (MT) Messages (Async)](#%EF%B8%8F-receiving-mobile-terminated-mt-messages-async)
 - [❓ Frequently Imagined Questions (FIQ)](#-frequently-imagined-questions-fiq)
 - [⚖️ License](#%EF%B8%8F-license)
 
@@ -413,31 +417,147 @@ This library provides a simple blocking API for communicating with the RockBLOCK
 #### **Recommended Practice**  
   Ensure the antenna has **an unobstructed view of the sky** during operation to improve signal strength and reduce message latency.
 
-### ⚠️ Blocking Behavior
+### ⚠️ Blocking Behavior (Sync)
 
 #### **Synchronous Operations**  
-  The library is **not currently asynchronous**. All functions block until the modem responds or a timeout occurs.
+  All default send / receive functions block until the modem responds or a timeout occurs.
 
 #### **Most Operations**  
   Most API calls involve sending and receiving small command sequences over serial at **230400 baud**, and generally return quickly. Exceptions for sending and receiving messages explained below.
 
-### ⬆️ Sending Mobile-Originated (MO) Messages
+### ⬆️ Sending Mobile-Originated (MO) Messages (Sync)
 
 #### **Blocking Transmit**
-  Sending an full payload MO message (up to 100 kB + 2 B CRC) may take **around 2 minutes** under good conditions. In areas with **poor signal**, this could take longer. **Use timeouts of several minutes**, not seconds.
+  Sending a full payload MO message (up to 100 kB + 2 B CRC) may take **around 2 minutes** under good conditions. In areas with **poor signal**, this could take longer. **Use timeouts of several minutes**, not seconds.
 
   Only transmit when:
   - You have good signal and a clear view of the sky
   - You handle it in a way blocking does not impact your the main application flow.
 
-### ⬇️ Receiving Mobile-Terminated (MT) Messages
+### ⬇️ Receiving Mobile-Terminated (MT) Messages (Sync)
 
 #### **Non-Blocking Receive**
-  Calling the listen function will not block until a message is received, it can timeout listening for unsolicited MT message, so it is advised to wrap this call in receive loop/thread, refer to our examples showing this.
+  Calling the receive function will not block until a message is received, it can timeout listening for unsolicited MT message, so it is advised to wrap this call in receive loop/thread, refer to our examples showing this.
 
-  Only call listen when:
+  Only call receive when:
   - You have good signal and a clear view of the sky
   - You handle it in a way you keep calling it until you have a message.
+
+### ⚠️ Non-blocking Approach (Async)
+
+#### **Asynchronous Operations**  
+  To use the library asynchronously and in a non-blocking manner use `rbPoll()` alongside any functions ending in `Async`, the details regarding these functions are explained below.
+
+#### **rbPoll()**  
+  This function is responsible for all the messaging communication to and from the modem which normally blocks in the default functions. It needs to be called **very frequently**, at most every **50ms**, for reliability we recommend keeping that number as low as you can get it.
+
+#### **Warnings**
+  - Don't call any functions that aren't labeled with **Async** while `rbPoll()` is running.
+  - Any functions labeled with **Async** require `rbPoll()` to be called very frequently to function correctly.
+
+### 📞 Callbacks
+
+#### **Overview**
+  User defined callbacks are used by the library to provide you with important information such as: Provisioning information, MO message status, MT message status and the current signal level. Below is simple implementation.
+
+#### **messageProvisioning**
+This callback will run once when you send your first message and return all your message provisioning information. Below we check if provisioning has been set then print every topic number and name.
+```c
+void onMessageProvisioning(const jsprMessageProvisioning_t *messageProvisioning)
+{
+    if(messageProvisioning->provisioningSet == true)
+    {
+        printf("Device is provisioned for %d topics\r\n", messageProvisioning->topicCount);
+        printf("Provisioned topics:\r\n");
+        for(int i = 0; i < messageProvisioning->topicCount; i++)
+        {
+            printf("Topic name: %s Topic number: %d\r\n", 
+            messageProvisioning->provisioning[i].topicName, messageProvisioning->provisioning[i].topicId);
+        }
+    }
+}
+```
+
+#### **moMessageComplete**
+This callback will run every time an MO message has either sent successfully or failed. Below we print the ID and status of the message as well as keep track of how many messages we managed to send so far.
+```c
+int messagesSent = 0;
+
+void onMoComplete(const unsigned int id, const int status)
+{
+    printf("MO Complete: ID = %u, Status = %d\r\n", id, status);
+    if(status == 1)
+    {
+        messagesSent += 1;
+    }
+}
+```
+
+#### **mtMessageComplete**
+This callback will run every time an MT message has either fully arrived successfully or failed. Below we print the ID and status of the message as well as update a bool to let our script know when to call `rbReceiveMessageAsync()`.
+```c
+bool receivedNewMessage = false;
+
+void onMtComplete(const unsigned int id, const int status)
+{
+    printf("\033[1;32mMT Complete: ID = %u, Status = %d\033[0m\r\n", id, status);
+    if(status == 1)
+    {
+        receivedNewMessage = true;
+    }
+}
+```
+
+#### **constellationState**
+This callback will run every time an unsolicited constellation state (signal) message is received from the modem, this happens every time there is a change in the signal bars or signal level which will be very often. Below we print the signal bars every time they change.
+```c
+int currentSignal = 0;
+
+void onConstellationState(const jsprConstellationState_t *state)
+{
+    if(state->signalBars != currentSignal)
+    {
+        printf("\033[1;34mCurrent Signal: %d\033[0m\r\n", state->signalBars);
+        currentSignal = state->signalBars;
+    }
+}
+```
+
+#### **Register callbacks**
+Finally at the start of our script we assign and register our callbacks with the library.
+```c
+//Assign callbacks
+rbCallbacks_t myCallbacks =
+{
+.messageProvisioning = onMessageProvisioning,
+.moMessageComplete = onMoComplete,
+.mtMessageComplete = onMtComplete,
+.constellationState = onConstellationState
+};
+//Register Callbacks
+rbRegisterCallbacks(&myCallbacks);
+```
+
+### ⬆️ Sending Mobile-Originated (MO) Messages (Async)
+
+#### **Queuing MO Messages**
+  Using the Async send function will put your message in a queue, you can queue up as many messages as your MO queue size, which is set in `imt_queue.h` as `#define MO_QUEUE_SIZE 1U`. This is kept at 1 by default.
+  Queued messages will send one after the other, you will not be able to queue another message unless there is space in the queue. `rbPoll()` is responsible for handling these messages to the modem so as stated previously make sure you call it **very frequently**.
+
+#### **Non-blocking Transmit**
+  Simply call `rbSendMessageAsync()` to queue your message, then continue with your code, making sure that `rbPoll()` is called at most every **50ms**.
+
+### ⬇️ Receiving Mobile-Terminated (MT) Messages (Async)
+
+#### **Queuing MT Messages**
+  As messages arrive `rbPoll()` will place them in the MT queue (1 by default) the size of which can be adjusted in `imt_queue.h` by changing `#define MO_QUEUE_SIZE 1U`. For most applications a queue size of 1 should be sufficient if your application can acknowledge the message as soon as it arrives to prevent it being overwritten, otherwise follow the steps below.
+
+  - Increase queue size to > 1.
+  - As a message comes in, if you received it using `rbReceiveMessageAsync()` you should then use `rbAcknowledgeReceiveHeadAsync()` to clear that message from the head of the queue and shift any messages up. If this isn't done, an incoming message will shift anything in your queue down to make space and place the latest message at the head of the queue.
+  - If your queue is full, by default the oldest message will be erased to make space. If you want to prevent this functionality call `rbReceiveLockAsync()`, this will instead not accept any new messages if your queue is full. `rbReceiveUnlockAsync()` can be called to undo this.
+
+#### **Non-Blocking Receive**
+  Calling `rbReceiveMessageAsync()` will check the head of the MT queue, if a valid message exists it will return successfully. It is advised to wait for a positive callback from `mtMessageComplete` before attempting to receive a message, that way you can ensure one exists.
 
 ---
 
