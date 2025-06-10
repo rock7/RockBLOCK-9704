@@ -1,147 +1,167 @@
 #include "imt_queue.h"
 
-imt_t imtMo[MO_QUEUE_SIZE] = { {0, NULL, 0, 0, false} };
-imt_t imtMt[MT_QUEUE_SIZE] = { {0, NULL, 0, 0, false} };
+static imt_queue_t imtMo;
+static imt_queue_t imtMt;
 
-static uint8_t imtMoBuffer[MO_QUEUE_SIZE][IMT_PAYLOAD_SIZE];
-static uint8_t imtMtBuffer[MT_QUEUE_SIZE][IMT_PAYLOAD_SIZE];
+static uint8_t imtMoBuffer[IMT_QUEUE_SIZE][IMT_PAYLOAD_SIZE];
+static uint8_t imtMtBuffer[IMT_QUEUE_SIZE][IMT_PAYLOAD_SIZE];
 
-int8_t addMoToQueue(uint16_t topic, const char * data, const size_t length)
+static bool mtLock = false;
+
+int8_t imtQueueMoPush(uint16_t topic, const char * data, const size_t length)
 {
-    int8_t queuePosition = -1;
+    bool queued = false;
+    uint16_t tempTail = imtMo.tail;
     if(data != NULL && length > 0)
     {
-        for(size_t i = 0; i < MO_QUEUE_SIZE; i++)
+        if(imtMo.count < imtMo.maxLength)
         {
-            if(imtMo[i].length != 0)
-            {
-                queuePosition = -1;
-            }
-            else
-            {
-                memcpy(imtMoBuffer[i], data, length); //add mo to first empty buffer
-                imtMo[i].buffer = imtMoBuffer[i];
-                imtMo[i].topic = topic;
-                imtMo[i].length = length;
-                queuePosition = (int8_t)i;
-                break;
-            }
+            memcpy(imtMoBuffer[tempTail], data, length);
+            //imtMo.messages[tempTail].buffer = imtMoBuffer[imtMo.head];
+            imtMo.messages[tempTail].topic = topic;
+            imtMo.messages[tempTail].length = length;
+            queued = true;
+
+            imtMo.tail = (tempTail + 1) % IMT_QUEUE_SIZE;
+            imtMo.count++;
         }
     }
-    return queuePosition;
+    return queued;
 }
 
-int8_t addMtToQueue(uint16_t topic, uint16_t id, size_t length)
+int8_t imtQueueMtPush(uint16_t topic, uint16_t id, size_t length)
 {
-    int8_t queuePosition = -1;
+    bool queued = false;
+    uint16_t tempTail = imtMt.tail;
     if(id >= 0 && length > 0)
     {
-        if(imtMt[0].length != 0 && imtMt[MT_QUEUE_SIZE - 1].length == 0) //keep shifting messages up unless queue is full
+        if(imtMt.count >= imtMt.maxLength && !mtLock)
         {
-            shiftMtQueueDown();
-        }
-        for(size_t i = 0; i < MT_QUEUE_SIZE; i++)
-        {
-            if(imtMt[i].length != 0)
-            {
-                queuePosition = -1;
-            }
-            else
-            {
-                imtMt[i].id = id; //add mt to first empty buffer, should always be 0 or -1
-                imtMt[i].topic = topic;
-                imtMt[i].length = length;
-                queuePosition = (int8_t)i;
-                break;
-            }
-        }
-    }
-    return queuePosition;
-}
-
-bool shiftMoQueueUp(void)
-{
-    bool success = false;
-    if(imtMo[0].length == 0) //check that head of que is empty before shifting
-    {
-        for (size_t i = 1; i < MO_QUEUE_SIZE; i++)
-        {
-            memcpy(imtMoBuffer[i - 1], imtMoBuffer[i], IMT_PAYLOAD_SIZE);
-            imtMo[i - 1] = imtMo[i];
-            imtMo[i - 1].buffer = imtMoBuffer[i - 1];
+            imtQueueRemoveMt(); //remove oldest entry if queue is full
         }
 
-        removeMoFromQueue(MO_QUEUE_SIZE - 1);
-        success = true;
-    }
-    return success;
-}
-
-bool shiftMtQueueUp(void)
-{
-    bool success = false;
-    if(imtMt[0].length == 0) //check that head of que is empty before shifting
-    {
-        for (size_t i = 1; i < MT_QUEUE_SIZE; i++)
+        if(imtMt.count < imtMt.maxLength)
         {
-            memcpy(imtMtBuffer[i - 1], imtMtBuffer[i], IMT_PAYLOAD_SIZE);
-            imtMt[i - 1] = imtMt[i];
-            imtMt[i - 1].buffer = imtMtBuffer[i - 1];
+            imtMt.messages[tempTail].id = id;
+            imtMt.messages[tempTail].topic = topic;
+            imtMt.messages[tempTail].length = length;
+            queued = true;
+
+            imtMt.head = (tempTail + 1) % IMT_QUEUE_SIZE;
+            imtMt.count++;
         }
-
-        removeMtFromQueue(MT_QUEUE_SIZE - 1);
-        success = true;
     }
-    return success;
+    return queued;
 }
 
-void shiftMtQueueDown(void)
+void imtQueueMtLock(bool lock)
 {
-    if(imtMt[MT_QUEUE_SIZE - 1].length != 0) //check that the tail of que is empty before shifting
+    if(lock)
     {
-        removeMtFromQueue(MT_QUEUE_SIZE - 1); //clear oldest MT if queue full
+        mtLock = true;
     }
-
-    for (size_t i = 1; i < MT_QUEUE_SIZE; i++)
+    else
     {
-        memcpy(imtMtBuffer[i], imtMtBuffer[i - 1], IMT_PAYLOAD_SIZE);
-        imtMt[i] = imtMt[i - 1];
-        imtMt[i].buffer = imtMtBuffer[i];
+        mtLock = false;
     }
-    removeMtFromQueue(0);
 }
 
-void removeMoFromQueue(int8_t queuePosition)
+imt_t * imtQueueMoPeek(void)
 {
-    memset(imtMoBuffer[queuePosition], 0, IMT_PAYLOAD_SIZE);
-    imtMo[queuePosition].id = 0;
-    imtMo[queuePosition].topic = 0;
-    imtMo[queuePosition].length = 0;
-    imtMo[queuePosition].readyToProcess = false;
-    imtMo[queuePosition].ready = false;
-}
+    imt_t * mo = NULL;
 
-void removeMtFromQueue(int8_t queuePosition)
-{
-    memset(imtMtBuffer[queuePosition], 0, IMT_PAYLOAD_SIZE);
-    imtMt[queuePosition].id = 0;
-    imtMt[queuePosition].topic = 0;
-    imtMt[queuePosition].length = 0;
-    imtMt[queuePosition].readyToProcess = false;
-    imtMt[queuePosition].ready = false;
-}
-
-void imtQueueInit (void) //zero out all queue buffers
-{
-    for (size_t i = 0; i < MO_QUEUE_SIZE; i++)
+    if(imtMo.count > 0)
     {
-        imtMo[i].buffer = imtMoBuffer[i];
-        memset(imtMo[i].buffer, 0, IMT_PAYLOAD_SIZE);
+        mo = &imtMo.messages[imtMo.head];
     }
 
-    for (size_t i = 0; i < MT_QUEUE_SIZE; i++)
+    return mo;
+}
+
+imt_t * imtQueueMtPeek(void)
+{
+    imt_t * mt = NULL;
+
+    if(imtMt.count > 0)
     {
-        imtMt[i].buffer = imtMtBuffer[i];
-        memset(imtMt[i].buffer, 0, IMT_PAYLOAD_SIZE);
+        mt = &imtMt.messages[imtMt.head];
     }
+
+    return mt;
+}
+
+bool imtQueueRemoveMo(void)
+{
+    bool removed = false;
+    imt_t * mo = imtQueueMoPeek();
+    if(mo != NULL)
+    {
+        uint16_t tempHead = imtMo.head;
+        memset(mo->buffer, 0, IMT_PAYLOAD_SIZE);
+        mo->id = 0;
+        mo->topic = 0;
+        mo->length = 0;
+        mo->readyToProcess = false;
+        mo->ready = false;
+
+        imtMo.head = (tempHead + 1) % IMT_QUEUE_SIZE;
+        imtMo.count--;
+        removed = true;
+    }
+    return removed;
+}
+
+bool imtQueueRemoveMt(void)
+{
+    bool removed = false;
+    imt_t * mt = imtQueueMtPeek();
+    if(mt != NULL)
+    {
+        uint16_t tempHead = imtMt.head;
+        memset(mt->buffer, 0, IMT_PAYLOAD_SIZE);
+        mt->id = 0;
+        mt->topic = 0;
+        mt->length = 0;
+        mt->readyToProcess = false;
+        mt->ready = false;
+
+        imtMt.head = (tempHead + 1) % IMT_QUEUE_SIZE;
+        imtMt.count--;
+        removed = true;
+    }
+    return removed;
+}
+
+void imtQueueInit(void)
+{
+    for (uint16_t i; i < IMT_QUEUE_SIZE; i++)
+    {
+        imtMo.messages[i].buffer = &imtMoBuffer[i];
+        memset(imtMo.messages[i].buffer, 0, IMT_PAYLOAD_SIZE);
+        imtMo.messages[i].id = 0;
+        imtMo.messages[i].length = 0;
+        imtMo.messages[i].ready = false;
+        imtMo.messages[i].readyToProcess = false;
+        imtMo.messages[i].topic = 0;
+
+
+        imtMt.messages[i].buffer = &imtMtBuffer[i];
+        memset(imtMt.messages[i].buffer, 0, IMT_PAYLOAD_SIZE);
+        imtMt.messages[i].id = 0;
+        imtMt.messages[i].length = 0;
+        imtMt.messages[i].ready = false;
+        imtMt.messages[i].readyToProcess = false;
+        imtMt.messages[i].topic = 0;
+    }
+
+    imtMo.head = 0;
+    imtMo.tail = 0;
+    imtMo.count = 0;
+    imtMo.maxLength = IMT_QUEUE_SIZE;
+
+    imtMt.head = 0;
+    imtMt.tail = 0;
+    imtMt.count = 0;
+    imtMt.maxLength = IMT_QUEUE_SIZE;
+
 }

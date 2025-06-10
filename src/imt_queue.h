@@ -10,12 +10,8 @@ extern "C" {
 #include <string.h>
 #include <stdbool.h>
 
-#ifndef MO_QUEUE_SIZE
-    #define MO_QUEUE_SIZE 1U
-#endif
-
-#ifndef MT_QUEUE_SIZE
-    #define MT_QUEUE_SIZE 1U
+#ifndef IMT_QUEUE_SIZE
+    #define IMT_QUEUE_SIZE 1U
 #endif
 
 #define IMT_CRC_SIZE 2U
@@ -35,14 +31,23 @@ typedef struct
     bool ready;
 } imt_t;
 
-int8_t addMoToQueue(uint16_t topic, const char * data, const size_t length);
-int8_t addMtToQueue(uint16_t topic, uint16_t id, size_t length);
-void removeMoFromQueue(int8_t queuePosition);
-void removeMtFromQueue(int8_t queuePosition);
+typedef struct
+{
+    imt_t messages[IMT_QUEUE_SIZE];
+    uint16_t count;
+    uint16_t head;
+    uint16_t tail;
+    uint16_t maxLength;
+} imt_queue_t;
+
+int8_t imtQueueMoPush(uint16_t topic, const char * data, const size_t length);
+int8_t imtQueueMtPush(uint16_t topic, uint16_t id, size_t length);
+bool imtQueueRemoveMo(void);
+bool imtQueueRemoveMt(void);
+imt_t * imtQueueMoPeek(void);
+imt_t * imtQueueMtPeek(void);
+void imtQueueMtLock(bool lock);
 void imtQueueInit (void);
-bool shiftMoQueueUp(void);
-bool shiftMtQueueUp(void);
-void shiftMtQueueDown(void);
 
 #ifdef __cplusplus
 }

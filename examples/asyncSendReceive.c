@@ -32,10 +32,10 @@
  * Requirements:
  * RB9704 needs to be provisioned for messaging topic 244 (RAW).
  * Have an open view of the sky where a good signal can be obtained.
- * Adjust MO_QUEUE_SIZE in imt_queue.h to 5U.
+ * Adjust IMT_QUEUE_SIZE in imt_queue.h to 5U.
  * 
  * (OPTIONAL) If you want to use and test MT queuing do the following:
- * Adjust MT_QUEUE_SIZE in imt_queue.h to desired queue size.
+ * Adjust IMT_QUEUE_SIZE in imt_queue.h to desired queue size.
  * Remove or adjust rbAcknowledgeReceiveHeadAsync() so that messages aren't acknowledged right away.
  * Use rbReceiveLockAsync() if you want to lock the queue so that no messages are removed when queue is full.
  * Use rbReceiveUnlockAsync() if you want to unlock the queue.
