@@ -47,7 +47,7 @@ int8_t imtQueueMtPush(uint16_t topic, uint16_t id, size_t length)
             imtMt.messages[tempTail].length = length;
             queued = true;
 
-            imtMt.head = (tempTail + 1) % IMT_QUEUE_SIZE;
+            imtMt.tail = (tempTail + 1) % IMT_QUEUE_SIZE;
             imtMt.count++;
         }
     }
@@ -134,9 +134,9 @@ bool imtQueueRemoveMt(void)
 
 void imtQueueInit(void)
 {
-    for (uint16_t i; i < IMT_QUEUE_SIZE; i++)
+    for (uint16_t i = 0; i < IMT_QUEUE_SIZE; i++)
     {
-        imtMo.messages[i].buffer = &imtMoBuffer[i];
+        imtMo.messages[i].buffer = imtMoBuffer[i];
         memset(imtMo.messages[i].buffer, 0, IMT_PAYLOAD_SIZE);
         imtMo.messages[i].id = 0;
         imtMo.messages[i].length = 0;
@@ -145,7 +145,7 @@ void imtQueueInit(void)
         imtMo.messages[i].topic = 0;
 
 
-        imtMt.messages[i].buffer = &imtMtBuffer[i];
+        imtMt.messages[i].buffer = imtMtBuffer[i];
         memset(imtMt.messages[i].buffer, 0, IMT_PAYLOAD_SIZE);
         imtMt.messages[i].id = 0;
         imtMt.messages[i].length = 0;
