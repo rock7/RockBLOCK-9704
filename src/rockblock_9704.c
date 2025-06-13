@@ -39,7 +39,7 @@ jsprSimStatus_t simStatus;
 jsprFirmwareInfo_t firmwareInfo;
 jsprMessageProvisioning_t messageProvisioningInfo;
 
-uint16_t messageLengthAsync = 0;
+uint32_t messageLengthAsync = 0;
 uint16_t moQueuedMessages = 0;
 uint16_t mtQueuedMessages = 0;
 bool Receivelock = false;
