@@ -10,7 +10,7 @@ extern HANDLE serialConnection;
 extern enum serialState serialState;
 extern serialContext context;
 
-bool setContextWindows(const char * port, const uint32_t baud);
+bool setContextWindows(const char * port, const uint32_t baud)
 {
     bool set = false;
     strncpy(context.serialPort, port, SERIAL_PORT_LENGTH);
