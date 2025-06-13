@@ -46,12 +46,14 @@ set(KERMIT_DIR ${THIRD_PARTY_DIR}/ekermit)
 set(KERMIT_IO_DIR ${SRC_DIR}/kermit)
 set(WINDOWS_GET_OPT_DIR ${THIRD_PARTY_DIR}/wingetopt/src)
 set(PYTHON_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/rockblock9704)
+set(LUA_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lua)
 
 # Library build here
 set(KERMIT_LIB kermit)
 set(WINDOWS_GET_OPT_LIB wingetopt)
 set(IRIDIUM_IMT_LIB iridiumImt)
 set(PYTHON_SHARED_LIB rockblock)
+set(LUA_SHARED_LIB rockblock_lua) # Lua shared library name This will result in rockblock_lua.so/.dll/.dylib
 
 # Some parent variables so projects can link against us and include us
 get_directory_property(HAS_PARENT PARENT_DIRECTORY)
@@ -106,6 +108,78 @@ if (BUILD_PYTHON_SHARED_LIBRARY STREQUAL "ON")
 
     set_target_properties(${PYTHON_SHARED_LIB} PROPERTIES OUTPUT_NAME ${PYTHON_SHARED_LIB})
 endif()
+
+
+
+# ========================================================================================================= LUA TESTING!!
+
+
+if (BUILD_LUA_SHARED_LIBRARY STREQUAL "ON")
+    # TODO - MAKE THIS WORK RATHER THAN HARD CODING
+    #find_package(Lua54 REQUIRED)
+
+    # Path to the directory containing Lua header files (e.g., lua.h, lauxlib.h)
+    set(Lua54_INCLUDE_DIR "C:/Users/Joel/Documents/Lua/lua/include")
+    message(STATUS "Hardcoding Lua Include Dir: ${Lua54_INCLUDE_DIR}")
+
+    # Path to the Lua library file (e.g., lua54.lib for MSVC)
+    set(Lua54_LIBRARIES "C:/Users/Joel/Documents/Lua/lua/bin/lua54.lib")
+    message(STATUS "Hardcoding Lua Libraries: ${Lua54_LIBRARIES}")
+
+    # This boolean is usually set by find_package. Manually set it to TRUE to proceed.
+    set(Lua54_FOUND TRUE)
+
+    # Ensure Lua was "found" (or manually marked as found)
+    if(NOT Lua54_FOUND)
+        message(FATAL_ERROR "Lua 5.4 was not found, even with hardcoded paths. Please check your paths.")
+    endif()
+
+
+    # Define the shared library for Lua
+    add_library(${LUA_SHARED_LIB} SHARED
+        # C library's source files
+        ${SRC_DIR}/rockblock_9704.c
+        ${SRC_DIR}/jspr_command.c
+        ${SRC_DIR}/jspr.c
+        ${SRC_DIR}/${GPIO_SRC}
+        ${SRC_DIR}/crossplatform.c
+        ${SRC_DIR}/serial.c
+        ${SRC_DIR}/serial_presets/serial_linux/serial_linux.c
+        ${SRC_DIR}/serial_presets/serial_windows/serial_windows.c
+        ${SRC_DIR}/serial_presets/serial_arduino/serial_arduino.cpp
+        ${LUA_SRC_DIR}/rockblock_lua_wrap.cxx # Path to generated SWIG file
+    )
+
+    target_include_directories(${LUA_SHARED_LIB} PRIVATE
+        ${Lua54_INCLUDE_DIR} # Lua include directory
+        ${IRIDIUM_IMT_LIB}   # Your existing C library include directory
+        ${CMAKE_CURRENT_SOURCE_DIR} # For rockblock.i and generated wrapper
+    )
+    target_link_libraries(${LUA_SHARED_LIB} PRIVATE
+        ${Lua54_LIBRARIES} # Lua linker libraries
+        ${IRIDIUM_IMT_LIB} # Your existing C library's dependencies
+        # -lm # Link against math library if needed for your C code
+    )
+    if(APPLE)
+        target_link_options(${LUA_SHARED_LIB} PRIVATE "-undefined" "dynamic_lookup")
+    endif()
+
+    # Lua modules should typically be named without a 'lib' prefix, and have the correct extension.
+    # SWIG usually generates a module that follows Lua's naming conventions for 'require'.
+    # e.g., if module is 'rockblock_lua', it looks for 'rockblock_lua.so' or 'rockblock_lua.dll'.
+    # The default output name from `add_library` might be 'librockblock_lua.so'.
+    # You might need to rename it for Lua.
+    set_target_properties(${LUA_SHARED_LIB} PROPERTIES
+        OUTPUT_NAME ${LUA_SHARED_LIB} # Sets the base name
+        # SUFFIX ".so" # Linux/macOS suffix (CMake handles .dll for Windows automatically for SHARED libraries)
+                      # SWIG will likely use 'rockblock_lua.so' for a module named 'rockblock_lua'.
+                      # Check SWIG's output naming conventions carefully.
+                      # If SWIG output is always rockblock_lua.so, you'd name your add_library target 'rockblock_lua'.
+    )
+endif()
+# ========================================================================================================= LUA TESTING!!
+
+
 
 add_executable(${REFLECTED_BIN} ${EXAMPLE_DIR}/reflected.c)
 add_executable(${CL_RAW_BIN} ${EXAMPLE_DIR}/cloudloopRaw.c)
