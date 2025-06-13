@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['rbbegin_0',['rbbegin',['../rockblock__9704_8h.html#ac0f3fc352eee205b427fff3543bcf806',1,'rbBegin(char *port):&#160;rockblock_9704.c'],['../rockblock__9704_8c.html#ac0f3fc352eee205b427fff3543bcf806',1,'rbBegin(char *port):&#160;rockblock_9704.c']]],
+  ['rbbegin_0',['rbbegin',['../rockblock__9704_8h.html#a7a064fa622e19300e96e457b1e9f189e',1,'rbBegin(const char *port):&#160;rockblock_9704.c'],['../rockblock__9704_8c.html#a7a064fa622e19300e96e457b1e9f189e',1,'rbBegin(const char *port):&#160;rockblock_9704.c']]],
   ['rbbegingpio_1',['rbbegingpio',['../rockblock__9704_8h.html#ac2d10808fdf6d5f0e8d0fcfd345010ee',1,'rbBeginGpio(char *port, const rbGpioTable_t *gpioInfo, const int timeout):&#160;rockblock_9704.c'],['../rockblock__9704_8c.html#ac2d10808fdf6d5f0e8d0fcfd345010ee',1,'rbBeginGpio(char *port, const rbGpioTable_t *gpioInfo, const int timeout):&#160;rockblock_9704.c']]],
   ['rbend_2',['rbend',['../rockblock__9704_8c.html#a2b48c4a73a4301f31da944cabb14f5dc',1,'rbEnd(void):&#160;rockblock_9704.c'],['../rockblock__9704_8h.html#a2b48c4a73a4301f31da944cabb14f5dc',1,'rbEnd(void):&#160;rockblock_9704.c']]],
   ['rbendgpio_3',['rbendgpio',['../rockblock__9704_8c.html#a57a20a5affb0fb1189c0349e019175dd',1,'rbEndGpio(const rbGpioTable_t *gpioInfo):&#160;rockblock_9704.c'],['../rockblock__9704_8h.html#a57a20a5affb0fb1189c0349e019175dd',1,'rbEndGpio(const rbGpioTable_t *gpioInfo):&#160;rockblock_9704.c']]],
