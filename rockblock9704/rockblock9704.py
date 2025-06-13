@@ -111,6 +111,16 @@ class RockBlock9704:
         else:
             return _rb.send_message_any(topic, message, timeout)
 
+    def send_message_async(self, message: bytes, topic: int = None) -> bool:
+        """
+        Sends a message from the RockBLOCK 9704 asynchronously
+        :param message: bytes to send
+        :param topic: optional topic to send to (defaults to raw topic)
+        :return: boolean indicating success
+        """
+        if topic is not None:
+            return _rb.send_message_async(topic, message)
+
     def receive_message(self, topic: int = None) -> bytes:
         """
         Check for messages sent to the RockBLOCK 9704
@@ -121,6 +131,53 @@ class RockBlock9704:
             return _rb.receive_message()
         else:
             return _rb.receive_message_with_topic(topic)
+        
+    def receive_message_async(self, topic: int = None) -> bytes:
+        """
+        Check asynchronously for messages sent to the RockBLOCK 9704
+        :param topic: optional to only get messages sent to this topic
+        :return: byte string message
+        """
+        if topic is None:
+            return _rb.receive_message_async()
+        
+    def acknowledge_receive_head_async(self) -> bool:
+        """
+        Acknowledges the head of the incoming message queue
+        :return: boolean indicating success
+        """
+        return _rb.acknowledge_receive_head_async()
+    
+    def receive_lock_async(self):
+        """
+        Locks the incoming message queue
+        """
+        return _rb.receive_lock_async()
+    
+    def receive_unlock_async(self):
+        """
+        Unlocks the incoming message queue
+        """
+        return _rb.receive_unlock_async()
+    
+    def poll(self):
+        """
+        Polls for responses from the modem for asynchronous functionality
+        """
+        return _rb.poll()
+    
+    def register_callbacks(self,
+                           message_provisioning=None,
+                           mo_message_complete=None,
+                           mt_message_complete=None,
+                           constellation_state=None):
+        """
+        Register user defined callbacks in the library.
+        """
+        return _rb.register_callbacks(messageProvisioning=message_provisioning,
+                                        moMessageComplete=mo_message_complete,
+                                        mtMessageComplete=mt_message_complete,
+                                        constellationState=constellation_state)
 
     def get_hardware_version(self) -> str:
         """

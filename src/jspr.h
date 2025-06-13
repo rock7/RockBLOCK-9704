@@ -267,6 +267,7 @@ typedef struct
 {
     jsprProvisioning_t provisioning[JSPR_MAX_TOPICS];
     uint8_t topicCount;
+    bool provisioningSet;
 } jsprMessageProvisioning_t;
 
 typedef struct
