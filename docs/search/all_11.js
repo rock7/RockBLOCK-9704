@@ -2,7 +2,7 @@ var searchData=
 [
   ['raw_5ftopic_0',['RAW_TOPIC',['../rockblock__9704_8h.html#abba1a824edb46c8c944f5bf7b53ac09ca0551504c93e0a96e534cb5a873467390',1,'rockblock_9704.h']]],
   ['rb9704_5fbaud_1',['RB9704_BAUD',['../rockblock__9704_8h.html#af79a63831651dc127235016bce24687d',1,'rockblock_9704.h']]],
-  ['rbbegin_2',['rbbegin',['../rockblock__9704_8c.html#ac0f3fc352eee205b427fff3543bcf806',1,'rbBegin(char *port):&#160;rockblock_9704.c'],['../rockblock__9704_8h.html#ac0f3fc352eee205b427fff3543bcf806',1,'rbBegin(char *port):&#160;rockblock_9704.c']]],
+  ['rbbegin_2',['rbbegin',['../rockblock__9704_8c.html#a7a064fa622e19300e96e457b1e9f189e',1,'rbBegin(const char *port):&#160;rockblock_9704.c'],['../rockblock__9704_8h.html#a7a064fa622e19300e96e457b1e9f189e',1,'rbBegin(const char *port):&#160;rockblock_9704.c']]],
   ['rbbegingpio_3',['rbbegingpio',['../rockblock__9704_8c.html#ac2d10808fdf6d5f0e8d0fcfd345010ee',1,'rbBeginGpio(char *port, const rbGpioTable_t *gpioInfo, const int timeout):&#160;rockblock_9704.c'],['../rockblock__9704_8h.html#ac2d10808fdf6d5f0e8d0fcfd345010ee',1,'rbBeginGpio(char *port, const rbGpioTable_t *gpioInfo, const int timeout):&#160;rockblock_9704.c']]],
   ['rbend_4',['rbend',['../rockblock__9704_8c.html#a2b48c4a73a4301f31da944cabb14f5dc',1,'rbEnd(void):&#160;rockblock_9704.c'],['../rockblock__9704_8h.html#a2b48c4a73a4301f31da944cabb14f5dc',1,'rbEnd(void):&#160;rockblock_9704.c']]],
   ['rbendgpio_5',['rbendgpio',['../rockblock__9704_8h.html#a57a20a5affb0fb1189c0349e019175dd',1,'rbEndGpio(const rbGpioTable_t *gpioInfo):&#160;rockblock_9704.c'],['../rockblock__9704_8c.html#a57a20a5affb0fb1189c0349e019175dd',1,'rbEndGpio(const rbGpioTable_t *gpioInfo):&#160;rockblock_9704.c']]],
