@@ -218,7 +218,6 @@ size_t rbReceiveMessageWithTopic(char ** buffer, uint16_t topic);
  * @brief Check if a valid message exists, stored at the head of the receiving queue.
  * 
  * @param buffer pointer to buffer of the stored MT messages.
- * @param topic uint16_t topic.
  * @return size_t the length of the buffer minus the IMT CRC.
  * 
  * * @note this pointer is a pointer to a pointer to the MT queue buffer, 

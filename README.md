@@ -458,10 +458,47 @@ This library provides a simple blocking API for communicating with the RockBLOCK
 ### 📞 Callbacks
 
 #### **Overview**
-  User defined callbacks are used by the library to provide you with important information such as: Provisioning information, MO message status, MT message status and the current signal level. Below is simple implementation.
+  User defined callbacks are called internally by the library, if set, to provide you with important messaging information outlined below.
+
+#### **Structure**
+```c
+typedef struct {
+    /**
+     * @brief Callback for message provisioning info once its been obtained.
+     * 
+     * @param messageProvisioning Pointer to the provisioning info structure.
+     */
+    void (*messageProvisioning)(const jsprMessageProvisioning_t *messageProvisioning);
+
+    /**
+     * @brief Callback for when a mobile-originated (MO) message has finished processing 
+     * and been sent successfully.
+     * 
+     * @param id Unique Identifier of the message.
+     * @param status Integer indicating result of processing (-1 for failure & 1 for success).
+     */
+    void (*moMessageComplete)(const unsigned int id, const int status);
+
+    /**
+     * @brief Callback for when a mobile-terminated (MT) message has finished processing 
+     * and been received successfully.
+     * 
+     * @param id Unique Identifier of the message.
+     * @param status Integer indicating result of processing (-1 for failure & 1 for success).
+     */
+    void (*mtMessageComplete)(const unsigned int id, const int status);
+
+    /**
+     * @brief Callback for the constellationState (signal) has been updated.
+     * 
+     * @param state Pointer to the updated constellation state structure.
+     */
+    void (*constellationState)(const jsprConstellationState_t *state);
+} rbCallbacks_t;
+```
 
 #### **messageProvisioning**
-This callback will run once when you send your first message and return all your message provisioning information. Below we check if provisioning has been set then print every topic number and name.
+This callback will run only one time when you send your first message and will return all your message provisioning information. Below we check if provisioning has been set then print every topic number and name.
 ```c
 void onMessageProvisioning(const jsprMessageProvisioning_t *messageProvisioning)
 {
@@ -494,13 +531,13 @@ void onMoComplete(const unsigned int id, const int status)
 ```
 
 #### **mtMessageComplete**
-This callback will run every time an MT message has either fully arrived successfully or failed. Below we print the ID and status of the message as well as update a bool to let our script know when to call `rbReceiveMessageAsync()`.
+This callback will run every time an MT message has either fully arrived successfully or failed. Below we print the ID and status of the message as well as update a bool to let our script know when to call `rbReceiveMessageAsync(...)`.
 ```c
 bool receivedNewMessage = false;
 
 void onMtComplete(const unsigned int id, const int status)
 {
-    printf("\033[1;32mMT Complete: ID = %u, Status = %d\033[0m\r\n", id, status);
+    printf("MT Complete: ID = %u, Status = %d\r\n", id, status);
     if(status == 1)
     {
         receivedNewMessage = true;
@@ -541,23 +578,23 @@ rbRegisterCallbacks(&myCallbacks);
 ### ⬆️ Sending Mobile-Originated (MO) Messages (Async)
 
 #### **Queuing MO Messages**
-  Using the Async send function will put your message in a queue, you can queue up as many messages as your MO queue size, which is set in `imt_queue.h` as `#define MO_QUEUE_SIZE 1U`. This is kept at 1 by default.
+  Using the Async send function will put your message in a queue, you can queue up as many messages as your MO queue size, which is set in `imt_queue.h` as `#define IMT_QUEUE_SIZE 1U`. This is kept at 1 by default.
   Queued messages will send one after the other, you will not be able to queue another message unless there is space in the queue. `rbPoll()` is responsible for handling these messages to the modem so as stated previously make sure you call it **very frequently**.
 
 #### **Non-blocking Transmit**
-  Simply call `rbSendMessageAsync()` to queue your message, then continue with your code, making sure that `rbPoll()` is called at most every **50ms**.
+  Simply call `rbSendMessageAsync(...)` to queue your message, then continue with your code, making sure that `rbPoll()` is called at most every **50ms**.
 
 ### ⬇️ Receiving Mobile-Terminated (MT) Messages (Async)
 
 #### **Queuing MT Messages**
-  As messages arrive `rbPoll()` will place them in the MT queue (1 by default) the size of which can be adjusted in `imt_queue.h` by changing `#define MO_QUEUE_SIZE 1U`. For most applications a queue size of 1 should be sufficient if your application can acknowledge the message as soon as it arrives to prevent it being overwritten, otherwise follow the steps below.
+  As messages arrive `rbPoll()` will place them in the MT queue (1 by default) the size of which can be adjusted in `imt_queue.h` by changing `#define IMT_QUEUE_SIZE 1U`. For most applications a queue size of 1 should be sufficient if your application can acknowledge the message as soon as it arrives to prevent it being overwritten, otherwise follow the steps below.
 
   - Increase queue size to > 1.
-  - As a message comes in, if you received it using `rbReceiveMessageAsync()` you should then use `rbAcknowledgeReceiveHeadAsync()` to clear that message from the head of the queue and shift any messages up. If this isn't done, an incoming message will shift anything in your queue down to make space and place the latest message at the head of the queue.
+  - As a message comes in, if you received it using `rbReceiveMessageAsync(...)` you should then use `rbAcknowledgeReceiveHeadAsync()` to clear that message from the head of the queue and shift any messages up. If this isn't done, an incoming message will be placed at the tail of the queue.
   - If your queue is full, by default the oldest message will be erased to make space. If you want to prevent this functionality call `rbReceiveLockAsync()`, this will instead not accept any new messages if your queue is full. `rbReceiveUnlockAsync()` can be called to undo this.
 
 #### **Non-Blocking Receive**
-  Calling `rbReceiveMessageAsync()` will check the head of the MT queue, if a valid message exists it will return successfully. It is advised to wait for a positive callback from `mtMessageComplete` before attempting to receive a message, that way you can ensure one exists.
+  Calling `rbReceiveMessageAsync(...)` will check the head of the MT queue, if a valid message exists it will return successfully. It is advised to wait for a positive callback from `mtMessageComplete` before attempting to receive a message, that way you can ensure one exists.
 
 ---
 

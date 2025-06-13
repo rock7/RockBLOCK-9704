@@ -8,7 +8,6 @@
 #include <stddef.h>
 #include <errno.h>
 #include <stdlib.h>
-#include <time.h>
 #include "crossplatform.h"
 
 #if defined(_WIN32)
@@ -40,22 +39,22 @@ jsprSimStatus_t simStatus;
 jsprFirmwareInfo_t firmwareInfo;
 jsprMessageProvisioning_t messageProvisioningInfo;
 
-int messageLengthAsync = 0;
-int moQueuedMessages = 0;
-int mtQueuedMessages = 0;
+uint16_t messageLengthAsync = 0;
+uint16_t moQueuedMessages = 0;
+uint16_t mtQueuedMessages = 0;
 bool Receivelock = false;
 bool moDropped = false;
 bool moSent = false;
 bool mtDropped = false;
 bool mtReceived = false;
 
-static rbCallbacks_t rbCallbacks = {0};
+static const rbCallbacks_t *rbCallbacks = NULL;
 
 void rbRegisterCallbacks(const rbCallbacks_t *callbacks) 
 {
     if (callbacks) 
     {
-        rbCallbacks = *callbacks;
+        rbCallbacks = callbacks;
     }
 }
 
@@ -383,7 +382,7 @@ bool rbSendMessageAny(uint16_t topic, const char * data, const size_t length, co
 static bool sendMoFromQueue(const int timeout)
 {
     bool sent = false;
-    time_t start = time(NULL);
+    unsigned long start = millis();
     jsprResponse_t response;
     int initCrc = 0;
     int segmentStart;
@@ -422,7 +421,7 @@ static bool sendMoFromQueue(const int timeout)
                                     moSent = false;
                                     break;
                                 }
-                                else if (difftime(time(NULL), start) >= timeout)
+                                else if ((millis() - start) >= (timeout * 1000UL))
                                 {
                                     sent = false;
                                     break;
@@ -678,9 +677,9 @@ void rbPoll(void)
                 }
                 if(JSPR_RC_NO_ERROR != response.code && JSPR_RC_UNSOLICITED_MESSAGE != response.code && strcmp(response.target, "messageOriginateSegment") == 0)
                 {
-                    if(rbCallbacks.moMessageComplete)
+                    if(rbCallbacks && rbCallbacks->moMessageComplete)
                     {
-                        rbCallbacks.moMessageComplete(imtMo->id, -1);
+                        rbCallbacks->moMessageComplete(imtMo->id, -1);
                     }
                     else
                     {
@@ -698,9 +697,9 @@ void rbPoll(void)
                         if(messageOriginateStatus.finalMoStatus == MO_ACK_RECEIVED_MOS 
                         && imtMo->id == messageOriginateStatus.messageId)
                         {
-                            if(rbCallbacks.moMessageComplete)
+                            if(rbCallbacks && rbCallbacks->moMessageComplete)
                             {
-                                rbCallbacks.moMessageComplete(imtMo->id, 1);
+                                rbCallbacks->moMessageComplete(imtMo->id, 1);
                             }
                             else
                             {
@@ -729,9 +728,9 @@ void rbPoll(void)
                 }
                 else
                 {
-                    if(rbCallbacks.mtMessageComplete)
+                    if(rbCallbacks && rbCallbacks->mtMessageComplete)
                     {
-                        rbCallbacks.mtMessageComplete(messageTerminate.messageId, -1);
+                        rbCallbacks->mtMessageComplete(messageTerminate.messageId, -1);
                     }
                 }
             }
@@ -753,9 +752,9 @@ void rbPoll(void)
                             messageLengthAsync += segmentLengthMt;
                             if(0 > decodedBytes)
                             {
-                                if(rbCallbacks.mtMessageComplete)
+                                if(rbCallbacks && rbCallbacks->mtMessageComplete)
                                 {
-                                    rbCallbacks.mtMessageComplete(imtMt->id, -1);
+                                    rbCallbacks->mtMessageComplete(imtMt->id, -1);
                                 }
                                 else
                                 {
@@ -780,9 +779,9 @@ void rbPoll(void)
                             if(messageTerminateStatus.finalMtStatus == COMPLETE 
                             && imtMt->id == messageTerminateStatus.messageId)
                             {
-                                if(rbCallbacks.mtMessageComplete)
+                                if(rbCallbacks && rbCallbacks->mtMessageComplete)
                                 {
-                                    rbCallbacks.mtMessageComplete(imtMt->id, 1);
+                                    rbCallbacks->mtMessageComplete(imtMt->id, 1);
                                 }
                                 else
                                 {
@@ -801,9 +800,9 @@ void rbPoll(void)
                 jsprConstellationState_t constellationState;
                 if(parseJsprGetSignal(response.json, &constellationState))
                 {
-                    if(rbCallbacks.constellationState)
+                    if(rbCallbacks && rbCallbacks->constellationState)
                     {
-                        rbCallbacks.constellationState(&constellationState);
+                        rbCallbacks->constellationState(&constellationState);
                     }
                 }
             }
@@ -1033,9 +1032,9 @@ static bool checkProvisioning(uint16_t topic)
                     {
                         if(messageProvisioning.provisioningSet)
                         {
-                            if(rbCallbacks.messageProvisioning)
+                            if(rbCallbacks && rbCallbacks->messageProvisioning)
                             {
-                                rbCallbacks.messageProvisioning(&messageProvisioning);
+                                rbCallbacks->messageProvisioning(&messageProvisioning);
                             }
                         }
                         messageProvisioningInfo = messageProvisioning;
