@@ -2739,11 +2739,10 @@ SWIG_Lua_dostring(lua_State *L, const char *str) {
 /* -------- TYPES TABLE (BEGIN) -------- */
 
 #define SWIGTYPE_p_cloudloopTopics_t swig_types[0]
-#define SWIGTYPE_p_int8_t swig_types[1]
-#define SWIGTYPE_p_p_char swig_types[2]
-#define SWIGTYPE_p_uint16_t swig_types[3]
-static swig_type_info *swig_types[5];
-static swig_module_info swig_module = {swig_types, 4, 0, 0, 0, 0};
+#define SWIGTYPE_p_p_char swig_types[1]
+#define SWIGTYPE_p_uint16_t swig_types[2]
+static swig_type_info *swig_types[4];
+static swig_module_info swig_module = {swig_types, 3, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -2808,10 +2807,6 @@ typedef struct{} LANGUAGE_OBJ;
 }
 
 
-// This block is for the C compiler.
-// It must include ALL headers necessary for the C code in rockblock_lua_wrap.cxx
-// to compile successfully. This includes headers for functions called by rockblock_9704.h
-// even if those functions are not directly exposed to Lua.
 #include "rockblock_9704.h"
 #include "crossplatform.h" // Assuming rockblock_9704.c might call functions from here
 #include "gpio.h"
@@ -2965,17 +2960,21 @@ static int _wrap_rbReceiveMessage(lua_State* L) {
   {
     int SWIG_arg = 0;
     char **arg1 = (char **) 0 ;
+    char *temp_buffer1 = NULL ;
     size_t result;
     
-    SWIG_check_num_args("rbReceiveMessage",1,1)
-    if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("rbReceiveMessage",1,"char **");
-    
-    if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_p_char,0))){
-      SWIG_fail_ptr("rbReceiveMessage",1,SWIGTYPE_p_p_char);
+    {
+      arg1 = &temp_buffer1; // arg1 is the char** parameter in the C function signature
     }
-    
+    SWIG_check_num_args("rbReceiveMessage",0,0)
     result = rbReceiveMessage(arg1);
     lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+    {
+      if (*arg1 && result > 0) {
+        lua_pushlstring(L, (const char*)*arg1, (size_t)result); // Push the string to Lua
+        SWIG_arg++; // Increment the count of Lua return values
+      }
+    }
     return SWIG_arg;
     
     fail: SWIGUNUSED;
@@ -2990,25 +2989,29 @@ static int _wrap_rbReceiveMessageWithTopic(lua_State* L) {
     int SWIG_arg = 0;
     char **arg1 = (char **) 0 ;
     uint16_t arg2 ;
+    char *temp_buffer1 = NULL ;
     uint16_t *argp2 ;
     size_t result;
     
-    SWIG_check_num_args("rbReceiveMessageWithTopic",2,2)
-    if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("rbReceiveMessageWithTopic",1,"char **");
-    if(!lua_isuserdata(L,2)) SWIG_fail_arg("rbReceiveMessageWithTopic",2,"uint16_t");
-    
-    if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_p_char,0))){
-      SWIG_fail_ptr("rbReceiveMessageWithTopic",1,SWIGTYPE_p_p_char);
+    {
+      arg1 = &temp_buffer1; // arg1 is the char** parameter in the C function signature
     }
+    SWIG_check_num_args("rbReceiveMessageWithTopic",1,1)
+    if(!lua_isuserdata(L,1)) SWIG_fail_arg("rbReceiveMessageWithTopic",1,"uint16_t");
     
-    
-    if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_uint16_t,0))){
+    if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp2,SWIGTYPE_p_uint16_t,0))){
       SWIG_fail_ptr("rbReceiveMessageWithTopic",2,SWIGTYPE_p_uint16_t);
     }
     arg2 = *argp2;
     
     result = rbReceiveMessageWithTopic(arg1,SWIG_STD_MOVE(arg2));
     lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+    {
+      if (*arg1 && result > 0) {
+        lua_pushlstring(L, (const char*)*arg1, (size_t)result); // Push the string to Lua
+        SWIG_arg++; // Increment the count of Lua return values
+      }
+    }
     return SWIG_arg;
     
     fail: SWIGUNUSED;
@@ -3026,8 +3029,8 @@ static int _wrap_rbGetSignal(lua_State* L) {
     SWIG_check_num_args("rbGetSignal",0,0)
     result = rbGetSignal();
     {
-      int8_t * resultptr = new int8_t(result);
-      SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_int8_t,1); SWIG_arg++;
+      lua_pushnumber(L, result);
+      SWIG_arg++; // this is to increment the lua values pushed else it doesn't know its done a thing
     }
     return SWIG_arg;
     
@@ -3097,8 +3100,8 @@ static int _wrap_rbGetBoardTemp(lua_State* L) {
     SWIG_check_num_args("rbGetBoardTemp",0,0)
     result = rbGetBoardTemp();
     {
-      int8_t * resultptr = new int8_t(result);
-      SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_int8_t,1); SWIG_arg++;
+      lua_pushnumber(L, result);
+      SWIG_arg++; // this is to increment the lua values pushed else it doesn't know its done a thing
     }
     return SWIG_arg;
     
@@ -3232,25 +3235,21 @@ static swig_lua_namespace swig_SwigModule = {
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
 static swig_type_info _swigt__p_cloudloopTopics_t = {"_p_cloudloopTopics_t", "cloudloopTopics_t *|enum cloudloopTopics_t *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_int8_t = {"_p_int8_t", "int8_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_p_char = {"_p_p_char", "char **", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_uint16_t = {"_p_uint16_t", "uint16_t *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_cloudloopTopics_t,
-  &_swigt__p_int8_t,
   &_swigt__p_p_char,
   &_swigt__p_uint16_t,
 };
 
 static swig_cast_info _swigc__p_cloudloopTopics_t[] = {  {&_swigt__p_cloudloopTopics_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_int8_t[] = {  {&_swigt__p_int8_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_p_char[] = {  {&_swigt__p_p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_uint16_t[] = {  {&_swigt__p_uint16_t, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_cloudloopTopics_t,
-  _swigc__p_int8_t,
   _swigc__p_p_char,
   _swigc__p_uint16_t,
 };

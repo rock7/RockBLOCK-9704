@@ -111,7 +111,6 @@ endif()
 
 
 
-# ========================================================================================================= LUA TESTING!!
 
 
 if (BUILD_LUA_SHARED_LIBRARY STREQUAL "ON")
@@ -137,7 +136,6 @@ if (BUILD_LUA_SHARED_LIBRARY STREQUAL "ON")
 
     # Define the shared library for Lua
     add_library(${LUA_SHARED_LIB} SHARED
-        # C library's source files
         ${SRC_DIR}/rockblock_9704.c
         ${SRC_DIR}/jspr_command.c
         ${SRC_DIR}/jspr.c
@@ -151,24 +149,20 @@ if (BUILD_LUA_SHARED_LIBRARY STREQUAL "ON")
     )
 
     target_include_directories(${LUA_SHARED_LIB} PRIVATE
-        ${Lua54_INCLUDE_DIR} # Lua include directory
-        ${IRIDIUM_IMT_LIB}   # Your existing C library include directory
-        ${CMAKE_CURRENT_SOURCE_DIR} # For rockblock.i and generated wrapper
+        ${Lua54_INCLUDE_DIR}
+        ${IRIDIUM_IMT_LIB}
+        ${CMAKE_CURRENT_SOURCE_DIR}
     )
+
     target_link_libraries(${LUA_SHARED_LIB} PRIVATE
-        ${Lua54_LIBRARIES} # Lua linker libraries
-        ${IRIDIUM_IMT_LIB} # Your existing C library's dependencies
-        # -lm # Link against math library if needed for your C code
+        ${Lua54_LIBRARIES}
+        ${IRIDIUM_IMT_LIB}
     )
+
     if(APPLE)
         target_link_options(${LUA_SHARED_LIB} PRIVATE "-undefined" "dynamic_lookup")
     endif()
 
-    # Lua modules should typically be named without a 'lib' prefix, and have the correct extension.
-    # SWIG usually generates a module that follows Lua's naming conventions for 'require'.
-    # e.g., if module is 'rockblock_lua', it looks for 'rockblock_lua.so' or 'rockblock_lua.dll'.
-    # The default output name from `add_library` might be 'librockblock_lua.so'.
-    # You might need to rename it for Lua.
     set_target_properties(${LUA_SHARED_LIB} PROPERTIES
         OUTPUT_NAME ${LUA_SHARED_LIB} # Sets the base name
         # SUFFIX ".so" # Linux/macOS suffix (CMake handles .dll for Windows automatically for SHARED libraries)
@@ -177,9 +171,6 @@ if (BUILD_LUA_SHARED_LIBRARY STREQUAL "ON")
                       # If SWIG output is always rockblock_lua.so, you'd name your add_library target 'rockblock_lua'.
     )
 endif()
-# ========================================================================================================= LUA TESTING!!
-
-
 
 add_executable(${REFLECTED_BIN} ${EXAMPLE_DIR}/reflected.c)
 add_executable(${CL_RAW_BIN} ${EXAMPLE_DIR}/cloudloopRaw.c)

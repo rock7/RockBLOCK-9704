@@ -1,10 +1,30 @@
 %module rockblock_lua
 
+//typemap to force 'int8_t' values returned by C functions to be pushed as Lua numbers directly
+%typemap(out) int8_t {
+    lua_pushnumber(L, $1);
+    SWIG_arg++; // this is to increment the lua values pushed else it doesn't know its done a thing
+}
+
+// typemap to auto create a char** rather than supply one from lua as an argument
+%typemap(in, numinputs=0) char **RECEIVE_BUFFER (char *temp_buffer = NULL) {
+    $1 = &temp_buffer; // $1 is the char** parameter in the C function signature
+}
+
+// typemap to push out a string if the above buffer isnt empty. this is a second return value in the fucntion
+// e.g. local message_length, message_content = rockblock.rbReceiveMessage() 
+%typemap(argout) char **RECEIVE_BUFFER {
+    if (*$1 && result > 0) {
+        lua_pushlstring(L, (const char*)*$1, (size_t)result); // Push the string to Lua
+        SWIG_arg++; // Increment the count of Lua return values
+    }
+}
+
+// apply the type maps to relevant functions. must use the correct names of variables
+%apply (char **RECEIVE_BUFFER) { char **buffer };
+
+// This block is for the C compiler, all headers for the C code in rockblock_lua_wrap.cxx to compile successfully
 %{
-// This block is for the C compiler.
-// It must include ALL headers necessary for the C code in rockblock_lua_wrap.cxx
-// to compile successfully. This includes headers for functions called by rockblock_9704.h
-// even if those functions are not directly exposed to Lua.
 #include "rockblock_9704.h"
 #include "crossplatform.h" // Assuming rockblock_9704.c might call functions from here
 #include "gpio.h"
@@ -14,8 +34,7 @@
 #include "serial.h"
 %}
 
-// Tell SWIG to ignore static declarations
-// This is because it's a static (internal) function and not part of the public API that should be exposed to Lua.
+// Tell SWIG to ignore static declarations as they are not part of the public API that should be exposed to Lua
 %ignore calculateCrc;
 %ignore appendCrc;
 %ignore encodeData;
@@ -32,10 +51,3 @@
 // This block is for SWIG's parser.
 // ONLY include headers here for functions/types you want DIRECTLY callable/usable from Lua.
 %include "rockblock_9704.h"
-
-// If any of the functions/structs in rockblock_9704.h internally use types
-// that are *defined* in other headers, and SWIG needs to understand those types
-// for correct wrapping (e.g., if a function in rockblock_9704.h returns `serial_port_handle_t`
-// and you want Lua to see `serial_port_handle_t` as a type), then you might need
-// to selectively include those specific definitions or headers here, or use `%import`.
-// However, if they are opaque pointers or simple data types, SWIG often handles it.
