@@ -11,15 +11,13 @@
 //Serial Variables
 extern int serialConnection;
 extern enum serialState serialState;
-extern char* serialPort;
-extern int serialBaud;
 extern serialContext context;
 
-bool setContextLinux(char* port, int baud)
+bool setContextLinux(const char * port, const uint32_t baud)
 {
     bool set = false;
-    serialPort = port;
-    serialBaud = baud;
+    strncpy(context.serialPort, port, SERIAL_PORT_LENGTH);
+    context.serialBaud = baud;
     context.serialInit = openPortLinux;
     context.serialDeInit = closePortLinux;
     context.serialRead = readLinux;
@@ -36,11 +34,11 @@ bool setContextLinux(char* port, int baud)
     return set;
 }
 
-bool openPortLinux()
+bool openPortLinux(void)
 {
     if(serialState != OPEN)
     {
-        serialConnection = open(serialPort, O_RDWR | O_NOCTTY | O_SYNC | O_NONBLOCK);
+        serialConnection = open(context.serialPort, O_RDWR | O_NOCTTY | O_SYNC | O_NONBLOCK);
         if(0 > serialConnection)
         {
             return false;
@@ -59,7 +57,7 @@ bool openPortLinux()
     }
 }
 
-bool closePortLinux()
+bool closePortLinux(void)
 {
     if(serialState != CLOSED)
     {
@@ -86,8 +84,8 @@ struct termios options;
     }
     else
     {
-        cfsetispeed(&options, getBaudRate(serialBaud));
-        cfsetospeed(&options, getBaudRate(serialBaud));
+        cfsetispeed(&options, getBaudRate(context.serialBaud));
+        cfsetospeed(&options, getBaudRate(context.serialBaud));
 
         options.c_cflag &= ~CSIZE;          // Clear the character size mask
         options.c_cflag |= CS8;             // Set 8 data bits
@@ -110,9 +108,9 @@ struct termios options;
     return true;
 }
 
-int getBaudRate(int baudRate)
+uint32_t getBaudRate(const uint32_t baudRate)
 {
-    switch (baudRate) 
+    switch (baudRate)
     {
         case 0: return B0;
         case 50: return B50;

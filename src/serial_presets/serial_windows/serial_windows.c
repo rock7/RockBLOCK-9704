@@ -8,15 +8,13 @@
 // Serial Variables
 extern HANDLE serialConnection;
 extern enum serialState serialState;
-extern char* serialPort;
-extern int serialBaud;
 extern serialContext context;
 
-bool setContextWindows(char* port, int baud)
+bool setContextWindows(const char * port, const uint32_t baud);
 {
     bool set = false;
-    serialPort = port;
-    serialBaud = baud;
+    strncpy(context.serialPort, port, SERIAL_PORT_LENGTH);
+    context.serialBaud = baud;
     context.serialInit = openPortWindows;
     context.serialDeInit = closePortWindows;
     context.serialRead = readWindows;
@@ -33,12 +31,12 @@ bool setContextWindows(char* port, int baud)
     return set;
 }
 
-bool openPortWindows()
+bool openPortWindows(void)
 {
     bool opened = false;
     if (serialState != OPEN)
     {
-        serialConnection = CreateFileA(serialPort, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
+        serialConnection = CreateFileA(context.serialPort, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
         if (serialConnection != INVALID_HANDLE_VALUE)
         {
             if (configurePortWindows())
@@ -55,7 +53,7 @@ bool openPortWindows()
     return opened;
 }
 
-bool closePortWindows()
+bool closePortWindows(void)
 {
     bool closed = false;
     if (serialState != CLOSED)
@@ -67,14 +65,14 @@ bool closePortWindows()
     return closed;
 }
 
-bool configurePortWindows()
+bool configurePortWindows(void)
 {
     bool configured = false;
     DCB dcbSerialParams = {0};
     dcbSerialParams.DCBlength = sizeof(dcbSerialParams);
     if (GetCommState(serialConnection, &dcbSerialParams))
     {
-        dcbSerialParams.BaudRate = serialBaud;
+        dcbSerialParams.BaudRate = context.serialBaud;
         dcbSerialParams.ByteSize = 8;
         dcbSerialParams.Parity = NOPARITY;
         dcbSerialParams.StopBits = ONESTOPBIT;
@@ -138,7 +136,7 @@ int writeWindows(const char* data, const uint16_t length)
     return bytesWritten;
 }
 
-int peekWindows()
+int peekWindows(void)
 {
     COMSTAT status;
     DWORD errors;

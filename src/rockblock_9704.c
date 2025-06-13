@@ -240,7 +240,7 @@ static bool setState(void)
     return set;
 }
 
-bool rbBegin(char* port)
+bool rbBegin(const char* port)
 {
     bool began = false;
     if(SERIAL_CONTEXT_SETUP_FUNC(port, RB9704_BAUD))

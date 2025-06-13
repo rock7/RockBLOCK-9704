@@ -97,7 +97,7 @@ typedef enum
  * @param port pointer to port name.
  * @return bool depicting success or failure.
  */
-bool rbBegin(char * port);
+bool rbBegin(const char * port);
 
 /**
  * @brief Uninitialise/close the the serial connection.

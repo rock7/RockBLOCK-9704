@@ -8,7 +8,6 @@
 extern int serialConnection;
 extern enum serialState serialState;
 Stream &serialPortArduino = Serial1;
-extern int serialBaud;
 extern serialContext context;
 
 bool openPortArduino()
@@ -26,32 +25,33 @@ bool closePortArduino()
 
 int readArduino(char * bytes, const uint16_t length)
 {
-    return serialPortArduino.readBytes(bytes, length);
+    return (int)serialPortArduino.readBytes(bytes, length);
 }
 
 int writeArduino(const char * data, const uint16_t length)
 {
-    return serialPortArduino.write(data, length);
+    return (int)serialPortArduino.write(data, length);
 }
 
-bool setContextArduino(char * port, int baud)
+bool setContextArduino(const char * port, const uint32_t baud)
 {
-    if(strcmp(port, "Serial1") == 0)
+    strncpy(context.serialPort, port, SERIAL_PORT_LENGTH);
+    if(strcmp(context.serialPort, "Serial1") == 0)
     {
         serialPortArduino = Serial1;
     }
 //JS TODO: double check the preprocessor defines below
 #ifdef defined(AVR_MEGA2560) || defined(ARDUINO_SAM_DUE) || defined(ARDUINO_GIGA)
-    else if(strcmp(port, "Serial2") == 0)
+    else if(strcmp(context.serialPort, "Serial2") == 0)
     {
         serialPortArduino = Serial2;
     }
-    else if(strcmp(port, "Serial3") == 0)
+    else if(strcmp(context.serialPort, "Serial3") == 0)
     {
         serialPortArduino = Serial3;
     }
 #ifdef defined(ARDUINO_GIGA)
-    else if(strcmp(port, "Serial4") == 0)
+    else if(strcmp(context.serialPort, "Serial4") == 0)
     {
         serialPortArduino = Serial4;
     }
@@ -63,7 +63,7 @@ bool setContextArduino(char * port, int baud)
     }
 
     bool set = false;
-    serialBaud = baud;
+    context.baud = baud;
     context.serialInit = openPortArduino;
     context.serialDeInit = closePortArduino;
     context.serialRead = readArduino;
