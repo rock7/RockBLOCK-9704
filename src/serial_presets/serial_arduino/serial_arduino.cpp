@@ -63,7 +63,7 @@ bool setContextArduino(const char * port, const uint32_t baud)
     }
 
     bool set = false;
-    context.baud = baud;
+    context.serialBaud = baud;
     context.serialInit = openPortArduino;
     context.serialDeInit = closePortArduino;
     context.serialRead = readArduino;
