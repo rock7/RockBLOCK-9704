@@ -2,8 +2,29 @@ import argparse
 from rockblock9704 import *
 from time import sleep
 
-messagesSent = 0
-receivedNewMessage = False
+#This example code showcases the asynchronous capabilities of this library by setting
+#the necessary callbacks, queuing and sending a message, listening for any incoming message
+#without blocking and finally quitting after receiving a successful message.
+#
+#At the start of the script we setup our 4 user defined callbacks to get message provisioning,
+#check if our queued message has sent, check if we received any messages and finally check the
+#signal strength. A serial connection will then be attempted on the selected port. The script will call
+#poll() every time it loops, it is important that this is done quite frequently (10ms is reliable)
+#as that function is responsible for listening to all the replies from the modem. A message will be
+#queued at the start and should start sending if a good signal has been obtained. The callback for message
+#provisioning should then return all the provisioned topics, followed by the onMoComplete callback when 
+#the message has sent. The onConstellationState callback will be called anytime either the signal level or
+#signal bars have changed although in this example we will only print the change in signal bars. Finally
+#the script will constantly wait for an incoming message, by waiting for the onMtComplete callback to be called,
+#then store and acknowledge it to clear space.
+#
+#Requirements:
+#RB9704 needs to be provisioned for messaging topic 244 (RAW).
+#Have an open view of the sky where a good signal can be obtained.
+
+messages_sent = 0
+messages_received = 0
+received_new_message = False
 current_signal = 0
 
 def on_provision(messageProvisioning):
@@ -13,17 +34,19 @@ def on_provision(messageProvisioning):
             print(f"\033[1;32mTopic name: {topic['topicName']}, Topic number: {topic['topicId']}\033[0m")
 
 def on_mo(id, status):
-    global messagesSent
+    global messages_sent
     print(f"\033[1;32mMO complete: ID={id}, status={status}\033[0m")
     if(status == 1):
-        messagesSent += 1
-        print(f"\033[1;33mMessage Sent: {messagesSent}\033[0m")
+        messages_sent += 1
+        print(f"\033[1;33mMessage Sent: {messages_sent}\033[0m")
 
 def on_mt(id, status):
-    global receivedNewMessage
+    global received_new_message, messages_received
     print(f"\033[1;32mMT complete: ID={id}, status={status}\033[0m")
     if(status == 1):
-        receivedNewMessage = True
+        messages_received += 1
+        print(f"\033[1;32mMessages received: {messages_received}\033[0m")
+        received_new_message = True
 
 def on_signal(state):
     global current_signal
@@ -43,10 +66,10 @@ if __name__ == '__main__':
         # Create RockBlock9704 instance
         rb = RockBlock9704()
         rb.register_callbacks(
-        #message_provisioning=on_provision,
+        message_provisioning=on_provision,
         mo_message_complete=on_mo,
-        mt_message_complete=on_mt
-        #constellation_state=on_signal
+        mt_message_complete=on_mt,
+        constellation_state=on_signal
         )
         # Begin serial communication
         connected = rb.begin(args.device)
@@ -59,7 +82,7 @@ if __name__ == '__main__':
             print("\033[1;34m9704 Modem IMEI: \t\033[0m", rb.get_imei())
             print("\033[1;34m9704 Modem ICCID: \t\033[0m", rb.get_iccid())
             messages_queued = 0
-            messages_received = 0
+            messages_acknowledged = 0
             while True:
                 rb.poll()
                 if(messages_queued == 0):
@@ -76,17 +99,17 @@ if __name__ == '__main__':
                         print("\033[1;31mQueueing failed\033[0m")
 
                 # Check for messages
-                if receivedNewMessage:
+                if received_new_message:
                     message = rb.receive_message_async()
 
                     if message is not None:
                         print(f"\033[1;32mReceived message: {message}\033[0m")
                         # Acknowledge the head of the queue
                         rb.acknowledge_receive_head_async()
-                        messages_received += 1
-                        print(f"\033[1;32mMessages received: {messages_received}\033[0m")
+                        messages_acknowledged += 1
+                        print(f"\033[1;32mMessages acknowledged: {messages_acknowledged}\033[0m")
 
-                if messages_received >= 5:
+                if messages_acknowledged >= 1:
                     break
 
             if(rb.end()):

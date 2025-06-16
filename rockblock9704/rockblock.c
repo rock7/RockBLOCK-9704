@@ -33,46 +33,61 @@ void message_provisioning_callback(const jsprMessageProvisioning_t *messageProvi
             PyList_SetItem(pyProvisioningList, i, pyTopic);
         }
 
+        Py_INCREF(Py_True);
+        Py_INCREF(Py_False);
+
         PyObject *pyMessageProvisioning = Py_BuildValue("{s:O,s:i,s:O}",
                                                         "provisioning", pyProvisioningList,
                                                         "topicCount", messageProvisioning->topicCount,
                                                         "provisioningSet", messageProvisioning->provisioningSet ? Py_True : Py_False);
 
-        Py_INCREF(Py_True);
-        Py_INCREF(Py_False);
-
         PyObject *result = PyObject_CallFunctionObjArgs(py_messageProvisioning_cb, pyMessageProvisioning, NULL);
 
         if (!result) {
             PyErr_Print();
-        } else {
+        }
+        else {
             Py_DECREF(result);
         }
 
-        Py_DECREF(pyMessageProvisioning);
+        Py_XDECREF(pyMessageProvisioning);
         PyGILState_Release(gstate);
     }
 }
 
-void mo_message_complete_callback(const unsigned int id, const int status) {
+void mo_message_complete_callback(const uint16_t id, const rbMsgStatus_t status) {
 
     if (py_moMessageComplete_cb && PyCallable_Check(py_moMessageComplete_cb)) {
 
         PyGILState_STATE gstate = PyGILState_Ensure();
 
-        PyObject_CallFunction(py_moMessageComplete_cb, "Ii", id, status);
+        PyObject *result = PyObject_CallFunction(py_moMessageComplete_cb, "Ii", id, status);
+
+        if (!result) {
+            PyErr_Print();
+        }
+        else {
+            Py_DECREF(result);
+        }
 
         PyGILState_Release(gstate);
     }
 }
 
-void mt_message_complete_callback(const unsigned int id, const int status) {
+void mt_message_complete_callback(const uint16_t id, const rbMsgStatus_t status) {
 
     if (py_mtMessageComplete_cb && PyCallable_Check(py_mtMessageComplete_cb)) {
 
         PyGILState_STATE gstate = PyGILState_Ensure();
 
-        PyObject_CallFunction(py_mtMessageComplete_cb, "Ii", id, status);
+        PyObject *result = PyObject_CallFunction(py_mtMessageComplete_cb, "Ii", id, status);
+
+        if (!result) {
+            PyErr_Print();
+        }
+        else {
+            Py_DECREF(result);
+        }
 
         PyGILState_Release(gstate);
     }
@@ -84,23 +99,24 @@ void constellation_state_callback(const jsprConstellationState_t *constellationS
 
         PyGILState_STATE gstate = PyGILState_Ensure();
 
+        Py_INCREF(Py_True);
+        Py_INCREF(Py_False);
+
         PyObject *pyConstellationState = Py_BuildValue("{s:O,s:i,s:i}",
                                                         "constellationVisible", constellationState->constellationVisible ? Py_True : Py_False,
                                                         "signalBars", constellationState->signalBars,
                                                         "signalLevel", constellationState->signalLevel);
 
-        Py_INCREF(Py_True);
-        Py_INCREF(Py_False);
-
         PyObject *result = PyObject_CallFunctionObjArgs(py_constellationState_cb, pyConstellationState, NULL);
 
         if (!result) {
             PyErr_Print();
-        } else {
+        }
+        else {
             Py_DECREF(result);
         }
 
-        Py_DECREF(pyConstellationState);
+        Py_XDECREF(pyConstellationState);
         PyGILState_Release(gstate);
     }
 }
@@ -109,7 +125,7 @@ static PyObject *py_registerCallbacks(PyObject *self, PyObject *args, PyObject *
 
     PyObject *msg_cb = NULL, *mo_cb = NULL, *mt_cb = NULL, *const_cb = NULL;
 
-    static char *keyword_list[] = {
+    static char * keyword_list[] = {
         "messageProvisioning",
         "moMessageComplete",
         "mtMessageComplete",
@@ -155,7 +171,7 @@ static PyObject *py_registerCallbacks(PyObject *self, PyObject *args, PyObject *
         py_constellationState_cb = const_cb;
     }
 
-    rbCallbacks_t callbacks = {
+    static rbCallbacks_t callbacks = {
         .messageProvisioning = message_provisioning_callback,
         .moMessageComplete = mo_message_complete_callback,
         .mtMessageComplete = mt_message_complete_callback,

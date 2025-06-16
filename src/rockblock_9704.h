@@ -20,13 +20,34 @@ extern "C" {
 #include <stddef.h>
 
 /**
+ * @enum rbMsgStatus_t.
+ * @brief Indicates the result of a message operation.
+ * 
+ * This enum represents success or failure of processing either an incoming 
+ * or outgoing message.
+ */
+typedef enum
+{
+    /**
+     * @brief Message was processed successfully.
+     */
+    RB_MSG_STATUS_OK = 1,
+
+    /**
+     * @brief Message failed to be processed.
+     */
+    RB_MSG_STATUS_FAIL = -1
+}rbMsgStatus_t;
+
+/**
  * @brief Struct containing user defined callback functions for asynchronous 
  * operations.
  * 
  * This structure allows the user to register custom handlers that this library 
  * will invoke during specific events.
  */
-typedef struct {
+typedef struct 
+{
     /**
      * @brief Callback for message provisioning info once its been obtained.
      * 
@@ -39,18 +60,18 @@ typedef struct {
      * and been sent successfully.
      * 
      * @param id Unique Identifier of the message.
-     * @param status Integer indicating result of processing (-1 for failure & 1 for success).
+     * @param status Enum indicating result of processing (-1 for failure & 1 for success).
      */
-    void (*moMessageComplete)(const unsigned int id, const int status);
+    void (*moMessageComplete)(const uint16_t id, const rbMsgStatus_t status);
 
     /**
      * @brief Callback for when a mobile-terminated (MT) message has finished processing 
      * and been received successfully.
      * 
      * @param id Unique Identifier of the message.
-     * @param status Integer indicating result of processing (-1 for failure & 1 for success).
+     * @param status Enum indicating result of processing (-1 for failure & 1 for success).
      */
-    void (*mtMessageComplete)(const unsigned int id, const int status);
+    void (*mtMessageComplete)(const uint16_t id, const rbMsgStatus_t status);
 
     /**
      * @brief Callback for the constellationState (signal) has been updated.

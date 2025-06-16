@@ -6,9 +6,9 @@ static imt_queue_t imtMt;
 static uint8_t imtMoBuffer[IMT_QUEUE_SIZE][IMT_PAYLOAD_SIZE];
 static uint8_t imtMtBuffer[IMT_QUEUE_SIZE][IMT_PAYLOAD_SIZE];
 
-static bool mtLock = false;
+static volatile bool mtLock = false;
 
-int8_t imtQueueMoPush(uint16_t topic, const char * data, const size_t length)
+bool imtQueueMoAdd(uint16_t topic, const char * data, const size_t length)
 {
     bool queued = false;
     uint16_t tempTail = imtMo.tail;
@@ -17,7 +17,6 @@ int8_t imtQueueMoPush(uint16_t topic, const char * data, const size_t length)
         if(imtMo.count < imtMo.maxLength)
         {
             memcpy(imtMoBuffer[tempTail], data, length);
-            //imtMo.messages[tempTail].buffer = imtMoBuffer[imtMo.head];
             imtMo.messages[tempTail].topic = topic;
             imtMo.messages[tempTail].length = length;
             queued = true;
@@ -29,7 +28,7 @@ int8_t imtQueueMoPush(uint16_t topic, const char * data, const size_t length)
     return queued;
 }
 
-int8_t imtQueueMtPush(uint16_t topic, uint16_t id, size_t length)
+bool imtQueueMtAdd(const uint16_t topic, const uint16_t id, const size_t length)
 {
     bool queued = false;
     uint16_t tempTail = imtMt.tail;
@@ -37,7 +36,7 @@ int8_t imtQueueMtPush(uint16_t topic, uint16_t id, size_t length)
     {
         if(imtMt.count >= imtMt.maxLength && !mtLock)
         {
-            imtQueueRemoveMt(); //remove oldest entry if queue is full
+            imtQueueMtRemove(); //remove oldest entry if queue is full
         }
 
         if(imtMt.count < imtMt.maxLength)
@@ -66,7 +65,7 @@ void imtQueueMtLock(bool lock)
     }
 }
 
-imt_t * imtQueueMoPeek(void)
+imt_t * imtQueueMoGetFirst(void)
 {
     imt_t * mo = NULL;
 
@@ -78,7 +77,7 @@ imt_t * imtQueueMoPeek(void)
     return mo;
 }
 
-imt_t * imtQueueMtPeek(void)
+imt_t * imtQueueMtGetFirst(void)
 {
     imt_t * mt = NULL;
 
@@ -90,10 +89,22 @@ imt_t * imtQueueMtPeek(void)
     return mt;
 }
 
-bool imtQueueRemoveMo(void)
+imt_t * imtQueueMtGetLast(void)
+{
+    imt_t * mt = NULL;
+
+    if(imtMt.count > 0)
+    {
+        mt = &imtMt.messages[(imtMt.tail == 0) ? (IMT_QUEUE_SIZE - 1) : (imtMt.tail - 1)]; //last added message
+    }
+
+    return mt;
+}
+
+bool imtQueueMoRemove(void)
 {
     bool removed = false;
-    imt_t * mo = imtQueueMoPeek();
+    imt_t * mo = imtQueueMoGetFirst();
     if(mo != NULL)
     {
         uint16_t tempHead = imtMo.head;
@@ -111,10 +122,10 @@ bool imtQueueRemoveMo(void)
     return removed;
 }
 
-bool imtQueueRemoveMt(void)
+bool imtQueueMtRemove(void)
 {
     bool removed = false;
-    imt_t * mt = imtQueueMtPeek();
+    imt_t * mt = imtQueueMtGetFirst();
     if(mt != NULL)
     {
         uint16_t tempHead = imtMt.head;

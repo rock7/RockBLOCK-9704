@@ -13,14 +13,14 @@
 #endif
 
 /**
- * This script showcases the asynchronous and queuing capabilites of this library by setting
- * the necessary callbacks, queuing and sending 5 messages and listening for any incoming messages
- * without blocking, quitting after receiving 5 successful messages.
+ * This example code showcases the asynchronous and queuing capabilities of this library by setting
+ * the necessary callbacks, queuing and sending 5 messages, listening for any incoming messages
+ * without blocking and finally quitting after receiving 5 successful messages.
  * 
  * At the start of the script we setup our 4 user defined callbacks to get message provisioning,
  * check if our queued messages have sent, check if we received any messages and finally check the
  * signal strength. A serial connection will then be attempted on the selected port. The script will call
- * rbPoll() everytime it loops, it is important that this is done quite frequently (10ms in this example)
+ * rbPoll() every time it loops, it is important that this is done quite frequently (10ms in this example)
  * as that function is responsible for listening to all the replies from the modem. Five messages will be
  * queued at the start and should start sending if a good signal has been obtained. The callback for message
  * provisioning should then return all the provisioned topics, followed by the onMoComplete callback for 
@@ -32,10 +32,9 @@
  * Requirements:
  * RB9704 needs to be provisioned for messaging topic 244 (RAW).
  * Have an open view of the sky where a good signal can be obtained.
- * Adjust IMT_QUEUE_SIZE in imt_queue.h to 5U.
+ * Compile the library with IMT_QUEUE_SIZE defined as your queue size.
  * 
  * (OPTIONAL) If you want to use and test MT queuing do the following:
- * Adjust IMT_QUEUE_SIZE in imt_queue.h to desired queue size.
  * Remove or adjust rbAcknowledgeReceiveHeadAsync() so that messages aren't acknowledged right away.
  * Use rbReceiveLockAsync() if you want to lock the queue so that no messages are removed when queue is full.
  * Use rbReceiveUnlockAsync() if you want to unlock the queue.
@@ -46,6 +45,7 @@ static char _serialDevice[PATH_MAX];
 static volatile bool _run = true;
 
 int messagesSent = 0;
+int messagesReceived = 0;
 int currentSignal = 0;
 bool receivedNewMessage = false;
 
@@ -93,21 +93,23 @@ void onMessageProvisioning(const jsprMessageProvisioning_t *messageProvisioning)
     }
 }
 
-void onMoComplete(const unsigned int id, const int status)
+void onMoComplete(const uint16_t id, const rbMsgStatus_t status)
 {
     printf("\033[1;32mMO Complete: ID = %u, Status = %d\033[0m\r\n", id, status);
-    if(status == 1)
+    if(status == RB_MSG_STATUS_OK)
     {
         messagesSent += 1;
         printf("\033[1;33mMessage Sent: %d\033[0m\r\n", messagesSent);
     }
 }
 
-void onMtComplete(const unsigned int id, const int status)
+void onMtComplete(const uint16_t id, const rbMsgStatus_t status)
 {
     printf("\033[1;32mMT Complete: ID = %u, Status = %d\033[0m\r\n", id, status);
-    if(status == 1)
+    if(status == RB_MSG_STATUS_OK)
     {
+        messagesReceived += 1;
+        printf("\033[1;33mMessages Received: %d\033[0m\r\n", messagesReceived);
         receivedNewMessage = true;
     }
 }
@@ -130,7 +132,7 @@ int main(int argc, char * argv[])
     char * mtBuffer = NULL;
     char mtStore[100000];
     int messagesQueued = 0;
-    int messagesReceived = 0;
+    int messagesAcknowledged = 0;
     signal(SIGINT, signal_handler);
     signal(SIGTERM, signal_handler);
 
@@ -237,14 +239,14 @@ int main(int argc, char * argv[])
                         }
                         printf("\r\n");
                         memset(mtStore, 0, sizeof(mtStore));
-                        messagesReceived += 1;
-                        printf("\033[1;33mMessages Received: %d\033[0m\r\n", messagesReceived);
+                        messagesAcknowledged += 1;
+                        printf("\033[1;33mMessages Received: %d\033[0m\r\n", messagesAcknowledged);
                         //Clear the message from the queue to make space
                         if(rbAcknowledgeReceiveHeadAsync())
                         {
-                            printf("\033[1;34mMessage acknowledged\033[0m\r\n");
+                            printf("\033[1;34mMessages acknowledged: %d\033[0m\r\n", messagesAcknowledged);
                         }
-                        if(messagesReceived >= 5)
+                        if(messagesAcknowledged >= 5)
                         {
                             break; //quit
                         }

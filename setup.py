@@ -23,8 +23,7 @@ class CMakeBuild(build_ext):
 
         cmake_args = [
             f"-DCMAKE_BUILD_TYPE={config}",
-            f"-DBUILD_PYTHON_SHARED_LIBRARY=ON",
-            f"-DDEBUG=ON"
+            f"-DBUILD_PYTHON_SHARED_LIBRARY=ON"
         ]
 
         build_args = ["--config", config]

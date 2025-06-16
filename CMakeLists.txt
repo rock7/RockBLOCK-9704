@@ -10,6 +10,14 @@ if(DEFINED DEBUG AND DEBUG STREQUAL "ON")
     add_definitions(-DDEBUG)
 endif()
 
+if(DEFINED IMT_QUEUE_SIZE)
+    add_definitions(-DIMT_QUEUE_SIZE=${IMT_QUEUE_SIZE})
+endif()
+
+if(DEFINED IMT_PAYLOAD_SIZE)
+    add_definitions(-DIMT_PAYLOAD_SIZE=${IMT_PAYLOAD_SIZE})
+endif()
+
 # Check for libgpiod
 find_library(LIB_GPIOD gpiod)
 

@@ -333,7 +333,7 @@ bool rbSendMessage(const char * data, const size_t length, const int timeout)
     {
         if(data != NULL && length > 0 && length <= IMT_PAYLOAD_SIZE - IMT_CRC_SIZE)
         {
-            queued = imtQueueMoPush(RAW_TOPIC, data, length);
+            queued = imtQueueMoAdd(RAW_TOPIC, data, length);
             if(queued)
             {
                 sent = sendMoFromQueue(timeout);
@@ -351,7 +351,7 @@ bool rbSendMessageCloudloop(cloudloopTopics_t topic, const char * data, const si
     {
         if(data != NULL && length > 0 && length <= IMT_PAYLOAD_SIZE - IMT_CRC_SIZE)
         {
-            queued = imtQueueMoPush(topic, data, length);
+            queued = imtQueueMoAdd(topic, data, length);
             if(queued)
             {
                 sent = sendMoFromQueue(timeout);
@@ -369,7 +369,7 @@ bool rbSendMessageAny(uint16_t topic, const char * data, const size_t length, co
     {
         if(data != NULL && length > 0 && length <= IMT_PAYLOAD_SIZE - IMT_CRC_SIZE)
         {
-            queued = imtQueueMoPush(topic, data, length);
+            queued = imtQueueMoAdd(topic, data, length);
             if(queued >= 0)
             {
                 sent = sendMoFromQueue(timeout);
@@ -388,7 +388,7 @@ static bool sendMoFromQueue(const int timeout)
     int segmentStart;
     int segmentLength;
     int encodedBytes;
-    imt_t * imtMo = imtQueueMoPeek();
+    imt_t * imtMo = imtQueueMoGetFirst();
 
     if(imtMo != NULL)
     {
@@ -434,7 +434,7 @@ static bool sendMoFromQueue(const int timeout)
         }
         else
         {
-            imtQueueRemoveMo(); //failed to apply crc, drop message
+            imtQueueMoRemove(); //failed to apply crc, drop message
         }
     }
     return sent;
@@ -446,7 +446,7 @@ size_t rbReceiveMessage(char ** buffer)
 
     if(listenForMt())
     {
-        imt_t * imtMt = imtQueueMtPeek();
+        imt_t * imtMt = imtQueueMtGetFirst();
         if(buffer != NULL && imtMt != NULL)
         {
             if(imtMt->buffer != NULL && imtMt->length > 0 && imtMt->topic >= IMT_MIN_TOPIC_ID &&
@@ -468,7 +468,7 @@ size_t rbReceiveMessageWithTopic(char ** buffer, uint16_t topic)
 
     if(listenForMt())
     {
-        imt_t * imtMt = imtQueueMtPeek();
+        imt_t * imtMt = imtQueueMtGetFirst();
         if(buffer != NULL && imtMt != NULL)
         {
             if(imtMt->buffer != NULL && imtMt->length > 0 && imtMt->topic >= IMT_MIN_TOPIC_ID &&
@@ -490,7 +490,7 @@ static bool listenForMt(void)
     bool received = false;
 
     rbPoll();
-    imt_t * imtMt = imtQueueMtPeek();
+    imt_t * imtMt = imtQueueMtGetFirst();
     if(imtMt != NULL)
     {
         if(imtMt->readyToProcess)
@@ -520,7 +520,7 @@ static bool sendMoFromQueueAsync(void)
 {
     bool started = false;
     jsprResponse_t response;
-    imt_t * imtMo = imtQueueMoPeek();
+    imt_t * imtMo = imtQueueMoGetFirst();
 
     if(imtMo != NULL)
     {
@@ -546,7 +546,7 @@ static bool sendMoFromQueueAsync(void)
         }
         else
         {
-            imtQueueRemoveMo(); //failed to apply crc, drop message
+            imtQueueMoRemove(); //failed to apply crc, drop message
         }
     }
     return started;
@@ -560,7 +560,7 @@ bool rbSendMessageAsync(uint16_t topic, const char * data, const size_t length)
     {
         if(data != NULL && length > 0 && length <= IMT_PAYLOAD_SIZE - IMT_CRC_SIZE)
         {
-            queued = imtQueueMoPush(topic, data, length);
+            queued = imtQueueMoAdd(topic, data, length);
             if(queued)
             {
                 if (moQueuedMessages == 0)
@@ -581,7 +581,7 @@ bool rbSendMessageAsync(uint16_t topic, const char * data, const size_t length)
 size_t rbReceiveMessageAsync(char ** buffer)
 {
     size_t length = 0;
-    imt_t * imtMt = imtQueueMtPeek();
+    imt_t * imtMt = imtQueueMtGetFirst();
 
     if(imtMt != NULL)
     {
@@ -616,7 +616,7 @@ void rbReceiveUnlockAsync(void)
 bool rbAcknowledgeReceiveHeadAsync(void)
 {
     bool acknowledged = false;
-    if(imtQueueRemoveMt())
+    if(imtQueueMtRemove())
     {
         acknowledged = true;
     }
@@ -646,7 +646,7 @@ void rbPoll(void)
     int encodedBytes;
     int decodedBytes;
     bool mtQueued;
-    imt_t * imtMo = imtQueueMoPeek();
+    imt_t * imtMo = imtQueueMoGetFirst();
     if(context.serialPeek() > 0)
     {
         if(receiveJspr(&response, NULL))
@@ -679,13 +679,13 @@ void rbPoll(void)
                 {
                     if(rbCallbacks && rbCallbacks->moMessageComplete)
                     {
-                        rbCallbacks->moMessageComplete(imtMo->id, -1);
+                        rbCallbacks->moMessageComplete(imtMo->id, RB_MSG_STATUS_FAIL);
                     }
                     else
                     {
                         moDropped = true;
                     }
-                    imtQueueRemoveMo(); //drop message
+                    imtQueueMoRemove(); //drop message
                     moQueuedMessages -= 1;
                     checkMoQueue();
                 }
@@ -699,13 +699,13 @@ void rbPoll(void)
                         {
                             if(rbCallbacks && rbCallbacks->moMessageComplete)
                             {
-                                rbCallbacks->moMessageComplete(imtMo->id, 1);
+                                rbCallbacks->moMessageComplete(imtMo->id, RB_MSG_STATUS_OK);
                             }
                             else
                             {
                                 moSent = true;
                             }
-                            imtQueueRemoveMo();
+                            imtQueueMoRemove();
                             moQueuedMessages -= 1;
                             checkMoQueue();
                         }
@@ -717,8 +717,8 @@ void rbPoll(void)
             {
                 jsprMessageTerminate_t messageTerminate;
                 parseJsprUnsMessageTerminate(response.json, &messageTerminate);
-                mtQueued = imtQueueMtPush(messageTerminate.topic, messageTerminate.messageId, messageTerminate.messageLengthMax);
-                imt_t * imtMt = imtQueueMtPeek();
+                mtQueued = imtQueueMtAdd(messageTerminate.topic, messageTerminate.messageId, messageTerminate.messageLengthMax);
+                imt_t * imtMt = imtQueueMtGetLast();
                 if (mtQueued) //returns -1 if que is full, no free spots to store mt
                 {
                     if(imtMt != NULL)
@@ -730,13 +730,13 @@ void rbPoll(void)
                 {
                     if(rbCallbacks && rbCallbacks->mtMessageComplete)
                     {
-                        rbCallbacks->mtMessageComplete(messageTerminate.messageId, -1);
+                        rbCallbacks->mtMessageComplete(messageTerminate.messageId, RB_MSG_STATUS_FAIL);
                     }
                 }
             }
             if(JSPR_RC_UNSOLICITED_MESSAGE == response.code && strcmp(response.target, "messageTerminateSegment") == 0)
             {
-                imt_t * imtMt = imtQueueMtPeek();
+                imt_t * imtMt = imtQueueMtGetLast();
                 if(imtMt != NULL)
                 {
                     if(imtMt->readyToProcess)
@@ -754,13 +754,13 @@ void rbPoll(void)
                             {
                                 if(rbCallbacks && rbCallbacks->mtMessageComplete)
                                 {
-                                    rbCallbacks->mtMessageComplete(imtMt->id, -1);
+                                    rbCallbacks->mtMessageComplete(imtMt->id, RB_MSG_STATUS_FAIL);
                                 }
                                 else
                                 {
                                     mtDropped = true;
                                 }
-                                imtQueueRemoveMt();
+                                imtQueueMtRemove();
                             }
                         }
                     }
@@ -768,7 +768,7 @@ void rbPoll(void)
             }
             if(JSPR_RC_UNSOLICITED_MESSAGE == response.code && strcmp(response.target, "messageTerminateStatus") == 0)
             {
-                imt_t * imtMt = imtQueueMtPeek();
+                imt_t * imtMt = imtQueueMtGetLast();
                 if(imtMt != NULL)
                 {
                     if(imtMt->readyToProcess)
@@ -781,7 +781,7 @@ void rbPoll(void)
                             {
                                 if(rbCallbacks && rbCallbacks->mtMessageComplete)
                                 {
-                                    rbCallbacks->mtMessageComplete(imtMt->id, 1);
+                                    rbCallbacks->mtMessageComplete(imtMt->id, RB_MSG_STATUS_OK);
                                 }
                                 else
                                 {
