@@ -5,3 +5,7 @@ wheelhouse
 rockblock9704.egg-info
 rockblock9704/__pycache__
 env
+
+*lua.dll
+*lua.so
+*lua.dylib

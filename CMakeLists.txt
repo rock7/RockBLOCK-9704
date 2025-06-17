@@ -53,7 +53,7 @@ set(KERMIT_LIB kermit)
 set(WINDOWS_GET_OPT_LIB wingetopt)
 set(IRIDIUM_IMT_LIB iridiumImt)
 set(PYTHON_SHARED_LIB rockblock)
-set(LUA_SHARED_LIB rockblock_lua) # Lua shared library name This will result in rockblock_lua.so/.dll/.dylib
+set(LUA_SHARED_LIB rockblock_lua)
 
 # Some parent variables so projects can link against us and include us
 get_directory_property(HAS_PARENT PARENT_DIRECTORY)
@@ -119,6 +119,8 @@ if (BUILD_LUA_SHARED_LIBRARY STREQUAL "ON")
 
     if (Lua_FOUND)
         message(STATUS "Found Lua ${LUA_VERSION_STRING}")
+        message(STATUS "Lua libs: ${LUA_LIBRARIES}")
+
         add_library(${LUA_SHARED_LIB} SHARED
             ${LUA_SRC_DIR}/rockblock_lua_wrap.cxx # Path to generated SWIG file
         )
@@ -133,16 +135,15 @@ if (BUILD_LUA_SHARED_LIBRARY STREQUAL "ON")
             ${IRIDIUM_IMT_LIB}
         )
 
-        # if(APPLE)
-        #     target_link_options(${LUA_SHARED_LIB} PRIVATE "-undefined" "dynamic_lookup")
-        # endif()
+        if(APPLE)
+            target_link_options(${LUA_SHARED_LIB} PRIVATE "-undefined" "dynamic_lookup")
+        endif()
 
         set_target_properties(${LUA_SHARED_LIB} PROPERTIES OUTPUT_NAME ${LUA_SHARED_LIB})
 
     else()
         message(FATAL_ERROR "Lua was not found")
     endif()
-
 
 endif()
 
