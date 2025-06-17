@@ -6,6 +6,16 @@
     SWIG_arg++; // this is to increment the lua values pushed else it doesn't know its done a thing
 }
 
+// typemap to handle 'uint16_t' when used as an input parameter.
+%typemap(in) uint16_t {
+    // Check if the Lua input is a number
+    if (!lua_isnumber(L, $input)) {
+        SWIG_fail_arg("$name", $argnum, "number"); // Error if not a number
+    }
+    // Convert the Lua number to uint16_t and assign it to the C argument ($1)
+    $1 = (uint16_t)lua_tonumber(L, $input);
+}
+
 // typemap to auto create a char** rather than supply one from lua as an argument
 %typemap(in, numinputs=0) char **RECEIVE_BUFFER (char *temp_buffer = NULL) {
     $1 = &temp_buffer; // $1 is the char** parameter in the C function signature

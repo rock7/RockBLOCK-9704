@@ -2927,20 +2927,20 @@ static int _wrap_rbSendMessageAny(lua_State* L) {
     char *arg2 = (char *) 0 ;
     size_t arg3 ;
     int arg4 ;
-    uint16_t *argp1 ;
     bool result;
     
     SWIG_check_num_args("rbSendMessageAny",4,4)
-    if(!lua_isuserdata(L,1)) SWIG_fail_arg("rbSendMessageAny",1,"uint16_t");
     if(!SWIG_lua_isnilstring(L,2)) SWIG_fail_arg("rbSendMessageAny",2,"char const *");
     if(!lua_isnumber(L,3)) SWIG_fail_arg("rbSendMessageAny",3,"size_t const");
     if(!lua_isnumber(L,4)) SWIG_fail_arg("rbSendMessageAny",4,"int const");
-    
-    if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_uint16_t,0))){
-      SWIG_fail_ptr("rbSendMessageAny",1,SWIGTYPE_p_uint16_t);
+    {
+      // Check if the Lua input is a number
+      if (!lua_isnumber(L, 1)) {
+        SWIG_fail_arg("$name", 1, "number"); // Error if not a number
+      }
+      // Convert the Lua number to uint16_t and assign it to the C argument (arg1)
+      arg1 = (uint16_t)lua_tonumber(L, 1);
     }
-    arg1 = *argp1;
-    
     arg2 = (char *)lua_tostring(L, 2);
     SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative");
     arg3 = (size_t const)lua_tonumber(L, 3);
@@ -2990,20 +2990,20 @@ static int _wrap_rbReceiveMessageWithTopic(lua_State* L) {
     char **arg1 = (char **) 0 ;
     uint16_t arg2 ;
     char *temp_buffer1 = NULL ;
-    uint16_t *argp2 ;
     size_t result;
     
     {
       arg1 = &temp_buffer1; // arg1 is the char** parameter in the C function signature
     }
     SWIG_check_num_args("rbReceiveMessageWithTopic",1,1)
-    if(!lua_isuserdata(L,1)) SWIG_fail_arg("rbReceiveMessageWithTopic",1,"uint16_t");
-    
-    if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp2,SWIGTYPE_p_uint16_t,0))){
-      SWIG_fail_ptr("rbReceiveMessageWithTopic",2,SWIGTYPE_p_uint16_t);
+    {
+      // Check if the Lua input is a number
+      if (!lua_isnumber(L, 1)) {
+        SWIG_fail_arg("$name", 2, "number"); // Error if not a number
+      }
+      // Convert the Lua number to uint16_t and assign it to the C argument (arg2)
+      arg2 = (uint16_t)lua_tonumber(L, 1);
     }
-    arg2 = *argp2;
-    
     result = rbReceiveMessageWithTopic(arg1,SWIG_STD_MOVE(arg2));
     lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
     {
