@@ -21,7 +21,7 @@ bool imtQueueMoAdd(uint16_t topic, const char * data, const size_t length)
             imtMo.messages[tempTail].length = length;
             queued = true;
 
-            imtMo.tail = (tempTail + 1) % IMT_QUEUE_SIZE;
+            imtMo.tail = (tempTail + 1) % imtMo.maxLength;
             imtMo.count++;
         }
     }
@@ -46,7 +46,7 @@ bool imtQueueMtAdd(const uint16_t topic, const uint16_t id, const size_t length)
             imtMt.messages[tempTail].length = length;
             queued = true;
 
-            imtMt.tail = (tempTail + 1) % IMT_QUEUE_SIZE;
+            imtMt.tail = (tempTail + 1) % imtMt.maxLength;
             imtMt.count++;
         }
     }
@@ -95,7 +95,7 @@ imt_t * imtQueueMtGetLast(void)
 
     if(imtMt.count > 0)
     {
-        mt = &imtMt.messages[(imtMt.tail == 0) ? (IMT_QUEUE_SIZE - 1) : (imtMt.tail - 1)]; //last added message
+        mt = &imtMt.messages[(imtMt.tail == 0) ? (imtMt.maxLength - 1) : (imtMt.tail - 1)]; //last added message
     }
 
     return mt;
@@ -115,7 +115,7 @@ bool imtQueueMoRemove(void)
         mo->readyToProcess = false;
         mo->ready = false;
 
-        imtMo.head = (tempHead + 1) % IMT_QUEUE_SIZE;
+        imtMo.head = (tempHead + 1) % imtMo.maxLength;
         imtMo.count--;
         removed = true;
     }
@@ -136,7 +136,7 @@ bool imtQueueMtRemove(void)
         mt->readyToProcess = false;
         mt->ready = false;
 
-        imtMt.head = (tempHead + 1) % IMT_QUEUE_SIZE;
+        imtMt.head = (tempHead + 1) % imtMt.maxLength;
         imtMt.count--;
         removed = true;
     }
