@@ -65,12 +65,10 @@ if __name__ == '__main__':
 
         # Create RockBlock9704 instance
         rb = RockBlock9704()
-        rb.register_callbacks(
-        message_provisioning=on_provision,
-        mo_message_complete=on_mo,
-        mt_message_complete=on_mt,
-        constellation_state=on_signal
-        )
+        rb.set_message_provisioning_callback(message_provisioning=on_provision)
+        rb.set_mo_message_complete_callback(mo_message_complete=on_mo)
+        rb.set_mt_message_complete_callback(mt_message_complete=on_mt)
+        rb.set_constellation_state_callback(constellation_state=on_signal)
         # Begin serial communication
         connected = rb.begin(args.device)
 

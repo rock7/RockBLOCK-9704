@@ -12,6 +12,14 @@ static PyObject *py_moMessageComplete_cb = NULL;
 static PyObject *py_mtMessageComplete_cb = NULL;
 static PyObject *py_constellationState_cb = NULL;
 
+//global callback structure
+static rbCallbacks_t g_callbacks = {
+    .messageProvisioning = NULL,
+    .moMessageComplete = NULL,
+    .mtMessageComplete = NULL,
+    .constellationState = NULL
+};
+
 void message_provisioning_callback(const jsprMessageProvisioning_t *messageProvisioning) {
 
     if (py_messageProvisioning_cb && PyCallable_Check(py_messageProvisioning_cb)) {
@@ -121,64 +129,94 @@ void constellation_state_callback(const jsprConstellationState_t *constellationS
     }
 }
 
-static PyObject *py_registerCallbacks(PyObject *self, PyObject *args, PyObject *keywords) {
+static PyObject *py_set_message_provisioning_callback(PyObject *self, PyObject *args) {
 
-    PyObject *msg_cb = NULL, *mo_cb = NULL, *mt_cb = NULL, *const_cb = NULL;
+    PyObject *cb;
 
-    static char * keyword_list[] = {
-        "messageProvisioning",
-        "moMessageComplete",
-        "mtMessageComplete",
-        "constellationState",
-        NULL
-    };
+    if (!PyArg_ParseTuple(args, "O", &cb))
+        return NULL;
 
-    if (!PyArg_ParseTupleAndKeywords(args, keywords, "|OOOO", keyword_list,
-                                     &msg_cb, &mo_cb, &mt_cb, &const_cb)) {
+    if (!PyCallable_Check(cb)) {
+        PyErr_SetString(PyExc_TypeError, "messageProvisioning must be callable");
         return NULL;
     }
 
-    if (msg_cb && PyCallable_Check(msg_cb)) {
+    Py_XINCREF(cb);
+    Py_XDECREF(py_messageProvisioning_cb);
+    py_messageProvisioning_cb = cb;
 
-        Py_XINCREF(msg_cb);
+    g_callbacks.messageProvisioning = message_provisioning_callback;
 
-        Py_XDECREF(py_messageProvisioning_cb);
+    rbRegisterCallbacks(&g_callbacks);
 
-        py_messageProvisioning_cb = msg_cb;
-    }
-    if (mo_cb && PyCallable_Check(mo_cb)) {
+    Py_RETURN_NONE;
+}
 
-        Py_XINCREF(mo_cb);
+static PyObject *py_set_mo_message_complete_callback(PyObject *self, PyObject *args) {
 
-        Py_XDECREF(py_moMessageComplete_cb);
+    PyObject *cb;
 
-        py_moMessageComplete_cb = mo_cb;
-    }
-    if (mt_cb && PyCallable_Check(mt_cb)) {
+    if (!PyArg_ParseTuple(args, "O", &cb))
+        return NULL;
 
-        Py_XINCREF(mt_cb);
-
-        Py_XDECREF(py_mtMessageComplete_cb);
-
-        py_mtMessageComplete_cb = mt_cb;
-    }
-    if (const_cb && PyCallable_Check(const_cb)) {
-
-        Py_XINCREF(const_cb);
-
-        Py_XDECREF(py_constellationState_cb);
-
-        py_constellationState_cb = const_cb;
+    if (!PyCallable_Check(cb)) {
+        PyErr_SetString(PyExc_TypeError, "moMessageComplete must be callable");
+        return NULL;
     }
 
-    static rbCallbacks_t callbacks = {
-        .messageProvisioning = message_provisioning_callback,
-        .moMessageComplete = mo_message_complete_callback,
-        .mtMessageComplete = mt_message_complete_callback,
-        .constellationState = constellation_state_callback
-    };
+    Py_XINCREF(cb);
+    Py_XDECREF(py_moMessageComplete_cb);
+    py_moMessageComplete_cb = cb;
 
-    rbRegisterCallbacks(&callbacks);
+    g_callbacks.moMessageComplete = mo_message_complete_callback;
+
+    rbRegisterCallbacks(&g_callbacks);
+
+    Py_RETURN_NONE;
+}
+
+static PyObject *py_set_mt_message_complete_callback(PyObject *self, PyObject *args) {
+
+    PyObject *cb;
+
+    if (!PyArg_ParseTuple(args, "O", &cb))
+        return NULL;
+
+    if (!PyCallable_Check(cb)) {
+        PyErr_SetString(PyExc_TypeError, "mtMessageComplete must be callable");
+        return NULL;
+    }
+
+    Py_XINCREF(cb);
+    Py_XDECREF(py_mtMessageComplete_cb);
+    py_mtMessageComplete_cb = cb;
+
+    g_callbacks.mtMessageComplete = mt_message_complete_callback;
+
+    rbRegisterCallbacks(&g_callbacks);
+
+    Py_RETURN_NONE;
+}
+
+static PyObject *py_set_constellation_state_callback(PyObject *self, PyObject *args) {
+
+    PyObject *cb;
+
+    if (!PyArg_ParseTuple(args, "O", &cb))
+        return NULL;
+
+    if (!PyCallable_Check(cb)) {
+        PyErr_SetString(PyExc_TypeError, "constellationState must be callable");
+        return NULL;
+    }
+
+    Py_XINCREF(cb);
+    Py_XDECREF(py_constellationState_cb);
+    py_constellationState_cb = cb;
+
+    g_callbacks.constellationState = constellation_state_callback;
+
+    rbRegisterCallbacks(&g_callbacks);
 
     Py_RETURN_NONE;
 }
@@ -553,7 +591,10 @@ static PyMethodDef rockblockMethods[] = {
     {"receive_lock_async", py_rbReceiveLockAsync, METH_VARARGS, "Function for locking the incoming message queue"},
     {"receive_unlock_async", py_rbReceiveUnlockAsync, METH_VARARGS, "Function for unlocking the incoming message queue"},
     {"poll", py_rbPoll, METH_VARARGS, "Function which polls for responses from the modem for asynchronous functionality"},
-    {"register_callbacks", py_registerCallbacks, METH_VARARGS | METH_KEYWORDS, "Function which registers the user defined callbacks for asynchronous functionality"},
+    {"set_message_provisioning_callback", py_set_message_provisioning_callback, METH_VARARGS, "Function which registers the user defined provisioning callback for asynchronous functionality"},
+    {"set_mo_message_complete_callback", py_set_mo_message_complete_callback, METH_VARARGS, "Function which registers the user defined mo message callback for asynchronous functionality"},
+    {"set_mt_message_complete_callback", py_set_mt_message_complete_callback, METH_VARARGS, "Function which registers the user defined mt message callback for asynchronous functionality"},
+    {"set_constellation_state_callback", py_set_constellation_state_callback, METH_VARARGS, "Function which registers the user defined signal level callback for asynchronous functionality"},
     {"get_hardware_version", py_getHardwareVersion, METH_VARARGS, "Function for getting hardware version"},
     {"get_serial_number", py_getSerialNumber, METH_VARARGS, "Function for getting serial number"},
     {"get_imei", py_getImei, METH_VARARGS, "Function for getting IMEI"},

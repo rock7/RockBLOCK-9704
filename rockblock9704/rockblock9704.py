@@ -165,19 +165,38 @@ class RockBlock9704:
         Polls for responses from the modem for asynchronous functionality
         """
         return _rb.poll()
-    
-    def register_callbacks(self,
-                           message_provisioning=None,
-                           mo_message_complete=None,
-                           mt_message_complete=None,
-                           constellation_state=None):
+
+    def set_message_provisioning_callback(self, message_provisioning = None):
         """
-        Register user defined callbacks in the library.
+        Register the user defined provisioning callback in the library.
+        :param message_provisioning: Callback that runs when the first message is sent, provides
+        dictionary of provisioning information.
         """
-        return _rb.register_callbacks(messageProvisioning=message_provisioning,
-                                        moMessageComplete=mo_message_complete,
-                                        mtMessageComplete=mt_message_complete,
-                                        constellationState=constellation_state)
+        return _rb.set_message_provisioning_callback(message_provisioning)
+
+    def set_mo_message_complete_callback(self, mo_message_complete = None):
+        """
+        Register the user defined mo message complete callback in the library.
+        :param mo_message_complete: Callback that runs when a message has sent,
+        provides the message id and completion status.
+        """
+        return _rb.set_mo_message_complete_callback(mo_message_complete)
+
+    def set_mt_message_complete_callback(self, mt_message_complete = None):
+        """
+        Register the user defined mt message complete callback in the library.
+        :param mt_message_complete: Callback that runs when a message has been received,
+        provides the message id and completion status.
+        """
+        return _rb.set_mt_message_complete_callback(mt_message_complete)
+
+    def set_constellation_state_callback(self, constellation_state = None):
+        """
+        Register the user defined signal level callback in the library.
+        :param constellation_state: Callback that runs when the signal has changed,
+        provides a dictionary of signal information.
+        """
+        return _rb.set_constellation_state_callback(constellation_state)
 
     def get_hardware_version(self) -> str:
         """
