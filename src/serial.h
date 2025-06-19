@@ -24,6 +24,8 @@ extern "C" {
     #include "serial_presets/serial_arduino/serial_arduino.h"
 #endif
 
+#define SERIAL_PORT_LENGTH 50U // Should be more than enough, don't want to use PATH_MAX as it will be wasteful
+
 // Callback functions which will link to the serial interface
 typedef bool(*serialInitFunc)();
 typedef bool(*serialDeInitFunc)();
@@ -38,6 +40,8 @@ typedef struct
     serialReadFunc           serialRead;
     serialWriteFunc          serialWrite;
     serialPeekFunc           serialPeek;
+    char                     serialPort[SERIAL_PORT_LENGTH];
+    uint32_t                 serialBaud;
 } serialContext;
 
 enum serialState

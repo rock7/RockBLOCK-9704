@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['mo_5fqueue_5fsize_0',['MO_QUEUE_SIZE',['../imt__queue_8h.html#a206c3250f7f7d7f1bc47afa1bf1e870e',1,'imt_queue.h']]],
-  ['mt_5fqueue_5fsize_1',['MT_QUEUE_SIZE',['../imt__queue_8h.html#a2c5b5ec907fece97416be3205f589737',1,'imt_queue.h']]]
+  ['pi_5fhat_5fpath_777',['PI_HAT_PATH',['../gpio_8h.html#aaf411df1b204214283e40eac18b410f4',1,'gpio.h']]],
+  ['power_5fenable_5fpin_778',['POWER_ENABLE_PIN',['../gpio_8h.html#a6bb1d888ae78af84187de563e9f59b20',1,'gpio.h']]]
 ];

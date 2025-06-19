@@ -1,95 +1,178 @@
 #include "imt_queue.h"
 
-imt_t imtMo[MO_QUEUE_SIZE] = { {0, NULL, 0, 0, false} };
-imt_t imtMt[MT_QUEUE_SIZE] = { {0, NULL, 0, 0, false} };
+static imt_queue_t imtMo;
+static imt_queue_t imtMt;
 
-static uint8_t imtMoBuffer[MO_QUEUE_SIZE][IMT_PAYLOAD_SIZE];
-static uint8_t imtMtBuffer[MT_QUEUE_SIZE][IMT_PAYLOAD_SIZE];
+static uint8_t imtMoBuffer[IMT_QUEUE_SIZE][IMT_PAYLOAD_SIZE];
+static uint8_t imtMtBuffer[IMT_QUEUE_SIZE][IMT_PAYLOAD_SIZE];
 
-int8_t addMoToQueue(uint16_t topic, const char * data, const size_t length)
+static volatile bool mtLock = false;
+
+bool imtQueueMoAdd(uint16_t topic, const char * data, const size_t length)
 {
-    int8_t queuePosition = -1;
+    bool queued = false;
+    uint16_t tempTail = imtMo.tail;
     if(data != NULL && length > 0)
     {
-        for(size_t i = 0; i < MO_QUEUE_SIZE; i++)
+        if(imtMo.count < imtMo.maxLength)
         {
-            for(size_t x = 0; x < IMT_PAYLOAD_SIZE; x++)
-            {
-                if(imtMoBuffer[i][x] != '\0')
-                {
-                    queuePosition = -1;
-                }
-                else
-                {
-                    memcpy(imtMoBuffer[i], data, length); //add mo to first empty buffer
-                    imtMo[i].buffer = imtMoBuffer[i];
-                    imtMo[i].topic = topic;
-                    imtMo[i].length = length;
-                    queuePosition = (int8_t)i;
-                }
-            }
+            memcpy(imtMoBuffer[tempTail], data, length);
+            imtMo.messages[tempTail].topic = topic;
+            imtMo.messages[tempTail].length = length;
+            queued = true;
+
+            imtMo.tail = (tempTail + 1) % imtMo.maxLength;
+            imtMo.count++;
         }
     }
-    return queuePosition;
+    return queued;
 }
 
-int8_t addMtToQueue(uint16_t topic, uint16_t id, size_t length)
+bool imtQueueMtAdd(const uint16_t topic, const uint16_t id, const size_t length)
 {
-    int8_t queuePosition = -1;
+    bool queued = false;
+    uint16_t tempTail = imtMt.tail;
     if(id >= 0 && length > 0)
     {
-        for(size_t i = 0; i < MT_QUEUE_SIZE; i++)
+        if(imtMt.count >= imtMt.maxLength && !mtLock)
         {
-            for(size_t x = 0; x < IMT_PAYLOAD_SIZE; x++)
-            {
-                if(imtMtBuffer[i][x] != '\0')
-                {
-                    queuePosition = -1;
-                }
-                else
-                {
-                    imtMt[i].id = id; //add mt to first empty buffer
-                    imtMt[i].topic = topic;
-                    imtMt[i].length = length;
-                    queuePosition = (int8_t)i;
-                }
-            }
+            imtQueueMtRemove(); //remove oldest entry if queue is full
+        }
+
+        if(imtMt.count < imtMt.maxLength)
+        {
+            imtMt.messages[tempTail].id = id;
+            imtMt.messages[tempTail].topic = topic;
+            imtMt.messages[tempTail].length = length;
+            queued = true;
+
+            imtMt.tail = (tempTail + 1) % imtMt.maxLength;
+            imtMt.count++;
         }
     }
-    return queuePosition;
+    return queued;
 }
 
-void removeMoFromQueue(int8_t queuePosition)
+void imtQueueMtLock(bool lock)
 {
-    memset(imtMoBuffer[queuePosition], 0, IMT_PAYLOAD_SIZE);
-    imtMo[queuePosition].id = 0;
-    imtMo[queuePosition].buffer = NULL;
-    imtMo[queuePosition].topic = 0;
-    imtMo[queuePosition].length = 0;
-    imtMo[queuePosition].readyToProcess = false;
-}
-
-void removeMtFromQueue(int8_t queuePosition)
-{
-    memset(imtMtBuffer[queuePosition], 0, IMT_PAYLOAD_SIZE);
-    imtMt[queuePosition].id = 0;
-    imtMt[queuePosition].buffer = NULL;
-    imtMt[queuePosition].topic = 0;
-    imtMt[queuePosition].length = 0;
-    imtMt[queuePosition].readyToProcess = false;
-}
-
-void imtQueueInit (void) //zero out all queue buffers
-{
-    for (size_t i = 0; i < MO_QUEUE_SIZE; i++)
+    if(lock)
     {
-        imtMo[i].buffer = imtMoBuffer[i];
-        memset(imtMo[i].buffer, 0, IMT_PAYLOAD_SIZE);
+        mtLock = true;
+    }
+    else
+    {
+        mtLock = false;
+    }
+}
+
+imt_t * imtQueueMoGetFirst(void)
+{
+    imt_t * mo = NULL;
+
+    if(imtMo.count > 0)
+    {
+        mo = &imtMo.messages[imtMo.head];
     }
 
-    for (size_t i = 0; i < MT_QUEUE_SIZE; i++)
+    return mo;
+}
+
+imt_t * imtQueueMtGetFirst(void)
+{
+    imt_t * mt = NULL;
+
+    if(imtMt.count > 0)
     {
-        imtMt[i].buffer = imtMoBuffer[i];
-        memset(imtMt[i].buffer, 0, IMT_PAYLOAD_SIZE);
+        mt = &imtMt.messages[imtMt.head];
     }
+
+    return mt;
+}
+
+imt_t * imtQueueMtGetLast(void)
+{
+    imt_t * mt = NULL;
+
+    if(imtMt.count > 0)
+    {
+        mt = &imtMt.messages[(imtMt.tail == 0) ? (imtMt.maxLength - 1) : (imtMt.tail - 1)]; //last added message
+    }
+
+    return mt;
+}
+
+bool imtQueueMoRemove(void)
+{
+    bool removed = false;
+    imt_t * mo = imtQueueMoGetFirst();
+    if(mo != NULL)
+    {
+        uint16_t tempHead = imtMo.head;
+        memset(mo->buffer, 0, IMT_PAYLOAD_SIZE);
+        mo->id = 0;
+        mo->topic = 0;
+        mo->length = 0;
+        mo->readyToProcess = false;
+        mo->ready = false;
+
+        imtMo.head = (tempHead + 1) % imtMo.maxLength;
+        imtMo.count--;
+        removed = true;
+    }
+    return removed;
+}
+
+bool imtQueueMtRemove(void)
+{
+    bool removed = false;
+    imt_t * mt = imtQueueMtGetFirst();
+    if(mt != NULL)
+    {
+        uint16_t tempHead = imtMt.head;
+        memset(mt->buffer, 0, IMT_PAYLOAD_SIZE);
+        mt->id = 0;
+        mt->topic = 0;
+        mt->length = 0;
+        mt->readyToProcess = false;
+        mt->ready = false;
+
+        imtMt.head = (tempHead + 1) % imtMt.maxLength;
+        imtMt.count--;
+        removed = true;
+    }
+    return removed;
+}
+
+void imtQueueInit(void)
+{
+    for (uint16_t i = 0; i < IMT_QUEUE_SIZE; i++)
+    {
+        imtMo.messages[i].buffer = imtMoBuffer[i];
+        memset(imtMo.messages[i].buffer, 0, IMT_PAYLOAD_SIZE);
+        imtMo.messages[i].id = 0;
+        imtMo.messages[i].length = 0;
+        imtMo.messages[i].ready = false;
+        imtMo.messages[i].readyToProcess = false;
+        imtMo.messages[i].topic = 0;
+
+
+        imtMt.messages[i].buffer = imtMtBuffer[i];
+        memset(imtMt.messages[i].buffer, 0, IMT_PAYLOAD_SIZE);
+        imtMt.messages[i].id = 0;
+        imtMt.messages[i].length = 0;
+        imtMt.messages[i].ready = false;
+        imtMt.messages[i].readyToProcess = false;
+        imtMt.messages[i].topic = 0;
+    }
+
+    imtMo.head = 0;
+    imtMo.tail = 0;
+    imtMo.count = 0;
+    imtMo.maxLength = IMT_QUEUE_SIZE;
+
+    imtMt.head = 0;
+    imtMt.tail = 0;
+    imtMt.count = 0;
+    imtMt.maxLength = IMT_QUEUE_SIZE;
+
 }

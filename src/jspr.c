@@ -647,7 +647,7 @@ bool parseJsprUnsMessageTerminate(char * jsprString, jsprMessageTerminate_t * me
             cJSON * messageLengthMax = cJSON_GetObjectItem(root, "message_length_max");
             if(cJSON_IsNumber(messageLengthMax))
             {
-                if(messageLengthMax->valueint >= 0 && messageLengthMax->valueint <= 100001)
+                if(messageLengthMax->valueint >= 3 && messageLengthMax->valueint <= 100002)
                 {
                     messageTerminate->messageLengthMax = messageLengthMax->valueint;
                 }
@@ -970,6 +970,7 @@ bool parseJsprGetMessageProvisioning(char * jsprString, jsprMessageProvisioning_
                     }
                 }
             }
+        messageProvisioning->provisioningSet = true;
         parsed = true;
         cJSON_Delete(root);
         }

@@ -1,9 +1,6 @@
 <map id="jspr_command.h" name="jspr_command.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="85,5,216,31"/>
-<area shape="rect" id="Node000002" href="$jspr_8c.html" title=" " alt="" coords="5,79,61,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,40,54,81,51,76,119,35"/>
-<area shape="rect" id="Node000003" href="$jspr__command_8c.html" title=" " alt="" coords="86,79,215,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="153,44,153,79,148,79,148,44"/>
-<area shape="rect" id="Node000004" href="$rockblock__9704_8c.html" title=" " alt="" coords="239,79,374,104"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="189,34,282,76,280,81,187,39"/>
+<area shape="rect" id="node1" title=" " alt="" coords="83,5,202,32"/>
+<area shape="rect" id="node2" href="$jspr_8c.html" title=" " alt="" coords="5,80,59,107"/>
+<area shape="rect" id="node3" href="$jspr__command_8c.html" title=" " alt="" coords="83,80,202,107"/>
+<area shape="rect" id="node4" href="$rockblock__9704_8c.html" title=" " alt="" coords="226,80,350,107"/>
 </map>

@@ -1,7 +1,5 @@
 <map id="imt_queue.h" name="imt_queue.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="76,5,179,31"/>
-<area shape="rect" id="Node000002" href="$imt__queue_8c.html" title=" " alt="" coords="5,79,108,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,43,70,80,66,77,104,39"/>
-<area shape="rect" id="Node000003" href="$rockblock__9704_8c.html" title=" " alt="" coords="132,79,267,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="151,39,190,77,186,80,147,43"/>
+<area shape="rect" id="node1" title=" " alt="" coords="72,5,165,32"/>
+<area shape="rect" id="node2" href="$imt__queue_8c.html" title=" " alt="" coords="5,80,99,107"/>
+<area shape="rect" id="node3" href="$rockblock__9704_8c.html" title=" " alt="" coords="123,80,247,107"/>
 </map>

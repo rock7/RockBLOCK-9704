@@ -156,7 +156,7 @@ int main(int argc, char * argv[])
                         oldSignal = newSignal;
                     }
 
-                    usleep(100000);
+                    usleep(10000);
                 }
 
                 //End serial connection

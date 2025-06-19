@@ -20,6 +20,78 @@ extern "C" {
 #include <stddef.h>
 
 /**
+ * @enum rbMsgStatus_t.
+ * @brief Indicates the result of a message operation.
+ * 
+ * This enum represents success or failure of processing either an incoming 
+ * or outgoing message.
+ */
+typedef enum
+{
+    /**
+     * @brief Message was processed successfully.
+     */
+    RB_MSG_STATUS_OK = 1,
+
+    /**
+     * @brief Message failed to be processed.
+     */
+    RB_MSG_STATUS_FAIL = -1
+}rbMsgStatus_t;
+
+/**
+ * @brief Struct containing user defined callback functions for asynchronous 
+ * operations.
+ * 
+ * This structure allows the user to register custom handlers that this library 
+ * will invoke during specific events.
+ */
+typedef struct 
+{
+    /**
+     * @brief Callback for message provisioning info once its been obtained.
+     * 
+     * @param messageProvisioning Pointer to the provisioning info structure.
+     */
+    void (*messageProvisioning)(const jsprMessageProvisioning_t *messageProvisioning);
+
+    /**
+     * @brief Callback for when a mobile-originated (MO) message has finished processing 
+     * and been sent successfully.
+     * 
+     * @param id Unique Identifier of the message.
+     * @param status Enum indicating result of processing (-1 for failure & 1 for success).
+     */
+    void (*moMessageComplete)(const uint16_t id, const rbMsgStatus_t status);
+
+    /**
+     * @brief Callback for when a mobile-terminated (MT) message has finished processing 
+     * and been received successfully.
+     * 
+     * @param id Unique Identifier of the message.
+     * @param status Enum indicating result of processing (-1 for failure & 1 for success).
+     */
+    void (*mtMessageComplete)(const uint16_t id, const rbMsgStatus_t status);
+
+    /**
+     * @brief Callback for the constellationState (signal) has been updated.
+     * 
+     * @param state Pointer to the updated constellation state structure.
+     */
+    void (*constellationState)(const jsprConstellationState_t *state);
+} rbCallbacks_t;
+
+/**
+ * @brief Registers a set of user-defined callbacks with the library.
+ * 
+ * This function will store the user provided callback functions, which 
+ * will be called by the library during relevant events.
+ * 
+ * @param callbacks Pointer to a structure containing function pointers to user-defined callbacks.
+ */
+void rbRegisterCallbacks(const rbCallbacks_t *callbacks);
+
+/**
  * @brief Temporary buffer size used for Base64 encoding/decoding of IMT messages.
  */
 #define BASE64_TEMP_BUFFER 2048U
@@ -97,7 +169,7 @@ typedef enum
  * @param port pointer to port name.
  * @return bool depicting success or failure.
  */
-bool rbBegin(char * port);
+bool rbBegin(const char * port);
 
 /**
  * @brief Uninitialise/close the the serial connection.
@@ -162,6 +234,70 @@ size_t rbReceiveMessage(char ** buffer);
  * code needs to preserve it for a period of time.
  */
 size_t rbReceiveMessageWithTopic(char ** buffer, uint16_t topic);
+
+/**
+ * @brief Check if a valid message exists, stored at the head of the receiving queue.
+ * 
+ * @param buffer pointer to buffer of the stored MT messages.
+ * @return size_t the length of the buffer minus the IMT CRC.
+ * 
+ * * @note this pointer is a pointer to a pointer to the MT queue buffer, 
+ * it may be reused to store another MT. It must be copied if the application 
+ * code needs to preserve it for a period of time.
+ */
+size_t rbReceiveMessageAsync(char ** buffer);
+
+/**
+ * @brief Acknowledge the head of the receiving queue by discarding it.
+ * 
+ * @return bool depicting success or failure.
+ * 
+ * * @note This function will clear the head of the receiving queue 
+ * to make space for other incoming messages, new messages will always 
+ * be brought to the head of the queue whilst old ones will be automatically
+ * discarded if they reach the end of the queue to make space.
+ */
+bool rbAcknowledgeReceiveHeadAsync(void);
+
+/**
+ * @brief Locks the receiving queue so that old messages aren't discarded 
+ * when incoming ones arrive.
+ * 
+ * * @note Locking the queue will cause new messages to be rejected unless 
+ * more space is made in the queue by acknowledging existing messages.
+ */
+void rbReceiveLockAsync(void);
+
+/**
+ * @brief Unlocks the receiving queue so that old messages are discarded 
+ * to make space for incoming ones.
+ * 
+ * * @note The queue is unlocked by default, so there is no need to call 
+ * this function unless rbReceiveLockAsync() was previously used.
+ */
+void rbReceiveUnlockAsync(void);
+
+/**
+ * @brief Queue a message to be sent.
+ * 
+ * @param topic uint16_t topic.
+ * @param data pointer to data (message).
+ * @param length size_t of data length. (Max 100kB).
+ * 
+ * @return bool depicting success or failure.
+ * 
+ * * @note This function will put a message in the outgoing queue to be
+ *  handled by rbPoll().
+ */
+bool rbSendMessageAsync(uint16_t topic, const char * data, const size_t length);
+
+/**
+ * @brief Polling function that handles all incoming communication from the modem.
+ * 
+ * * @note This function is used in a asynchronous approach and will need to be 
+ * called very frequently as it is non-blocking. 
+ */
+void rbPoll(void);
 
 /**
  * @brief Get the current signal strength from the modem.
@@ -412,6 +548,21 @@ static bool getHwInfo(jsprHwInfo_t * hwInfo);
  * @return true on success, false on failure.
  */
 static bool getSimStatus(jsprSimStatus_t * simStatus);
+
+/**
+ * @brief Send a the modem a request to queue a message.
+ *
+ * @return true if request was sent successfully, false otherwise.
+ */
+static bool sendMoFromQueueAsync(void);
+
+/**
+ * @brief Checks if any more messages have been queued, if so, send them.
+ *
+ * @return true on success, false on failure.
+ */
+static bool checkMoQueue(void);
+
 
 #ifdef __cplusplus
 }
