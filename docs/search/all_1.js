@@ -1,11 +1,9 @@
 var searchData=
 [
-  ['base64_5ftemp_5fbuffer_6',['BASE64_TEMP_BUFFER',['../rockblock__9704_8h.html#a1a7cd410850bd003e40c5e91c4b6383b',1,'rockblock_9704.h']]],
-  ['base64buffer_7',['base64Buffer',['../rockblock__9704_8c.html#a8c62ddea5f9dd284289a37ffd6e17705',1,'rockblock_9704.c']]],
-  ['boardtemp_8',['boardTemp',['../structjsprHwInfo__t.html#a28de0833a8527ad6a9ae46f847d83fe4',1,'jsprHwInfo_t']]],
-  ['booted_9',['booted',['../structrbGpioTable__t.html#abbeabeb5a78c6a024edd38354fdaf048',1,'rbGpioTable_t']]],
-  ['bootslottostr_10',['bootSlotToStr',['../jspr__command_8c.html#a78f00378213876c00ee07089092013d8',1,'jspr_command.c']]],
-  ['bootsource_11',['bootSource',['../structjsprBootInfo__t.html#af30c5fcda732e546c6e17094731f1532',1,'jsprBootInfo_t']]],
-  ['buffer_12',['buffer',['../structimt__t.html#a6a7955036c634beecf7a69e55fbb9870',1,'imt_t']]],
-  ['buildinfo_13',['buildInfo',['../structjsprVersionInfo__t.html#abb8eb0290e1b5d5268c4b6a2a539d0c5',1,'jsprVersionInfo_t']]]
+  ['active_0',['ACTIVE',['../jspr_8h.html#a7b94d36039cbe65d670e3308153f5f3ba33cf1d8ef1d06ee698a7fabf40eb3a7f',1,'jspr.h']]],
+  ['activeversion_1',['activeVersion',['../structjsprApiVersion__t.html#abdb34a3eb41aff5f72df921dcaad2573',1,'jsprApiVersion_t']]],
+  ['activeversionset_2',['activeVersionSet',['../structjsprApiVersion__t.html#a1abe3ffcb03b782cbd3ecf33cbcfb7a2',1,'jsprApiVersion_t']]],
+  ['appendcrc_3',['appendcrc',['../rockblock__9704_8c.html#a8f23909945feab2130ae9f60d3666886',1,'appendCrc(uint8_t *buffer, size_t length):&#160;rockblock_9704.c'],['../rockblock__9704_8h.html#a8f23909945feab2130ae9f60d3666886',1,'appendCrc(uint8_t *buffer, size_t length):&#160;rockblock_9704.h']]],
+  ['availableoperationalstates_5ft_4',['availableOperationalStates_t',['../jspr_8h.html#a7b94d36039cbe65d670e3308153f5f3b',1,'jspr.h']]],
+  ['availablesiminterfaces_5ft_5',['availableSimInterfaces_t',['../jspr_8h.html#a072025eee1d7fa38f32237ce1161dda0',1,'jspr.h']]]
 ];

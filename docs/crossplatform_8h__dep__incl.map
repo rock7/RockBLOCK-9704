@@ -1,10 +1,22 @@
 <map id="crossplatform.h" name="crossplatform.h">
-<area shape="rect" id="node1" title=" " alt="" coords="280,5,392,32"/>
-<area shape="rect" id="node2" href="$crossplatform_8c.html" title=" " alt="" coords="5,80,117,107"/>
-<area shape="rect" id="node3" href="$jspr_8c.html" title=" " alt="" coords="484,229,537,256"/>
-<area shape="rect" id="node4" href="$jspr_8h.html" title=" " alt="" coords="309,80,363,107"/>
-<area shape="rect" id="node5" href="$jspr__command_8h.html" title=" " alt="" coords="341,155,459,181"/>
-<area shape="rect" id="node7" href="$rockblock__9704_8c.html" title=" " alt="" coords="193,229,317,256"/>
-<area shape="rect" id="node8" href="$rockblock__9704_8h.html" title="The RockBLOCK 9704 library. Maintained by Ground Control (https://www.groundcontrol...." alt="" coords="193,155,317,181"/>
-<area shape="rect" id="node6" href="$jspr__command_8c.html" title=" " alt="" coords="341,229,459,256"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="299,5,423,31"/>
+<area shape="rect" id="Node000002" href="$crossplatform_8c.html" title=" " alt="" coords="5,79,128,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="302,36,115,81,114,76,300,31"/>
+<area shape="rect" id="Node000003" href="$jspr_8c.html" title=" " alt="" coords="516,225,572,251"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="400,35,433,54,470,80,506,112,534,151,542,170,547,190,548,225,542,225,541,191,537,171,530,153,502,116,467,84,430,59,397,39"/>
+<area shape="rect" id="Node000004" href="$jspr_8h.html" title=" " alt="" coords="333,79,390,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="364,44,364,79,359,79,359,44"/>
+<area shape="rect" id="Node000005" href="$jspr__command_8h.html" title=" " alt="" coords="363,152,493,177"/>
+<area shape="poly" id="edge11_Node000001_Node000005" title=" " alt="" coords="382,40,405,77,420,118,428,151,423,153,415,119,400,80,377,43"/>
+<area shape="rect" id="Node000007" href="$rockblock__9704_8c.html" title=" " alt="" coords="203,225,338,251"/>
+<area shape="poly" id="edge12_Node000001_Node000007" title=" " alt="" coords="324,39,289,58,253,83,219,115,193,153,190,164,191,174,203,193,224,210,246,223,244,227,221,214,199,196,186,175,185,163,188,151,215,112,249,79,287,53,321,34"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="404,99,457,117,483,132,507,150,522,168,532,189,544,224,539,226,527,191,517,171,503,154,480,136,455,122,403,104"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="384,113,419,150,415,154,380,116"/>
+<area shape="rect" id="Node000008" href="$rockblock__9704_8h.html" title="The RockBLOCK 9704 library. Maintained by Ground Control (https://www.groundcontrol...." alt="" coords="203,152,339,177"/>
+<area shape="poly" id="edge9_Node000004_Node000008" title=" " alt="" coords="337,115,287,154,284,150,334,110"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="460,182,526,223,524,227,457,187"/>
+<area shape="rect" id="Node000006" href="$jspr__command_8c.html" title=" " alt="" coords="362,225,491,251"/>
+<area shape="poly" id="edge7_Node000005_Node000006" title=" " alt="" coords="430,191,430,225,424,225,425,191"/>
+<area shape="poly" id="edge8_Node000005_Node000007" title=" " alt="" coords="391,185,297,228,295,223,389,181"/>
+<area shape="poly" id="edge10_Node000008_Node000007" title=" " alt="" coords="273,191,273,225,268,225,268,191"/>
 </map>
