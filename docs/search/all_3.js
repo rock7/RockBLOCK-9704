@@ -1,8 +1,26 @@
 var searchData=
 [
-  ['data_37',['data',['../structjsprMessageTerminateSegment__t.html#a0c8b7cf2b06d124d4e4534eccaa307a6',1,'jsprMessageTerminateSegment_t']]],
-  ['datalength_38',['dataLength',['../structjsprMessageTerminateSegment__t.html#ab11c84203a94f9b8a6d94647d0182497',1,'jsprMessageTerminateSegment_t']]],
-  ['decodedata_39',['decodeData',['../rockblock__9704_8c.html#a7ddd0b60dbdc2cb7e5b8ea5b301463c0',1,'decodeData(const char *srcBuffer, const size_t srcLength, char *destBuffer, const size_t destLength):&#160;rockblock_9704.c'],['../rockblock__9704_8h.html#a7ddd0b60dbdc2cb7e5b8ea5b301463c0',1,'decodeData(const char *srcBuffer, const size_t srcLength, char *destBuffer, const size_t destLength):&#160;rockblock_9704.h']]],
-  ['delay_40',['delay',['../crossplatform_8c.html#a7f2dfce1046bdd2a2b753643726c2346',1,'delay(uint32_t ms):&#160;crossplatform.c'],['../crossplatform_8h.html#a7f2dfce1046bdd2a2b753643726c2346',1,'delay(uint32_t ms):&#160;crossplatform.c']]],
-  ['discardtimeseconds_41',['discardTimeSeconds',['../structjsprProvisioning__t.html#aa92c8ed7eda869264694ec5df4d2e249',1,'jsprProvisioning_t']]]
+  ['cal_5ftest_0',['CAL_TEST',['../jspr_8h.html#a7b94d36039cbe65d670e3308153f5f3bade6d65ab08066d28ae019db3e8432c7b',1,'jspr.h']]],
+  ['calculatecrc_1',['calculatecrc',['../rockblock__9704_8c.html#a89016da84698387751b56df8e8d09af0',1,'calculateCrc(const uint8_t *buffer, const size_t bufferLength, const uint16_t initialCRC):&#160;rockblock_9704.c'],['../rockblock__9704_8h.html#a89016da84698387751b56df8e8d09af0',1,'calculateCrc(const uint8_t *buffer, const size_t bufferLength, const uint16_t initialCRC):&#160;rockblock_9704.h']]],
+  ['cardpresent_2',['cardPresent',['../structjsprSimStatus__t.html#a0b2408f53892b5472203787a444093ee',1,'jsprSimStatus_t']]],
+  ['checkmoqueue_3',['checkmoqueue',['../rockblock__9704_8h.html#a5f96a9bef5231e945a9e9cbe2b5fcaa2',1,'checkMoQueue(void):&#160;rockblock_9704.h'],['../rockblock__9704_8c.html#a5f96a9bef5231e945a9e9cbe2b5fcaa2',1,'checkMoQueue(void):&#160;rockblock_9704.c']]],
+  ['checkprovisioning_4',['checkprovisioning',['../rockblock__9704_8h.html#a4383e5f9960cc720f581cd18a765bb42',1,'checkProvisioning(uint16_t topic):&#160;rockblock_9704.h'],['../rockblock__9704_8c.html#a4383e5f9960cc720f581cd18a765bb42',1,'checkProvisioning(uint16_t topic):&#160;rockblock_9704.c']]],
+  ['chip_5',['chip',['../structgpioPin__t.html#abc479d488fdb943a3c23f987afe54694',1,'gpioPin_t']]],
+  ['chip_5fname_6',['CHIP_NAME',['../gpio_8h.html#adc9da0a24824ca1239b593f6459b3954',1,'gpio.h']]],
+  ['clearresponse_7',['clearresponse',['../jspr_8c.html#a0d0c1eba116c4baaf50252675634a9b1',1,'clearResponse(jsprResponse_t *response):&#160;jspr.c'],['../jspr_8h.html#a0d0c1eba116c4baaf50252675634a9b1',1,'clearResponse(jsprResponse_t *response):&#160;jspr.c']]],
+  ['closed_8',['CLOSED',['../serial_8h.html#a4a1f54577f7860805a311ce452a00c6ca929f0327e17604ce9713b2a6117bd603',1,'serial.h']]],
+  ['cloudlooptopics_5ft_9',['cloudloopTopics_t',['../rockblock__9704_8h.html#abba1a824edb46c8c944f5bf7b53ac09c',1,'rockblock_9704.h']]],
+  ['code_10',['code',['../structjsprResponse__t.html#aa9a4902f84dea7f960335445f3b0debc',1,'jsprResponse_t']]],
+  ['command_5fmax_5flen_11',['COMMAND_MAX_LEN',['../jspr__command_8h.html#a87c9dde477023307eb0245984d0546e7',1,'jspr_command.h']]],
+  ['complete_12',['COMPLETE',['../jspr_8h.html#ab709e224739ee34265ffd0aba0e6ddc6a00a900c9df90c74f75004b3dc04f173d',1,'jspr.h']]],
+  ['constellationstate_13',['constellationState',['../structrbCallbacks__t.html#a7f3102a20186c85fa360e242a3fa6639',1,'rbCallbacks_t']]],
+  ['constellationvisible_14',['constellationVisible',['../structjsprConstellationState__t.html#aad37262ad511067ff6797f054b4b4682',1,'jsprConstellationState_t']]],
+  ['context_15',['context',['../jspr__command_8c.html#aa38b725755619d237e2299c353eadedb',1,'context:&#160;serial.c'],['../rockblock__9704_8c.html#aa38b725755619d237e2299c353eadedb',1,'context:&#160;serial.c'],['../serial_8c.html#aa38b725755619d237e2299c353eadedb',1,'context:&#160;serial.c'],['../jspr_8c.html#aa38b725755619d237e2299c353eadedb',1,'context:&#160;serial.c']]],
+  ['count_16',['count',['../structimt__queue__t.html#a408227b3d358cbad74a18d62b44b40e5',1,'imt_queue_t']]],
+  ['crc16table_17',['CRC16Table',['../rockblock__9704_8c.html#ad58c9a5782e86aaccebd930df0d69c8e',1,'rockblock_9704.c']]],
+  ['crc_5ferror_5fin_5ftransfer_18',['CRC_ERROR_IN_TRANSFER',['../jspr_8h.html#ab709e224739ee34265ffd0aba0e6ddc6a33ed7cc2855f9c5a4a19ddd5faf99b88',1,'jspr.h']]],
+  ['crc_5ferror_5fin_5ftransfer_5fmos_19',['CRC_ERROR_IN_TRANSFER_MOS',['../jspr_8h.html#aafd92c3577af7f102b6d46e5dfdf1340a7d8045beb6557dfecdff43993a512255',1,'jspr.h']]],
+  ['crcbuffer_20',['crcBuffer',['../rockblock__9704_8c.html#a0d2eace3fa2bea551ecfff1e9e56aae4',1,'rockblock_9704.c']]],
+  ['crossplatform_2ec_21',['crossplatform.c',['../crossplatform_8c.html',1,'']]],
+  ['crossplatform_2eh_22',['crossplatform.h',['../crossplatform_8h.html',1,'']]]
 ];

@@ -377,6 +377,24 @@ char * rbGetIccid(void);
  */
 char *  rbGetFirmwareVersion(void);
 
+/**
+ * @brief Requests a resynchronisation of the service configuration.
+ * 
+ * Call this method if the provisioning state has changed but the modem
+ * is still reporting outdated configuration data. This will clear the 
+ * stored provisioning configuration and force a resync with the gateway.
+ * 
+ * This function must be called after the modem has been power-cycled.
+ * It is recommended to:
+ * 1. Power off the RockBLOCK 9704.
+ * 2. Power it back on.
+ * 3. Call `rbBegin()`.
+ * 4. Then call this method.
+ *
+ * @return true on success, false on failure.
+ */
+bool rbResyncServiceConfig(void);
+
 #if defined(KERMIT)
 /**
  * @brief A callback definition for the kermit transfer

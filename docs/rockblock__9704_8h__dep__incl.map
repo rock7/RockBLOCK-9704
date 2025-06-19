@@ -1,4 +1,5 @@
 <map id="rockblock_9704.h" name="rockblock_9704.h">
-<area shape="rect" id="node1" title="The RockBLOCK 9704 library. Maintained by Ground Control (https://www.groundcontrol...." alt="" coords="5,5,129,32"/>
-<area shape="rect" id="node2" href="$rockblock__9704_8c.html" title=" " alt="" coords="5,80,129,107"/>
+<area shape="rect" id="Node000001" title="The RockBLOCK 9704 library. Maintained by Ground Control (https://www.groundcontrol...." alt="" coords="5,5,141,31"/>
+<area shape="rect" id="Node000002" href="$rockblock__9704_8c.html" title=" " alt="" coords="6,79,141,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,44,76,79,71,79,71,44"/>
 </map>
