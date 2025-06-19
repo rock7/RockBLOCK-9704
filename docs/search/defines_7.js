@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['pi_5fhat_5fpath_0',['PI_HAT_PATH',['../gpio_8h.html#aaf411df1b204214283e40eac18b410f4',1,'gpio.h']]],
-  ['power_5fenable_5fpin_1',['POWER_ENABLE_PIN',['../gpio_8h.html#a6bb1d888ae78af84187de563e9f59b20',1,'gpio.h']]]
+  ['rb9704_5fbaud_779',['RB9704_BAUD',['../rockblock__9704_8h.html#af79a63831651dc127235016bce24687d',1,'rockblock_9704.h']]],
+  ['rx_5fbuffer_5fsize_780',['RX_BUFFER_SIZE',['../jspr_8h.html#a739a2a1a0047c98ac1b18ecd25dac092',1,'jspr.h']]]
 ];
