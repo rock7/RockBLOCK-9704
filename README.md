@@ -39,6 +39,7 @@ Further documentation for hardware and specifications can be found on our docume
     - [📞 Callbacks](#-callbacks)
     - [⬆️ Sending Mobile-Originated (MO) Messages (Async)](#%EF%B8%8F-sending-mobile-originated-mo-messages-async)
     - [⬇️ Receiving Mobile-Terminated (MT) Messages (Async)](#%EF%B8%8F-receiving-mobile-terminated-mt-messages-async)
+  - [↗️ Adjusting library size (Queue & Payload)](#%EF%B8%8F-adjusting-library-size)
 - [❓ Frequently Imagined Questions (FIQ)](#-frequently-imagined-questions-fiq)
 - [⚖️ License](#%EF%B8%8F-license)
 
@@ -454,6 +455,23 @@ This library provides a simple blocking API for communicating with the RockBLOCK
 #### **Warnings**
   - Don't call any functions that aren't labeled with **Async** while `rbPoll()` is running.
   - Any functions labeled with **Async** require `rbPoll()` to be called very frequently to function correctly.
+
+### ↗️ Adjusting Library Size
+  The compiled library will be ~15-20k Bytes in size, however the library uses static messaging buffers for both incoming and outgoing data, these, by default are 100kB in size. Further to this queueing is available if sufficient memory exists on your device, however by default both incoming and outgoing queues are set to 1. Altogether with the default configuration an extra ~200kB are required to handle full size messaging. Below are the steps to increase or decrease the queue & payload sizes to reduce the size of the overall library.
+
+#### **Changing payload size**
+  - Adjust manually in `imt_queue.h` via `IMT_PAYLOAD_SIZE`.
+
+    OR
+
+  - When compiling use the `-DIMT_PAYLOAD_SIZE=*size*U` eg, `-DIMT_PAYLOAD_SIZE=10000U` to set the maximum payload size to 10k Bytes.
+
+#### **Changing queue size**
+  - Adjust manually in `imt_queue.h` via `IMT_QUEUE_SIZE`.
+
+    OR
+
+  - When compiling use the `-DIMT_QUEUE_SIZE=*size*U` eg, `-DIMT_QUEUE_SIZE=5U` to set the queue size to 5.
 
 ### 📞 Callbacks
 
