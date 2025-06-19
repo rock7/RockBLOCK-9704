@@ -111,6 +111,16 @@ class RockBlock9704:
         else:
             return _rb.send_message_any(topic, message, timeout)
 
+    def send_message_async(self, message: bytes, topic: int = None) -> bool:
+        """
+        Sends a message from the RockBLOCK 9704 asynchronously
+        :param message: bytes to send
+        :param topic: optional topic to send to (defaults to raw topic)
+        :return: boolean indicating success
+        """
+        if topic is not None:
+            return _rb.send_message_async(topic, message)
+
     def receive_message(self, topic: int = None) -> bytes:
         """
         Check for messages sent to the RockBLOCK 9704
@@ -121,6 +131,72 @@ class RockBlock9704:
             return _rb.receive_message()
         else:
             return _rb.receive_message_with_topic(topic)
+        
+    def receive_message_async(self, topic: int = None) -> bytes:
+        """
+        Check asynchronously for messages sent to the RockBLOCK 9704
+        :param topic: optional to only get messages sent to this topic
+        :return: byte string message
+        """
+        if topic is None:
+            return _rb.receive_message_async()
+        
+    def acknowledge_receive_head_async(self) -> bool:
+        """
+        Acknowledges the head of the incoming message queue
+        :return: boolean indicating success
+        """
+        return _rb.acknowledge_receive_head_async()
+    
+    def receive_lock_async(self):
+        """
+        Locks the incoming message queue
+        """
+        return _rb.receive_lock_async()
+    
+    def receive_unlock_async(self):
+        """
+        Unlocks the incoming message queue
+        """
+        return _rb.receive_unlock_async()
+    
+    def poll(self):
+        """
+        Polls for responses from the modem for asynchronous functionality
+        """
+        return _rb.poll()
+
+    def set_message_provisioning_callback(self, message_provisioning = None):
+        """
+        Register the user defined provisioning callback in the library.
+        :param message_provisioning: Callback that runs when the first message is sent, provides
+        dictionary of provisioning information.
+        """
+        return _rb.set_message_provisioning_callback(message_provisioning)
+
+    def set_mo_message_complete_callback(self, mo_message_complete = None):
+        """
+        Register the user defined mo message complete callback in the library.
+        :param mo_message_complete: Callback that runs when a message has sent,
+        provides the message id and completion status.
+        """
+        return _rb.set_mo_message_complete_callback(mo_message_complete)
+
+    def set_mt_message_complete_callback(self, mt_message_complete = None):
+        """
+        Register the user defined mt message complete callback in the library.
+        :param mt_message_complete: Callback that runs when a message has been received,
+        provides the message id and completion status.
+        """
+        return _rb.set_mt_message_complete_callback(mt_message_complete)
+
+    def set_constellation_state_callback(self, constellation_state = None):
+        """
+        Register the user defined signal level callback in the library.
+        :param constellation_state: Callback that runs when the signal has changed,
+        provides a dictionary of signal information.
+        """
+        return _rb.set_constellation_state_callback(constellation_state)
 
     def get_hardware_version(self) -> str:
         """
