@@ -109,10 +109,6 @@ if (BUILD_PYTHON_SHARED_LIBRARY STREQUAL "ON")
     set_target_properties(${PYTHON_SHARED_LIB} PROPERTIES OUTPUT_NAME ${PYTHON_SHARED_LIB})
 endif()
 
-
-
-
-
 if (BUILD_LUA_SHARED_LIBRARY STREQUAL "ON")
 
     find_package(Lua)
