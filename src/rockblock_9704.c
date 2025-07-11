@@ -331,6 +331,11 @@ bool rbSendMessage(const char * data, const size_t length, const int timeout)
     bool queued = false;
     if(checkProvisioning(RAW_TOPIC))
     {
+        if (moQueuedMessages > 0)
+        {
+            imtQueueMoRemove();
+            moQueuedMessages--;
+        }
         if(data != NULL && length > 0 && length <= IMT_PAYLOAD_SIZE - IMT_CRC_SIZE)
         {
             queued = imtQueueMoAdd(RAW_TOPIC, data, length);
@@ -349,6 +354,11 @@ bool rbSendMessageCloudloop(cloudloopTopics_t topic, const char * data, const si
     bool queued = false;
     if(checkProvisioning(topic))
     {
+        if (moQueuedMessages > 0)
+        {
+            imtQueueMoRemove();
+            moQueuedMessages--;
+        }
         if(data != NULL && length > 0 && length <= IMT_PAYLOAD_SIZE - IMT_CRC_SIZE)
         {
             queued = imtQueueMoAdd(topic, data, length);
@@ -367,6 +377,11 @@ bool rbSendMessageAny(uint16_t topic, const char * data, const size_t length, co
     bool queued = false;
     if(checkProvisioning(topic))
     {
+        if (moQueuedMessages > 0)
+        {
+            imtQueueMoRemove();
+            moQueuedMessages--;
+        }
         if(data != NULL && length > 0 && length <= IMT_PAYLOAD_SIZE - IMT_CRC_SIZE)
         {
             queued = imtQueueMoAdd(topic, data, length);
