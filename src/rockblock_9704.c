@@ -794,6 +794,9 @@ void rbPoll(void)
                             if(messageTerminateStatus.finalMtStatus == COMPLETE 
                             && imtMt->id == messageTerminateStatus.messageId)
                             {
+                                imtMt->length = messageLengthAsync;
+                                messageLengthAsync = 0;
+                                imtMt->ready = true;
                                 if(rbCallbacks && rbCallbacks->mtMessageComplete)
                                 {
                                     rbCallbacks->mtMessageComplete(imtMt->id, RB_MSG_STATUS_OK);
@@ -802,9 +805,6 @@ void rbPoll(void)
                                 {
                                     mtReceived = true;
                                 }
-                                imtMt->length = messageLengthAsync;
-                                messageLengthAsync = 0;
-                                imtMt->ready = true;
                             }
                         }
                     }
