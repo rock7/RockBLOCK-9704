@@ -210,6 +210,10 @@ bool jsprPutMessageOriginate(const uint16_t topic, const size_t length)
     if (rc > 0)
     {
         messageReference++;
+        if(messageReference > 100)
+        {
+            messageReference = 1;
+        }
         const size_t putMessageOriginateStrLen = (const size_t)rc;
         if (context.serialWrite != NULL)
         {

@@ -397,6 +397,7 @@ bool rbSendMessageAny(uint16_t topic, const char * data, const size_t length, co
 static bool sendMoFromQueue(const int timeout)
 {
     bool sent = false;
+    bool started = false;
     unsigned long start = millis();
     jsprResponse_t response;
     int initCrc = 0;
@@ -421,6 +422,7 @@ static bool sendMoFromQueue(const int timeout)
                             jsprMessageOriginate_t messageOriginate;
                             parseJsprPutMessageOriginate(response.json, &messageOriginate);
                             imtMo->id = messageOriginate.messageId;
+                            started = true;
                             while (true)
                             {
                                 rbPoll();
@@ -447,9 +449,10 @@ static bool sendMoFromQueue(const int timeout)
                 }
             }
         }
-        else
+
+        if(!started)
         {
-            imtQueueMoRemove(); //failed to apply crc, drop message
+            imtQueueMoRemove(); //failed one of the checks, drop message
         }
     }
     return sent;
@@ -559,9 +562,10 @@ static bool sendMoFromQueueAsync(void)
                 }
             }
         }
-        else
+
+        if(!started)
         {
-            imtQueueMoRemove(); //failed to apply crc, drop message
+            imtQueueMoRemove(); //failed one of the checks, drop message
         }
     }
     return started;
