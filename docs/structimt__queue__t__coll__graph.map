@@ -1,5 +1,4 @@
 <map id="imt_queue_t" name="imt_queue_t">
-<area shape="rect" id="Node000001" title="Circular buffer structure to hold queued messages." alt="" coords="5,93,108,119"/>
-<area shape="rect" id="Node000002" href="$structimt__t.html" title="Represents a single message in the queue." alt="" coords="29,5,85,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,45,59,93,54,93,54,45"/>
+<area shape="rect" id="node1" title="Circular buffer structure to hold queued messages." alt="" coords="5,95,99,121"/>
+<area shape="rect" id="node2" href="$structimt__t.html" title="Represents a single message in the queue." alt="" coords="27,5,77,32"/>
 </map>

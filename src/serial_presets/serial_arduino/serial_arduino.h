@@ -41,6 +41,13 @@ int readArduino(char * bytes, const uint16_t length);
 int writeArduino(const char * data, const uint16_t length);
 
 /**
+ * @brief Peeks at the number of bytes available in the receive buffer.
+ *
+ * @return Number of bytes available to read.
+ */
+int peekArduino(void);
+
+/**
  * @brief Sets the communication context for Arduino serial connection.
  *
  * @param port String of the Arduino serial port i.e. Serial1 Serial2

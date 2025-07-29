@@ -33,6 +33,11 @@ int writeArduino(const char * data, const uint16_t length)
     return (int)serialPortArduino.write(data, length);
 }
 
+int peekArduino(void)
+{
+    return (int)serialPortArduino.available();
+}
+
 bool setContextArduino(const char * port, const uint32_t baud)
 {
     strncpy(context.serialPort, port, SERIAL_PORT_LENGTH);
@@ -68,6 +73,7 @@ bool setContextArduino(const char * port, const uint32_t baud)
     context.serialDeInit = closePortArduino;
     context.serialRead = readArduino;
     context.serialWrite = writeArduino;
+    context.serialPeek = peekArduino;
 
     if(context.serialInit()) //Open and close the port to test
     {
