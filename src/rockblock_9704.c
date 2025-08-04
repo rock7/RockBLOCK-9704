@@ -713,22 +713,35 @@ void rbPoll(void)
                     jsprMessageOriginateStatus_t messageOriginateStatus;
                     if(parseJsprUnsMessageOriginateStatus(response.json, &messageOriginateStatus))
                     {
-                        if(messageOriginateStatus.finalMoStatus == MO_ACK_RECEIVED_MOS 
-                        && imtMo->id == messageOriginateStatus.messageId)
+                        if(imtMo->id == messageOriginateStatus.messageId)
                         {
-                            if(rbCallbacks && rbCallbacks->moMessageComplete)
+                            if(messageOriginateStatus.finalMoStatus == MO_ACK_RECEIVED_MOS)
                             {
-                                rbCallbacks->moMessageComplete(imtMo->id, RB_MSG_STATUS_OK);
+                                if(rbCallbacks && rbCallbacks->moMessageComplete)
+                                {
+                                    rbCallbacks->moMessageComplete(imtMo->id, RB_MSG_STATUS_OK);
+                                }
+                                else
+                                {
+                                    moSent = true;
+                                }
                             }
                             else
                             {
-                                moSent = true;
+                                if(rbCallbacks && rbCallbacks->moMessageComplete)
+                                {
+                                    rbCallbacks->moMessageComplete(imtMo->id, RB_MSG_STATUS_FAIL);
+                                }
+                                else
+                                {
+                                    moDropped = true;
+                                }
                             }
-                            imtQueueMoRemove();
-                            moQueuedMessages -= 1;
-                            checkMoQueue();
                         }
                     }
+                    imtQueueMoRemove();
+                    moQueuedMessages -= 1;
+                    checkMoQueue();
                 }
             }
             //MT JSPR
@@ -795,19 +808,32 @@ void rbPoll(void)
                         jsprMessageTerminateStatus_t messageTerminateStatus;
                         if(parseJsprUnsMessageTerminateStatus(response.json, &messageTerminateStatus))
                         {
-                            if(messageTerminateStatus.finalMtStatus == COMPLETE 
-                            && imtMt->id == messageTerminateStatus.messageId)
+                            if(imtMt->id == messageTerminateStatus.messageId)
                             {
-                                imtMt->length = messageLengthAsync;
-                                messageLengthAsync = 0;
-                                imtMt->ready = true;
-                                if(rbCallbacks && rbCallbacks->mtMessageComplete)
+                                if(messageTerminateStatus.finalMtStatus == COMPLETE)
                                 {
-                                    rbCallbacks->mtMessageComplete(imtMt->id, RB_MSG_STATUS_OK);
+                                    imtMt->length = messageLengthAsync;
+                                    messageLengthAsync = 0;
+                                    imtMt->ready = true;
+                                    if(rbCallbacks && rbCallbacks->mtMessageComplete)
+                                    {
+                                        rbCallbacks->mtMessageComplete(imtMt->id, RB_MSG_STATUS_OK);
+                                    }
+                                    else
+                                    {
+                                        mtReceived = true;
+                                    }
                                 }
                                 else
                                 {
-                                    mtReceived = true;
+                                    if(rbCallbacks && rbCallbacks->mtMessageComplete)
+                                    {
+                                        rbCallbacks->mtMessageComplete(imtMt->id, RB_MSG_STATUS_FAIL);
+                                    }
+                                    else
+                                    {
+                                        mtDropped = true;
+                                    }
                                 }
                             }
                         }
