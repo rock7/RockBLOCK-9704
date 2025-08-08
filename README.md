@@ -633,6 +633,26 @@ rbRegisterCallbacks(&myCallbacks);
 > **Q:** Can it survive being strapped to a rocket?
 >
 > **A:** The modem, yes. Your nerves, maybe not.
+>
+> **Q:** What are topics?
+>
+> **A:** Topics are named channels used to send/receive messages to/from.
+>
+> **Q:** How can I provision a topic?
+>
+> **A:** Topics are provisioned by the plan provider ([Cloudloop Topics](https://rock7.github.io/RockBLOCK-9704/rockblock__9704_8h.html#abba1a824edb46c8c944f5bf7b53ac09c))
+>
+> **Q:** What do the names of the topics mean?
+>
+> **A:** Our topic names have no special meaning - they are simply chosen to make it easier to distinguish between them
+>
+> **Q:** Do I have to use topics?
+>
+> **A:** Yes, all IMT traffic has to pass through a topic
+>
+> **Q:** Why would I use topics?
+>
+> **A:** Topics can be utilised if needed, otherwise the default topic can be used. <br/> For example, the Red Topic may be used to send alerts from the application, the Green Topic may be used for routine status messages. <br/> If all messages used a single topic, it may be harded to identify different message types. <br/> Using topics could also help messages handled differently on the Cloud side (**hint**, you can filter by topic/category in Cloudloop Data)
 
 ---
 
