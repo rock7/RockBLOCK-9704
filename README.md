@@ -63,11 +63,15 @@ The high level API calls can be seen in the generated Doxygen documentation [her
 
 ### Simple Send/Receive Example
 
-***Note:*** In this example we send a message to the cloudloop RAW topic then use cloudloop to send a message back to the RB9704.
+***Note:*** In this example we send a message to the Cloudloop RAW topic then use Cloudloop to send a message back to the RB9704.
 
 **Requirements for below example:**
-- Your RB9704 needs to be provisioned for the cloudloop RAW topic (244).
-- Have a good view of the sky so that signal can be obtained.
+- Your RB9704 needs to be active on a plan and have picked up its provisioning information. 
+
+ℹ️ Note that initial provisioning or a change requires the RB9704 being powered with a good view of the sky for 10 - 30 minutes. This will allow to collect its provisioning information including the available IMT topics.
+ 
+- Your RB9704 needs to be provisioned for the Cloudloop RAW topic (244) as this example uses `rbSendMessage` to send to the default topic.
+- Have a good view of the sky so that stable signal can be obtained.
 
 ```c
 #include <stdio.h>
