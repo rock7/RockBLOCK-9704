@@ -652,7 +652,7 @@ rbRegisterCallbacks(&myCallbacks);
 >
 > **Q:** Why would I use topics?
 >
-> **A:** Topics can be utilised if needed, otherwise the default topic can be used. <br/> For example, the Red Topic may be used to send alerts from the application, the Green Topic may be used for routine status messages. <br/> If all messages used a single topic, it may be harded to identify different message types. <br/> Using topics could also help messages handled differently on the Cloud side (**hint**, you can filter by topic/category in Cloudloop Data)
+> **A:** Topics can be utilised if needed, otherwise the default topic can be used. <br/> For example, the Red Topic may be used to send alerts from the application, the Green Topic may be used for routine status messages. <br/> If all messages used a single topic, it may be harder to identify different message types. <br/> Using topics could also help messages handled differently on the Cloud side (**hint**, you can filter by topic/category in Cloudloop Data)
 
 ---
 
