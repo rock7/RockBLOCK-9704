@@ -63,11 +63,15 @@ The high level API calls can be seen in the generated Doxygen documentation [her
 
 ### Simple Send/Receive Example
 
-***Note:*** In this example we send a message to the cloudloop RAW topic then use cloudloop to send a message back to the RB9704.
+***Note:*** In this example we send a message to the Cloudloop RAW topic then use Cloudloop to send a message back to the RB9704.
 
 **Requirements for below example:**
-- Your RB9704 needs to be provisioned for the cloudloop RAW topic (244).
-- Have a good view of the sky so that signal can be obtained.
+- Your RB9704 needs to be active on a plan and have picked up its provisioning information. 
+
+ℹ️ Note that initial provisioning or a change requires the RB9704 being powered with a good view of the sky for 10 - 30 minutes. This will allow to collect its provisioning information including the available IMT topics.
+ 
+- Your RB9704 needs to be provisioned for the Cloudloop RAW topic (244) as this example uses `rbSendMessage` to send to the default topic.
+- Have a good view of the sky so that stable signal can be obtained.
 
 ```c
 #include <stdio.h>
@@ -629,6 +633,26 @@ rbRegisterCallbacks(&myCallbacks);
 > **Q:** Can it survive being strapped to a rocket?
 >
 > **A:** The modem, yes. Your nerves, maybe not.
+>
+> **Q:** What are topics?
+>
+> **A:** Topics are named channels used to send/receive messages to/from.
+>
+> **Q:** How can I provision a topic?
+>
+> **A:** Topics are provisioned by the plan provider ([Cloudloop Topics](https://rock7.github.io/RockBLOCK-9704/rockblock__9704_8h.html#abba1a824edb46c8c944f5bf7b53ac09c))
+>
+> **Q:** What do the names of the topics mean?
+>
+> **A:** Our topic names have no special meaning - they are simply chosen to make it easier to distinguish between them
+>
+> **Q:** Do I have to use topics?
+>
+> **A:** Yes, all IMT traffic has to pass through a topic
+>
+> **Q:** Why would I use topics?
+>
+> **A:** Topics can be utilised if needed, otherwise the default topic can be used. <br/> For example, the Red Topic may be used to send alerts from the application, the Green Topic may be used for routine status messages. <br/> If all messages used a single topic, it may be harder to identify different message types. <br/> Using topics could also help messages handled differently on the Cloud side (**hint**, you can filter by topic/category in Cloudloop Data)
 
 ---
 
