@@ -106,10 +106,10 @@ typedef struct
 
 typedef enum
 {
-    NONE,
-    LOCAL,
-    REMOTE,
-    INTERNAL
+    SIM_NONE,
+    SIM_LOCAL,
+    SIM_REMOTE,
+    SIM_INTERNAL
 }availableSimInterfaces_t;
 
 typedef struct

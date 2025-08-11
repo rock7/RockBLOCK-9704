@@ -61,19 +61,19 @@ bool putSimInterface(const availableSimInterfaces_t iface)
 
     switch (iface)
     {
-        case NONE:
+        case SIM_NONE:
             rVal =  jsprPutSimInterface("none");
         break;
 
-        case LOCAL:
+        case SIM_LOCAL:
             rVal =  jsprPutSimInterface("local");
         break;
 
-        case REMOTE:
+        case SIM_REMOTE:
             rVal =  jsprPutSimInterface("remote");
         break;
 
-        case INTERNAL:
+        case SIM_INTERNAL:
         // Fall through
         default:
             rVal =  jsprPutSimInterface("internal");
