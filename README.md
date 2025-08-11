@@ -299,7 +299,7 @@ Serial1.begin(230400, SERIAL_8N1, D11, D12);
 
 **Notes:**
 
-- Message size: ~2–5 KB depending on Arduino model.
+- Message size: ~2–100 kB depending on Arduino model.
 - Buffers adjustable in `imt_queue.h` via `IMT_PAYLOAD_SIZE`. (Refer to [↗️ Adjusting library size (Queue & Payload)](#%EF%B8%8F-adjusting-library-size))
 
 **Reviewed Boards:**
