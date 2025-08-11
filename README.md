@@ -276,7 +276,9 @@ make
 
 **⚠️IMPORTANT⚠️**
 
-This library requires sufficient RAM memory (~230kB) which a lot of Arduino models lack on board. Please find below a table of popular Arduino models with our recommendations. Refer to our [↗️ Adjusting library size (Queue & Payload)](#%EF%B8%8F-adjusting-library-size) section to see how you can reduce this memory limit (affecting functionality) if need be.
+This library requires sufficient RAM memory (~230kB) which a lot of Arduino models lack on board. Please find below a table of popular Arduino models with our recommendations. Refer to our [↗️ Adjusting library size (Queue & Payload)](#%EF%B8%8F-adjusting-library-size) section to see how you can reduce this memory limit (affecting functionality) if need be. Our recommendation for low-memory systems is to reduce the value of `IMT_PAYLOAD_SIZE` to the whatever you expect your largest message size to be eg. Adjust value to `100U` if you're not planning on sending / receiving a message bigger than 100 Bytes, for this configuration it should reduce memory usage down to ~20kB (size of library + 2x 100 Byte buffers).
+
+Please also note that by default all Arduino models compile with `5000U` as a default for `IMT_PAYLOAD_SIZE`, meaning that unless changed, the maximum message size will be 5000 Bytes, this is to accommodate a large number of models with low RAM capacity. As already stated, if you wish to decreased or increase this limit from 0 - 100kB, follow the instructions described above.
 
 **Getting Started:**
 
@@ -300,21 +302,21 @@ Serial1.begin(230400, SERIAL_8N1, D11, D12);
 - Message size: ~2–5 KB depending on Arduino model.
 - Buffers adjustable in `imt_queue.h` via `IMT_PAYLOAD_SIZE`. (Refer to [↗️ Adjusting library size (Queue & Payload)](#%EF%B8%8F-adjusting-library-size))
 
-**Tested Boards:**
+**Reviewed Boards:**
 
 | Arduino                     | RAM (kB)         | Extra RAM recommended? | ~ Max `IMT_PAYLOAD_SIZE` Size (kB) | Recommended? | Tested? |
 | --------------------------- | ---------------- | ---------------------- | ---------------------------------- |  ----------- | ------- |
 |Arduino Uno R3               |2                 |-                       |-                                   |NO            |YES      |
-|Arduino Leonardo             |2.5               |-                       |-                                   |NO            |NO       |
-|Arduino Nano                 |2                 |-                       |-                                   |NO            |NO       |
-|Arduino Nano Every           |6                 |-                       |-                                   |NO            |NO       |
+|Arduino Leonardo             |2.5               |-                       |-                                   |NO            |YES      |
+|Arduino Nano                 |2                 |-                       |-                                   |NO            |YES      |
+|Arduino Nano Every           |6                 |-                       |-                                   |NO            |YES      |
 |Arduino Mega 2560 R3         |8                 |-                       |-                                   |NO            |YES      |
-|Arduino Due                  |96                |Depends                 |?                                   |YES           |NO       |
-|Arduino Giga R1 Wifi         |1024              |NO                      |100                                 |YES           |NO       |
-|Arduino Zero                 |32                |YES                     |?                                   |YES           |NO       |
+|Arduino Giga R1 Wifi         |1024              |NO                      |100                                 |YES           |YES      |
+|Arduino Zero                 |32                |YES                     |~7                                  |YES           |YES      |
 |Arduino MKR Wifi 1010 / Zero*|32                |YES                     |~5                                  |YES           |YES      |
 |Arduino Uno R4               |32                |YES                     |~2                                  |YES           |YES      |
-|Arduino Portenta C33 / (H7)  |512 (1024 + 8192) |NO                      |100                                 |YES           |NO       |
+|Arduino Portenta C33         |512               |NO                      |100                                 |YES           |YES      |
+|Arduino Portenta H7          |1024 + 8192       |NO                      |100                                 |YES           |YES      |
 |Nano ESP32                   |512               |YES                     |~5                                  |YES           |YES      |
 
 ---
