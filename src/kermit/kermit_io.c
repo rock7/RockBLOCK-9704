@@ -1,3 +1,4 @@
+#ifndef ARDUINO
 #include <time.h>
 #include <sys/stat.h>
 
@@ -272,4 +273,4 @@ int kermit_io_init_string(void)
 
     return rVal;
 }
-
+#endif

@@ -1,3 +1,4 @@
+#ifndef ARDUINO_ARCH_MBED
 /*
  *  RFC 1521 base64 encoding/decoding
  *
@@ -209,3 +210,4 @@ int mbedtls_base64_decode( unsigned char *dst, size_t dlen, size_t *olen,
 
     return( 0 );
 }
+#endif

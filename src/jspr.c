@@ -420,22 +420,22 @@ bool parseJsprGetSimInterface(char * jsprString, jsprSimInterface_t * simInterfa
                 if(strcmp(iface->valuestring, "none") == 0)
                 {
                     simInterface->ifaceSet = true;
-                    simInterface->iface = NONE;
+                    simInterface->iface = SIM_NONE;
                 }
                 else if (strcmp(iface->valuestring, "local") == 0)
                 {
                     simInterface->ifaceSet = true;
-                    simInterface->iface = LOCAL;
+                    simInterface->iface = SIM_LOCAL;
                 }
                 else if (strcmp(iface->valuestring, "remote") == 0)
                 {
                     simInterface->ifaceSet = true;
-                    simInterface->iface = REMOTE;
+                    simInterface->iface = SIM_REMOTE;
                 }
                 else if (strcmp(iface->valuestring, "internal") == 0)
                 {
                     simInterface->ifaceSet = true;
-                    simInterface->iface = INTERNAL;
+                    simInterface->iface = SIM_INTERNAL;
                 }
             }
             else

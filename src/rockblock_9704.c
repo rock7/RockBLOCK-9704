@@ -181,9 +181,9 @@ static bool setSim(void)
                 jsprSimInterface_t simInterface;
                 parseJsprGetSimInterface(response.json, &simInterface);
                 
-                if(!simInterface.ifaceSet || simInterface.iface != INTERNAL)
+                if(!simInterface.ifaceSet || simInterface.iface != SIM_INTERNAL)
                 {
-                    putSimInterface(INTERNAL);
+                    putSimInterface(SIM_INTERNAL);
                     receiveJspr(&response, "simConfig");
                     if ((JSPR_RC_NO_ERROR == response.code) &&
                         (strncmp(response.target, "simConfig", JSPR_MAX_TARGET_LENGTH) == 0))
@@ -197,7 +197,7 @@ static bool setSim(void)
                         }
                     }
                 }
-                else if (JSPR_RC_NO_ERROR == response.code && simInterface.iface == INTERNAL)
+                else if (JSPR_RC_NO_ERROR == response.code && simInterface.iface == SIM_INTERNAL)
                 {
                     set = true;
                 }

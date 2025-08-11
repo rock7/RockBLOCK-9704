@@ -1,3 +1,4 @@
+#ifndef ARDUINO
 #ifndef KERMIT_IO_H
 #define KERMIT_IO_H
 
@@ -18,6 +19,8 @@ int kermit_io_init_string(void);
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif
 
 #endif
