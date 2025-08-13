@@ -32,7 +32,7 @@
  * Requirements:
  * RB9704 needs to be provisioned for messaging topic 244 (RAW).
  * Have an open view of the sky where a good signal can be obtained.
- * Compile the library with IMT_QUEUE_SIZE defined as your queue size.
+ * Compile the library with IMT_QUEUE_SIZE defined as your queue size (5 for this example).
  * 
  * (OPTIONAL) If you want to use and test MT queuing do the following:
  * Remove or adjust rbAcknowledgeReceiveHeadAsync() so that messages aren't acknowledged right away.
