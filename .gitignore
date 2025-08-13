@@ -1,6 +1,12 @@
 .vscode
+.vs
 .idea
 wheelhouse
 rockblock9704.egg-info
 rockblock9704/__pycache__
 env
+out
+
+*lua.dll
+*lua.so
+*lua.dylib
