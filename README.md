@@ -68,10 +68,10 @@ The high level API calls can be seen in the generated Doxygen documentation [her
 **Requirements for below example:**
 - Your RB9704 needs to be active on a plan and have picked up its provisioning information. 
 
-ℹ️ Note that initial provisioning or a change requires the RB9704 being powered with a good view of the sky for 10 - 30 minutes. This will allow to collect its provisioning information including the available IMT topics.
+ℹ️ Note that the initial provisioning or a change requires the RB9704 being powered with a good view of the sky for 10 - 30 minutes. This will allow it to collect its provisioning information including the available IMT topics.
  
 - Your RB9704 needs to be provisioned for the Cloudloop RAW topic (244) as this example uses `rbSendMessage` to send to the default topic.
-- Have a good view of the sky so that stable signal can be obtained.
+- Have a good view of the sky so that a stable signal can be obtained.
 
 ```c
 #include <stdio.h>
@@ -633,7 +633,11 @@ rbRegisterCallbacks(&myCallbacks);
 > **Q:** Can it survive being strapped to a rocket?
 >
 > **A:** The modem, yes. Your nerves, maybe not.
->
+
+---
+
+## ❓ **Frequently Asked Questions (FAQ)**
+
 > **Q:** What are topics?
 >
 > **A:** Topics are named channels used to send/receive messages to/from.
