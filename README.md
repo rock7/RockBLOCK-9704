@@ -318,11 +318,17 @@ Serial1.begin(230400, SERIAL_8N1, D11, D12);
 |Arduino Mega 2560 R3         |8                 |-                       |-                                   |NO            |YES      |
 |Arduino Giga R1 Wifi         |1024              |NO                      |100                                 |YES           |YES      |
 |Arduino Zero                 |32                |YES                     |~7                                  |YES           |YES      |
-|Arduino MKR Wifi 1010 / Zero*|32                |YES                     |~5                                  |YES           |YES      |
+|Arduino MKR Wifi 1010 / Zero*|32                |YES                     |~0.5                                |YES           |YES      |
 |Arduino Uno R4               |32                |YES                     |~2                                  |YES           |YES      |
 |Arduino Portenta C33         |512               |NO                      |100                                 |YES           |YES      |
 |Arduino Portenta H7          |1024 + 8192       |NO                      |100                                 |YES           |YES      |
 |Nano ESP32                   |512               |YES                     |~5                                  |YES           |YES      |
+
+**⚠️IMPORTANT⚠️**
+
+The tested devices listed above have all only been checked at compilation level via the Arduino IDE, please note that the max `IMT_PAYLOAD_SIZE` size may vary depending on user code and as the library is updated in the future. If at any point your Arduino code behaves unexpectedly (crashes, freezing etc) we recommend adjusting `IMT_PAYLOAD_SIZE` to a small figure (eg. 50U, 100U etc) and working your way up to find your current message size limit. 
+
+To prevent this all together we **highly recommend** using devices with a 200kB or higher RAM supply.
 
 ---
 
