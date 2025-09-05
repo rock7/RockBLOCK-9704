@@ -1,6 +1,10 @@
 #ifndef CROSSPLATFORM_H
 #define CROSSPLATFORM_H
 
+#ifdef ARDUINO
+#include <Arduino.h>
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif

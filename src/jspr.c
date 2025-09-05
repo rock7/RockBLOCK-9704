@@ -133,8 +133,8 @@ bool receiveJspr(jsprResponse_t * response, const char * expectedTarget)
                 }
             }
         }while(reading == true);
-    return received;
     }
+    return received;
 }
 
 bool waitForJsprMessage(jsprResponse_t * response, const char * expectedTarget, const uint32_t expectedCode, const uint32_t timeoutSeconds)

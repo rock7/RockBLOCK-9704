@@ -45,8 +45,7 @@ bool setContextArduino(const char * port, const uint32_t baud)
     {
         serialPortArduino = Serial1;
     }
-//JS TODO: double check the preprocessor defines below
-#ifdef defined(AVR_MEGA2560) || defined(ARDUINO_SAM_DUE) || defined(ARDUINO_GIGA)
+#if defined(AVR_MEGA2560) || defined(ARDUINO_SAM_DUE) || defined(ARDUINO_GIGA)
     else if(strcmp(context.serialPort, "Serial2") == 0)
     {
         serialPortArduino = Serial2;
@@ -55,7 +54,7 @@ bool setContextArduino(const char * port, const uint32_t baud)
     {
         serialPortArduino = Serial3;
     }
-#ifdef defined(ARDUINO_GIGA)
+#if defined(ARDUINO_GIGA)
     else if(strcmp(context.serialPort, "Serial4") == 0)
     {
         serialPortArduino = Serial4;
