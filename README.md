@@ -281,9 +281,9 @@ make
 
 **⚠️IMPORTANT⚠️**
 
-This library requires sufficient RAM memory (~230kB) which a lot of Arduino models lack on board. Please find below a table of popular Arduino models with our recommendations. Refer to our [↗️ Adjusting library size (Queue & Payload)](#%EF%B8%8F-adjusting-library-size) section to see how you can reduce this memory limit (affecting functionality) if need be. Our recommendation for low-memory systems is to reduce the value of `IMT_PAYLOAD_SIZE` to the whatever you expect your largest message size to be eg. Adjust value to `100U` if you're not planning on sending / receiving a message bigger than 100 Bytes, for this configuration it should reduce memory usage down to ~20kB (size of library + 2x 100 Byte buffers).
+This library requires sufficient RAM memory (~230kB) which a lot of Arduino models lack on board. Please find below a table of popular Arduino models with our recommendations. Refer to our [↗️ Adjusting library size (Queue & Payload)](#%EF%B8%8F-adjusting-library-size) section to see how you can reduce this memory limit (affecting functionality) if need be. Our recommendation for low-memory systems is to reduce the value of `IMT_PAYLOAD_SIZE` to whatever you expect your largest message size to be eg. Adjust value to `100U` if you're not planning on sending / receiving a message bigger than 100 Bytes, for this configuration it should reduce memory usage down to ~20kB (size of library + 2x 100 Byte buffers).
 
-Please also note that by default all Arduino models compile with `5000U` as a default for `IMT_PAYLOAD_SIZE`, meaning that unless changed, the maximum message size will be 5000 Bytes, this is to accommodate a large number of models with low RAM capacity. As already stated, if you wish to decreased or increase this limit from 0 - 100kB, follow the instructions described above.
+Please also note that by default all Arduino models compile with `5000U` as a default for `IMT_PAYLOAD_SIZE`, meaning that unless changed, the maximum message size will be 5000 Bytes, this is to accommodate a large number of models with low RAM capacity. As already stated, if you wish to decreased or increase this limit from 0 - 100kB, follow the instructions linked described above.
 
 **Getting Started:**
 
@@ -323,10 +323,12 @@ Serial1.begin(230400, SERIAL_8N1, D11, D12);
 |Arduino Portenta C33         |512               |NO                      |100                                 |YES           |YES      |
 |Arduino Portenta H7          |1024 + 8192       |NO                      |100                                 |YES           |YES      |
 |Nano ESP32                   |512               |YES                     |~5                                  |YES           |YES      |
+|Raspberry Pi Pico            |264               |NO                      |100                                 |YES           |YES      |
+|Raspberry Pi Pico 2          |520               |NO                      |100                                 |YES           |YES      |
 
 **⚠️IMPORTANT⚠️**
 
-The tested devices listed above have all only been checked at compilation level via the Arduino IDE, please note that the max `IMT_PAYLOAD_SIZE` size may vary depending on user code and as the library is updated in the future. If at any point your Arduino code behaves unexpectedly (crashes, freezing etc) we recommend adjusting `IMT_PAYLOAD_SIZE` to a small figure (eg. 50U, 100U etc) and working your way up to find your current message size limit. 
+The tested devices listed above have all only been checked at compilation level via the Arduino IDE, please note that the max `IMT_PAYLOAD_SIZE` size may vary depending on user code and as the library is updated in the future. If at any point your Arduino code behaves unexpectedly (crashes, freezing etc) we recommend adjusting `IMT_PAYLOAD_SIZE` to a small figure (eg. 50U, 100U etc) and working your way up to find your current message size limit.
 
 To prevent this all together we **highly recommend** using devices with a 200kB or higher RAM supply.
 
