@@ -54,12 +54,14 @@ set(KERMIT_DIR ${THIRD_PARTY_DIR}/ekermit)
 set(KERMIT_IO_DIR ${SRC_DIR}/kermit)
 set(WINDOWS_GET_OPT_DIR ${THIRD_PARTY_DIR}/wingetopt/src)
 set(PYTHON_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/rockblock9704)
+set(LUA_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lua)
 
 # Library build here
 set(KERMIT_LIB kermit)
 set(WINDOWS_GET_OPT_LIB wingetopt)
 set(IRIDIUM_IMT_LIB iridiumImt)
 set(PYTHON_SHARED_LIB rockblock)
+set(LUA_SHARED_LIB rockblock_lua)
 
 # Some parent variables so projects can link against us and include us
 get_directory_property(HAS_PARENT PARENT_DIRECTORY)
@@ -114,6 +116,40 @@ if (BUILD_PYTHON_SHARED_LIBRARY STREQUAL "ON")
     endif()
 
     set_target_properties(${PYTHON_SHARED_LIB} PROPERTIES OUTPUT_NAME ${PYTHON_SHARED_LIB})
+endif()
+
+if (BUILD_LUA_SHARED_LIBRARY STREQUAL "ON")
+
+    find_package(Lua)
+
+    if (Lua_FOUND)
+        message(STATUS "Found Lua ${LUA_VERSION_STRING}")
+        message(STATUS "Lua libs: ${LUA_LIBRARIES}")
+
+        add_library(${LUA_SHARED_LIB} SHARED
+            ${LUA_SRC_DIR}/rockblock_lua_wrap.cxx # Path to generated SWIG file
+        )
+
+        target_include_directories(${LUA_SHARED_LIB} PRIVATE
+            ${LUA_INCLUDE_DIR}
+            ${IRIDIUM_IMT_LIB}
+        )
+
+        target_link_libraries(${LUA_SHARED_LIB} PRIVATE
+            ${LUA_LIBRARIES}
+            ${IRIDIUM_IMT_LIB}
+        )
+
+        if(APPLE)
+            target_link_options(${LUA_SHARED_LIB} PRIVATE "-undefined" "dynamic_lookup")
+        endif()
+
+        set_target_properties(${LUA_SHARED_LIB} PROPERTIES OUTPUT_NAME ${LUA_SHARED_LIB})
+
+    else()
+        message(FATAL_ERROR "Lua was not found")
+    endif()
+
 endif()
 
 add_executable(${REFLECTED_BIN} ${EXAMPLE_DIR}/reflected.c)

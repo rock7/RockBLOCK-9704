@@ -26,6 +26,7 @@ Further documentation for hardware and specifications can be found on our docume
   - [🖥️ Windows](#%EF%B8%8F-windows)
   - [🥧 Raspberry Pi](#-raspberry-pi)
   - [🤖 Arduino](#-arduino)
+  - [⚙️ Lua](#-lua)
 - [🔌 Hardware Setup](#-hardware-setup)
 - [📖 Kick-start your own project](#-kick-start-your-own-project)
   - [🪜 Kick-start step-by-step guide](#-kick-start-step-by-step-guide)
@@ -331,6 +332,61 @@ Serial1.begin(230400, SERIAL_8N1, D11, D12);
 The tested devices listed above have all only been checked at compilation level via the Arduino IDE, please note that the max `IMT_PAYLOAD_SIZE` size may vary depending on user code and as the library is updated in the future. If at any point your Arduino code behaves unexpectedly (crashes, freezing etc) we recommend adjusting `IMT_PAYLOAD_SIZE` to a small figure (eg. 50U, 100U etc) and working your way up to find your current message size limit.
 
 To prevent this all together we **highly recommend** using devices with a 200kB or higher RAM supply.
+
+---
+
+### ⚙️ Lua
+
+> **NOTE - NOT YET AVAILABLE ON LUAROCKS**
+
+> **Tip:** If you're using Lua, install directly from LuaRocks:
+>
+> ```bash
+> luarocks install rockblock_lua
+> ```
+
+**Dependencies:**
+
+- All the same dependencies as building on source for your platform
+- [lUA 5.4](https://www.lua.org/manual/5.4/readme.html)
+- [Swig](https://www.swig.org/) (optional to regenerate bindings - tested on 4.3.1)
+
+**Build Steps:**
+
+To build the lua lbirary (rockblock_lua .dll/.so/.dylib) simply provide the flag `-DBUILD_LUA_SHARED_LIBRARY=ON` with the usual build.
+You may also need to provide `-DLUA_LIBRARIES="pathToLua/lua/lib/lua54.lib"` and `-DLUA_INCLUDE_DIR="pathToLua/lua/include"`
+if your Lua installation is not found.
+
+ Windows Example
+```bash
+mkdir build
+cmake -G "Visual Studio 17 2022" -A x64 -S . -B build -DBUILD_LUA_SHARED_LIBRARY=ON -DLUA_LIBRARIES="C:/Program Files/lua/lib/lua54.lib" -DLUA_INCLUDE_DIR="C:/Program Files/lua/include"
+msbuild build\ALL_BUILD.vcxproj /p:Configuration=Debug /p:Platform=x64
+```
+
+**Usage:**
+
+Simply place the rockblock_lua.dll in an accesible location for your lua program, and require its use in the program. You can then use the functions form lua!
+```bash
+local rockblock = require("rockblock_lua")
+local success = rockblock.rbBegin(port_name)
+```
+For example usage of common methods, see the examples/lua directory.
+
+> **Tip:** On MacOS it may be required to adjust the cpath in lua:
+>
+> ```bash
+> package.cpath = package.cpath .. ";?.dylib"
+> ```
+
+**(Optional) Regenerate lua bindings:**
+
+If you need to regenerate the C bindings to Lua functions then swig can be used. Type mapping can be found in `rockblock.i` and will generate
+lua/rockblock_lua_wrap.cxx. This file contains the mapping from C functions to Lua functions and when included in the build, generates the
+rockblock_lua /.dll/.so/.dylib.
+```bash
+swig -lua -c++ -I./src -o ./lua/rockblock_lua_wrap.cxx rockblock.i
+```
 
 ---
 
