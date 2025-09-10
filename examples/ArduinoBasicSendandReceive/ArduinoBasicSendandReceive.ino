@@ -5,18 +5,18 @@ char * mtBuffer = NULL;
 int oldSignal;
 
 /**
- * This sketch sends a "Reflected Hello World!" message via the RB9704, then attempts
- * to read it when it gets sent back to the device.
+ * This sketch sends a "Hello World!" message via the RB9704, then attempts
+ * to read a message if it gets sent back to the device.
  * 
  * A serial connection (on Serial1) will first be attempted, if successful a request to
  * que the message will be issued (note: this will fail if the RB9704 is not provisioned
  * for the specified topic and will block until the message is fully transferred, this might
  * take a while if the signal is poor). Once the message is sent the script will display
- * any change in signal and listen for the message to be reflected back, once the message
+ * any change in signal and listen for a message to be sent back, once the message
  * has been received an attempt to shutdown the serial connection will be made.
  * 
  * Requirements:
- * RB9704 needs to be provisioned for messaging topic 80 (reflector).
+ * RB9704 needs to be provisioned for cloudloop topic 244.
  * RB9704 needs to be wired to the TX and RX pins of Serial1.
  * Have an open view of the sky where a good signal can be obtained.
  * 
@@ -30,8 +30,8 @@ void setup() {
   {
       Serial.println("Successfully started serial session with RB9704\r\n");
       //Queue and send MO
-      const char *message = "Reflected Hello World!";
-      if(rbSendMessageAny(80, message, strlen(message), 600))
+      const char *message = "Hello World!";
+      if(rbSendMessageAny(244, message, strlen(message), 600))
       {
           Serial.print("Sent MO: ");
           Serial.println(message);
