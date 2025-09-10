@@ -132,7 +132,7 @@ Ended connection successfully
 ```bash
 ./<example_name> <arguments>
 
-e.g., ./reflected -d <serial device>
+e.g., ./cloudloopRaw -d <serial device>
 e.g., ./customFileMessage -d <serial device> -t 244 -f "/path/to/file.txt"
 ```
 
@@ -283,7 +283,7 @@ make
 
 This library requires sufficient RAM memory (~230kB) which a lot of Arduino models lack on board. Please find below a table of popular Arduino models with our recommendations. Refer to our [↗️ Adjusting library size (Queue & Payload)](#%EF%B8%8F-adjusting-library-size) section to see how you can reduce this memory limit (affecting functionality) if need be. Our recommendation for low-memory systems is to reduce the value of `IMT_PAYLOAD_SIZE` to whatever you expect your largest message size to be eg. Adjust value to `100U` if you're not planning on sending / receiving a message bigger than 100 Bytes, for this configuration it should reduce memory usage down to ~20kB (size of library + 2x 100 Byte buffers).
 
-Please also note that by default all Arduino models compile with `5000U` as a default for `IMT_PAYLOAD_SIZE`, meaning that unless changed, the maximum message size will be 5000 Bytes, this is to accommodate a large number of models with low RAM capacity. As already stated, if you wish to decreased or increase this limit from 0 - 100kB, follow the instructions linked described above.
+Please also note that by default all Arduino models compile with `5000U` as a default for `IMT_PAYLOAD_SIZE`, meaning that unless changed, the maximum message size will be 5000 Bytes, this is to accommodate a large number of models with low RAM capacity. As already stated, if you wish to decreased or increase this limit from 0 - 100kB, follow the instructions linked above.
 
 **Getting Started:**
 
@@ -487,7 +487,9 @@ This library provides a simple blocking API for communicating with the RockBLOCK
   - Any functions labeled with **Async** require `rbPoll()` to be called very frequently to function correctly.
 
 ### ↗️ Adjusting Library Size
-  The compiled library will be ~15-20k Bytes in size, however the library uses static messaging buffers for both incoming and outgoing data, these, by default are 100kB in size. Further to this queueing is available if sufficient memory exists on your device, however by default both incoming and outgoing queues are set to 1. Altogether with the default configuration an extra ~200kB are required to handle full size messaging. Below are the steps to increase or decrease the queue & payload sizes to reduce the size of the overall library.
+  The fully compiled library is ~130kB, however that's only if you choose to include everything, otherwise the size varies depending on what is linked to your project. For example an average Arduino sketch will usually be ~30-40kB for a basic send and receive script.
+  
+  The library uses static messaging buffers for both incoming and outgoing data, these, by default are 100kB in size and will therefore require ~200kB in dynamic memory making the total requirement for the library ~230kB. Further to this queueing is available if sufficient memory exists on your device, however by default both incoming and outgoing queues are set to 1. Below are the steps to increase or decrease the queue & payload sizes to reduce the dynamic memory requirement.
 
 #### **Changing payload size**
   - Adjust manually in `imt_queue.h` via `IMT_PAYLOAD_SIZE`.
