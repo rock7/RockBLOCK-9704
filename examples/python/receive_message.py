@@ -5,11 +5,12 @@ from time import sleep
 #This script receives a message via the RB9704.
 #
 #A serial connection will first be attempted on the selected port, if successful 
-#the device information will be printed and the signal will be polled and once obtained 
-#the script will listen for a message to come in. #not what I see happening.
+#the device information will be printed and script will begin listening for MT messages.
 #
 #Requirements:
 #Have an open view of the sky where a good signal can be obtained.
+#Have the RockBLOCK 9704 on an active plan.
+#Send MT messages after running this script.
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='receive-message', description="Python example to receive IMT message on RockBLOCK 9704.")
@@ -27,26 +28,13 @@ if __name__ == '__main__':
 
         if connected:
 
-            # Get RockBlock information
+            # Get RockBLOCK information
             print("Board temperature: \t", rb.get_board_temp())
             print("Hardware version: \t", rb.get_hardware_version())
             print("9704 Modem IMEI: \t", rb.get_imei())
+            print("9704 Serial Number: \t", rb.get_serial_number())
 
-            # --- Extremely bad practice to wait for signal ---
-            # while rb.get_signal() < 1:
-            #     print("Waiting for signal...")
-            #     sleep(2)
-            #
-            # print("Signal acquired!")
-
-            # --- premature exit resulting in signal acquired but no MT ---
-            # Check for messages
-            # message = rb.receive_message()
-            #
-            # if message is not None:
-            #     print("Received message: ", message)
-
-            # --- new loop waiting for MT ---
+            # Begin listening for MT messages
             print("Listening for MT messages... Press Ctrl+C to stop.")
             try:
                 while True:
