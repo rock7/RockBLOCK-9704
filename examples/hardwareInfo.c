@@ -96,6 +96,7 @@ int main(int argc, char * argv[])
         if(rbBegin(_serialDevice))
         {
             printf("Successfully started serial session with RB9704\r\n");
+            usleep(100000); //Wait at least 100ms before queueing a message the first time you run rbBegin after boot.
             //define structure and populate
             char *hwVersion = rbGetHwVersion();
             if(hwVersion != NULL)

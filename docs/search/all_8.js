@@ -31,9 +31,8 @@ var searchData=
   ['imtqueuemtremove_97',['imtQueueMtRemove',['../imt__queue_8c.html#a1e002cfaa5f514bc6f878a90dc28b557',1,'imtQueueMtRemove(void):&#160;imt_queue.c'],['../imt__queue_8h.html#a1e002cfaa5f514bc6f878a90dc28b557',1,'imtQueueMtRemove(void):&#160;imt_queue.c']]],
   ['imtqueuesize_98',['imtQueueSize',['../imt__queue_8h.html#ad605bea90373d45fecf76d2b5b4fb90e',1,'imt_queue.h']]],
   ['inactive_99',['INACTIVE',['../jspr_8h.html#a7b94d36039cbe65d670e3308153f5f3ba3ff8ba88da6f8947ab7c22b7825c6bb6',1,'jspr.h']]],
-  ['internal_100',['INTERNAL',['../jspr_8h.html#a072025eee1d7fa38f32237ce1161dda0adc7588f17692aa631f375290d50a2c8e',1,'jspr.h']]],
-  ['invalid_5fhardware_101',['INVALID_HARDWARE',['../jspr_8h.html#a82e59da59e4fb03da994ff7b5645b2b4aac5b7802ea4e1536f3e956789c62fd63',1,'jspr.h']]],
-  ['iridium_5fbooted_5fpin_102',['IRIDIUM_BOOTED_PIN',['../gpio_8h.html#af5c5ce51a1bab901b6359c7d3907b2ab',1,'gpio.h']]],
-  ['iridium_5fenable_5fpin_103',['IRIDIUM_ENABLE_PIN',['../gpio_8h.html#a3883f5f920f2beb8a670ba4b01c8f33f',1,'gpio.h']]],
-  ['iridiumenable_104',['iridiumEnable',['../structrbGpioTable__t.html#acd2332f477e965668226dbebcc424f5e',1,'rbGpioTable_t']]]
+  ['invalid_5fhardware_100',['INVALID_HARDWARE',['../jspr_8h.html#a82e59da59e4fb03da994ff7b5645b2b4aac5b7802ea4e1536f3e956789c62fd63',1,'jspr.h']]],
+  ['iridium_5fbooted_5fpin_101',['IRIDIUM_BOOTED_PIN',['../gpio_8h.html#af5c5ce51a1bab901b6359c7d3907b2ab',1,'gpio.h']]],
+  ['iridium_5fenable_5fpin_102',['IRIDIUM_ENABLE_PIN',['../gpio_8h.html#a3883f5f920f2beb8a670ba4b01c8f33f',1,'gpio.h']]],
+  ['iridiumenable_103',['iridiumEnable',['../structrbGpioTable__t.html#acd2332f477e965668226dbebcc424f5e',1,'rbGpioTable_t']]]
 ];

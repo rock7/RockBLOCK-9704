@@ -1,5 +1,6 @@
 import argparse
 from rockblock9704 import *
+from time import sleep
 
 #This script uses GPIO pins rather than a USB-C cable to initialise the
 #RB9704.
@@ -46,7 +47,7 @@ if __name__ == '__main__':
         connected = rb.begin_gpio(args.device, config, 60)
 
         if connected:
-
+            sleep(0.1); #Wait at least 100ms before queueing a message the first time you run rbBegin after boot.
             # Get RockBlock information
             print("9704 Modem IMEI: \t", rb.get_imei())
 

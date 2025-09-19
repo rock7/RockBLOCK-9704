@@ -29,6 +29,7 @@ void setup() {
   if(rbBegin("Serial1"))
   {
       Serial.println("Successfully started serial session with RB9704\r\n");
+      delay(100); //Wait at least 100ms before queueing a message the first time you run rbBegin after boot.
       //Queue and send MO
       const char *message = "Hello World!";
       if(rbSendMessageAny(244, message, strlen(message), 600))

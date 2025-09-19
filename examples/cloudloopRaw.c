@@ -101,6 +101,7 @@ int main(int argc, char * argv[])
         if(rbBegin(_serialDevice))
         {
             printf("Successfully started serial session with RB9704\r\n");
+            usleep(100000);
             //Queue and send MO
             const char *message = "Cloudloop Hello World!";
             if(rbSendMessage(message, strlen(message), 600))

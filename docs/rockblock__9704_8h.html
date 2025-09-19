@@ -838,6 +838,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Initialise the the serial connection in the detected context (or user defined), if successful continue to set the API, SIM &amp; state of the modem in order to be ready for messaging. </p>
+<dl class="section note"><dt>Note</dt><dd>Make sure you wait at least 100ms after calling this function for the first time after reboot before doing anything else to prevent unexpected behaviour. This gives the modem time to acknowledge its new settings.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">port</td><td>pointer to port name. </td></tr>
@@ -881,6 +882,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Drives user defined pin (power enable) low and user defined pin (iridium enable) high to initialise the RB9704 PiHat. Initialise the serial connection in the detected context (or user defined), if successful continue to set the API, SIM &amp; state of the modem in order to be ready for messaging. </p>
+<dl class="section note"><dt>Note</dt><dd>Make sure you wait at least 100ms after calling this function for the first time after reboot before doing anything else to prevent unexpected behaviour. This gives the modem time to acknowledge its new settings.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">port</td><td>pointer to port name. </td></tr>

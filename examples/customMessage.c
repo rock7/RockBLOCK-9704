@@ -120,6 +120,7 @@ int main(int argc, char * argv[])
         if(rbBegin(_serialDevice))
         {
             printf("Successfully started serial session with RB9704\r\n");
+            usleep(100000); //Wait at least 100ms before queueing a message the first time you run rbBegin after boot.
             //Queue and send MO
             if(rbSendMessageAny(_topic, _message, strlen(_message), 600))
             {

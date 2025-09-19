@@ -85,6 +85,7 @@ int main(void)
 
     if (rbBegin("/dev/ttyUSB2"))
     {
+        usleep(100000);
         if (rbSendMessage(message, strlen(message), 600))
         {
             printf("Sent message: %s\r\n", message);
@@ -685,6 +686,10 @@ rbRegisterCallbacks(&myCallbacks);
 > **Q:** Why would I use topics?
 >
 > **A:** Topics can be utilised if needed, otherwise the default topic can be used. <br/> For example, the Red Topic may be used to send alerts from the application, the Green Topic may be used for routine status messages. <br/> If all messages used a single topic, it may be harder to identify different message types. <br/> Using topics could also help messages handled differently on the Cloud side (**hint**, you can filter by topic/category in Cloudloop Data)
+>
+> **Q:** Why is the send message function failing the first time I call it after rebooting the device? (418 Error in Debug).
+>
+> **A:** When we call `rbBegin()` we send a couple commands to the 9704 modem to set it up, like the simConfig and operationalState, the modem needs some time (100ms or more) after changing these, otherwise it may not be ready to send a message, these only reset if changed manually or the RockBLOCK is rebooted, which is why your code might fail the first time but works every time after that until rebooted. To fix this simply put a 100ms or bigger delay after calling `rbBegin()`.
 
 ---
 

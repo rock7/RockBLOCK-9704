@@ -166,6 +166,10 @@ typedef enum
  * if successful continue to set the API, SIM & state of the modem in order
  * to be ready for messaging.
  * 
+ * @note Make sure you wait at least 100ms after calling this function for the first time after 
+ * reboot before doing anything else to prevent unexpected behaviour. This gives the modem time 
+ * to acknowledge its new settings.
+ * 
  * @param port pointer to port name.
  * @return bool depicting success or failure.
  */
@@ -429,6 +433,10 @@ bool rbUpdateFirmware (const char * firmwareFile, updateProgressCallback progres
  * initialise the RB9704 PiHat. Initialise the serial connection in the 
  * detected context (or user defined), if successful continue to set 
  * the API, SIM & state of the modem in order to be ready for messaging.
+ * 
+ * @note Make sure you wait at least 100ms after calling this function for the first time after 
+ * reboot before doing anything else to prevent unexpected behaviour. This gives the modem time 
+ * to acknowledge its new settings.
  * 
  * @param port pointer to port name.
  * @param gpioInfo structure containing a valid chip & pin for powerEnable, IridiumEnable and booted.
