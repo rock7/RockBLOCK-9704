@@ -632,6 +632,16 @@ void rbReceiveUnlockAsync(void)
     imtQueueMtLock(false);
 }
 
+void rbSendLockAsync(void)
+{
+    imtQueueMoLock(true);
+}
+
+void rbSendUnlockAsync(void)
+{
+    imtQueueMoLock(false);
+}
+
 bool rbAcknowledgeReceiveHeadAsync(void)
 {
     bool acknowledged = false;

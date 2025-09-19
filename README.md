@@ -632,6 +632,8 @@ rbRegisterCallbacks(&myCallbacks);
   Using the Async send function will put your message in a queue, you can queue up as many messages as your MO queue size, which is set in `imt_queue.h` as `#define IMT_QUEUE_SIZE 1U`. This is kept at 1 by default.
   Queued messages will send one after the other, you will not be able to queue another message unless there is space in the queue. `rbPoll()` is responsible for handling these messages to the modem so as stated previously make sure you call it **very frequently**.
 
+  - If your queue is full, by default trying to add another message will fail. If you want to prevent this functionality call `rbSendUnlockAsync()`, this will instead accept any new messages if your queue is full by clearing the oldest message. `rbSendLockAsync()` can be called to undo this.
+
 #### **Non-blocking Transmit**
   Simply call `rbSendMessageAsync(...)` to queue your message, then continue with your code, making sure that `rbPoll()` is called at most every **50ms**.
 

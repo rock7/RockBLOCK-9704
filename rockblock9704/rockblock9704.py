@@ -147,7 +147,7 @@ class RockBlock9704:
         :return: boolean indicating success
         """
         return _rb.acknowledge_receive_head_async()
-    
+
     def receive_lock_async(self):
         """
         Locks the incoming message queue
@@ -159,7 +159,19 @@ class RockBlock9704:
         Unlocks the incoming message queue
         """
         return _rb.receive_unlock_async()
+
+    def send_lock_async(self):
+        """
+        Locks the outgoing message queue
+        """
+        return _rb.send_lock_async()
     
+    def send_unlock_async(self):
+        """
+        Unlocks the outgoing message queue
+        """
+        return _rb.send_unlock_async()
+
     def poll(self):
         """
         Polls for responses from the modem for asynchronous functionality
