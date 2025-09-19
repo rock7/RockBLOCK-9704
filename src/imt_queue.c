@@ -7,6 +7,7 @@ static uint8_t imtMoBuffer[IMT_QUEUE_SIZE][IMT_PAYLOAD_SIZE];
 static uint8_t imtMtBuffer[IMT_QUEUE_SIZE][IMT_PAYLOAD_SIZE];
 
 static volatile bool mtLock = false;
+static volatile bool moLock = true;
 
 bool imtQueueMoAdd(uint16_t topic, const char * data, const size_t length)
 {
@@ -14,6 +15,11 @@ bool imtQueueMoAdd(uint16_t topic, const char * data, const size_t length)
     uint16_t tempTail = imtMo.tail;
     if(data != NULL && length > 0)
     {
+        if(imtMo.count >= imtMt.maxLength && !moLock)
+        {
+            imtQueueMoRemove(); //remove oldest entry if queue is full
+        }
+
         if(imtMo.count < imtMo.maxLength)
         {
             memcpy(imtMoBuffer[tempTail], data, length);
@@ -62,6 +68,18 @@ void imtQueueMtLock(bool lock)
     else
     {
         mtLock = false;
+    }
+}
+
+void imtQueueMoLock(bool lock)
+{
+    if(lock)
+    {
+        moLock = true;
+    }
+    else
+    {
+        moLock = false;
     }
 }
 

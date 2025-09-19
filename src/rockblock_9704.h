@@ -282,6 +282,21 @@ void rbReceiveLockAsync(void);
 void rbReceiveUnlockAsync(void);
 
 /**
+ * @brief Locks the sending queue so that old messages aren't discarded 
+ * when incoming ones arrive.
+ * 
+ * * @note The queue is unlocked by default, so there is no need to call 
+ * this function unless rbSendUnlockAsync() was previously used.
+ */
+void rbSendLockAsync(void);
+
+/**
+ * @brief Unlocks the sending queue so that old messages are discarded 
+ * to make space for incoming ones.
+ */
+void rbSendUnlockAsync(void);
+
+/**
  * @brief Queue a message to be sent.
  * 
  * @param topic uint16_t topic.
