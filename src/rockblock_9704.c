@@ -41,7 +41,6 @@ jsprMessageProvisioning_t messageProvisioningInfo;
 
 uint32_t messageLengthAsync = 0;
 uint16_t moQueuedMessages = 0;
-uint16_t mtQueuedMessages = 0;
 bool Receivelock = false;
 bool moDropped = false;
 bool moSent = false;
@@ -706,17 +705,25 @@ void rbPoll(void)
                 }
                 if(JSPR_RC_NO_ERROR != response.code && JSPR_RC_UNSOLICITED_MESSAGE != response.code && strcmp(response.target, "messageOriginateSegment") == 0)
                 {
-                    if(rbCallbacks && rbCallbacks->moMessageComplete)
+                    jsprMessageOriginateSegment_t messageOriginateSegment;
+                    if(parseJsprUnsMessageOriginateSegment(response.json, &messageOriginateSegment))
                     {
-                        rbCallbacks->moMessageComplete(imtMo->id, RB_MSG_STATUS_FAIL);
+                        if(imtMo->id == messageOriginateSegment.messageId)
+                        {
+                    
+                            if(rbCallbacks && rbCallbacks->moMessageComplete)
+                            {
+                                rbCallbacks->moMessageComplete(imtMo->id, RB_MSG_STATUS_FAIL);
+                            }
+                            else
+                            {
+                                moDropped = true;
+                            }
+                            imtQueueMoRemove(); //drop message
+                            moQueuedMessages -= 1;
+                            checkMoQueue();
+                        }
                     }
-                    else
-                    {
-                        moDropped = true;
-                    }
-                    imtQueueMoRemove(); //drop message
-                    moQueuedMessages -= 1;
-                    checkMoQueue();
                 }
                 if(JSPR_RC_UNSOLICITED_MESSAGE == response.code && strcmp(response.target, "messageOriginateStatus") == 0)
                 {
@@ -747,11 +754,11 @@ void rbPoll(void)
                                     moDropped = true;
                                 }
                             }
+                            imtQueueMoRemove();
+                            moQueuedMessages -= 1;
+                            checkMoQueue();
                         }
                     }
-                    imtQueueMoRemove();
-                    moQueuedMessages -= 1;
-                    checkMoQueue();
                 }
             }
             //MT JSPR

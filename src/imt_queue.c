@@ -9,6 +9,8 @@ static uint8_t imtMtBuffer[IMT_QUEUE_SIZE][IMT_PAYLOAD_SIZE];
 static volatile bool mtLock = false;
 static volatile bool moLock = true;
 
+extern uint16_t moQueuedMessages;
+
 bool imtQueueMoAdd(uint16_t topic, const char * data, const size_t length)
 {
     bool queued = false;
@@ -135,6 +137,7 @@ bool imtQueueMoRemove(void)
 
         imtMo.head = (tempHead + 1) % imtMo.maxLength;
         imtMo.count--;
+        moQueuedMessages--;
         removed = true;
     }
     return removed;
