@@ -86,6 +86,9 @@ Functions</h2></td></tr>
 <tr class="memitem:aa1a83f37c8b120daf8d4f84fd49e793c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="imt__queue_8c.html#aa1a83f37c8b120daf8d4f84fd49e793c">imtQueueMtLock</a> (bool lock)</td></tr>
 <tr class="memdesc:aa1a83f37c8b120daf8d4f84fd49e793c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lock or unlock the MT queue to prevent messages from getting discarded if full.  <a href="imt__queue_8c.html#aa1a83f37c8b120daf8d4f84fd49e793c">More...</a><br /></td></tr>
 <tr class="separator:aa1a83f37c8b120daf8d4f84fd49e793c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f5c42f550c9717b1eed2e3db612cdb4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="imt__queue_8c.html#a5f5c42f550c9717b1eed2e3db612cdb4">imtQueueMoLock</a> (bool lock)</td></tr>
+<tr class="memdesc:a5f5c42f550c9717b1eed2e3db612cdb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lock or unlock the MO queue to prevent messages from getting discarded if full.  <a href="imt__queue_8c.html#a5f5c42f550c9717b1eed2e3db612cdb4">More...</a><br /></td></tr>
+<tr class="separator:a5f5c42f550c9717b1eed2e3db612cdb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d45cee65f0df7338947bd87e1b6e22c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structimt__t.html">imt_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="imt__queue_8c.html#a0d45cee65f0df7338947bd87e1b6e22c">imtQueueMoGetFirst</a> (void)</td></tr>
 <tr class="memdesc:a0d45cee65f0df7338947bd87e1b6e22c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the address of the head of the MO queue.  <a href="imt__queue_8c.html#a0d45cee65f0df7338947bd87e1b6e22c">More...</a><br /></td></tr>
 <tr class="separator:a0d45cee65f0df7338947bd87e1b6e22c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -117,6 +120,8 @@ Variables</h2></td></tr>
 <tr class="separator:add0765e27fd50c51658fb585ba7366a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec72dad189fc67f048383563be098c03"><td class="memItemLeft" align="right" valign="top">static volatile bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="imt__queue_8c.html#aec72dad189fc67f048383563be098c03">mtLock</a> = false</td></tr>
 <tr class="separator:aec72dad189fc67f048383563be098c03"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ed30ac560ba49e7da3db555641c9be1"><td class="memItemLeft" align="right" valign="top">static volatile bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="imt__queue_8c.html#a0ed30ac560ba49e7da3db555641c9be1">moLock</a> = true</td></tr>
+<tr class="separator:a0ed30ac560ba49e7da3db555641c9be1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a9ab248b0457c867fa4425997e6d81de4"></a>
@@ -202,6 +207,33 @@ Variables</h2></td></tr>
 
 <p>Get the address of the head of the MO queue. </p>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to the next message in the queue, NULL if queue is empty. </dd></dl>
+
+</div>
+</div>
+<a id="a5f5c42f550c9717b1eed2e3db612cdb4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f5c42f550c9717b1eed2e3db612cdb4">&#9670;&nbsp;</a></span>imtQueueMoLock()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void imtQueueMoLock </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>lock</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Lock or unlock the MO queue to prevent messages from getting discarded if full. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">lock</td><td>Called with true to lock the queue and false to unlock the queue.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This is set to false by default. </dd></dl>
 
 </div>
 </div>
@@ -439,6 +471,28 @@ Variables</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">uint8_t imtMtBuffer[1U][100000U+ 2U]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0ed30ac560ba49e7da3db555641c9be1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ed30ac560ba49e7da3db555641c9be1">&#9670;&nbsp;</a></span>moLock</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">volatile bool moLock = true</td>
         </tr>
       </table>
   </td>

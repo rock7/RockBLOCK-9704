@@ -130,6 +130,15 @@ imt_t * imtQueueMtGetLast(void);
 void imtQueueMtLock(bool lock);
 
 /**
+ * @brief Lock or unlock the MO queue to prevent messages from getting discarded if full.
+ * 
+ * @param lock Called with true to lock the queue and false to unlock the queue.
+ * 
+ * @note This is set to false by default.
+ */
+void imtQueueMoLock(bool lock);
+
+/**
  * @brief Used to initialise both outgoing and incoming queues.
  * 
  */

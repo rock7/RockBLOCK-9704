@@ -511,6 +511,18 @@ static PyObject *py_rbReceiveUnlockAsync(PyObject *self, PyObject *args) {
     Py_RETURN_NONE;
 }
 
+static PyObject *py_rbSendLockAsync(PyObject *self, PyObject *args) {
+
+    rbSendLockAsync();
+    Py_RETURN_NONE;
+}
+
+static PyObject *py_rbSendUnlockAsync(PyObject *self, PyObject *args) {
+
+    rbSendUnlockAsync();
+    Py_RETURN_NONE;
+}
+
 static PyObject *py_rbPoll(PyObject *self, PyObject *args) {
 
     rbPoll();
@@ -595,6 +607,8 @@ static PyMethodDef rockblockMethods[] = {
     {"acknowledge_receive_head_async", py_rbAcknowledgeReceiveHeadAsync, METH_VARARGS, "Function for acknowledging the head of the MT queue"},
     {"receive_lock_async", py_rbReceiveLockAsync, METH_VARARGS, "Function for locking the incoming message queue"},
     {"receive_unlock_async", py_rbReceiveUnlockAsync, METH_VARARGS, "Function for unlocking the incoming message queue"},
+    {"send_lock_async", py_rbSendLockAsync, METH_VARARGS, "Function for locking the outgoing message queue"},
+    {"send_unlock_async", py_rbSendUnlockAsync, METH_VARARGS, "Function for unlocking the outgoing message queue"},
     {"poll", py_rbPoll, METH_VARARGS, "Function which polls for responses from the modem for asynchronous functionality"},
     {"set_message_provisioning_callback", py_set_message_provisioning_callback, METH_VARARGS, "Function which registers the user defined provisioning callback for asynchronous functionality"},
     {"set_mo_message_complete_callback", py_set_mo_message_complete_callback, METH_VARARGS, "Function which registers the user defined mo message callback for asynchronous functionality"},
