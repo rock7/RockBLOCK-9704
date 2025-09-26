@@ -635,7 +635,7 @@ rbRegisterCallbacks(&myCallbacks);
   - If your queue is full, by default trying to add another message will fail. If you want to prevent this functionality call `rbSendUnlockAsync()`, this will instead accept any new messages if your queue is full by clearing the oldest message. `rbSendLockAsync()` can be called to undo this.
 
 #### **Non-blocking Transmit**
-  Simply call `rbSendMessageAsync(...)` to queue your message, then continue with your code, making sure that `rbPoll()` is called at most every **50ms**.
+  Simply call `rbSendMessageAsync(...)` to queue your message, then continue with your code, making sure that the interval between calling `rbPoll()` is at most **50ms** (`rbPoll()` needs to be called at least every **50ms**).
 
 ### ⬇️ Receiving Mobile-Terminated (MT) Messages (Async)
 
