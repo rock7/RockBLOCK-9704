@@ -66,7 +66,7 @@ void loop() {
           //End serial connection
           if(rbEnd())
           {
-              Serial.println("Ended connection sucessfully\r\n");
+              Serial.println("Ended connection successfully\r\n");
               Serial1.end();
               ended = true;
           }
