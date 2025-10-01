@@ -66,6 +66,14 @@ void onConstellationState(const jsprConstellationState_t *state)
         Serial.println(state->signalBars);
 }
 
+static rbCallbacks_t myCallbacks =
+{
+.messageProvisioning = onMessageProvisioning,
+.moMessageComplete = onMoComplete,
+.mtMessageComplete = onMtComplete,
+.constellationState = onConstellationState
+};
+
 void setup() {
   Serial.begin(9600);
   Serial1.begin(230400, SERIAL_8N1, 21, 22);
@@ -74,13 +82,6 @@ void setup() {
   if(rbBegin("Serial1"))
   {
       delay(1000);
-      rbCallbacks_t myCallbacks =
-      {
-      .messageProvisioning = onMessageProvisioning,
-      .moMessageComplete = onMoComplete,
-      .mtMessageComplete = onMtComplete,
-      .constellationState = onConstellationState
-      };
       //Register Callbacks
       rbRegisterCallbacks(&myCallbacks);
       Serial.println("Successfully started serial session with RB9704\r\n");
@@ -100,9 +101,9 @@ void setup() {
   {
       Serial.println("Failed to begin the serial connection\r\n");
   }
+}
 
-  while(true)
-  {
+void loop() {
     rbPoll();
     delay(10);
 
@@ -113,16 +114,11 @@ void setup() {
         {
             Serial.println("Ended connection successfully\r\n");
             Serial1.end();
-            break;
+            messagesSent = 0;
         }
         else
         {
             Serial.println("Failed to end connection\r\n");
         }
     }
-  }
-}
-
-void loop() {
-
 }
