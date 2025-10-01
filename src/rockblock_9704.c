@@ -38,6 +38,7 @@ jsprHwInfo_t hwInfo;
 jsprSimStatus_t simStatus;
 jsprFirmwareInfo_t firmwareInfo;
 jsprMessageProvisioning_t messageProvisioningInfo;
+static jsprResponse_t response;
 
 uint32_t messageLengthAsync = 0;
 uint16_t moQueuedMessages = 0;
@@ -134,7 +135,6 @@ static const uint16_t CRC16Table[256] =
 static bool setApi(void)
 {
     bool set = false;
-    jsprResponse_t response;
     for(int i = 0; i < 2; i++)
     {
 #ifdef ARDUINO
@@ -170,7 +170,6 @@ static bool setApi(void)
 static bool setSim(void)
 {
     bool set = false;
-    jsprResponse_t response;
     if(jsprGetSimInterface())
     {
         if (receiveJspr(&response, "simConfig"))
@@ -209,7 +208,6 @@ static bool setSim(void)
 static bool setState(void)
 {
     bool set = false;
-    jsprResponse_t response;
     if(jsprGetOperationalState())
     {
         if(receiveJspr(&response, "operationalState"))
@@ -398,7 +396,6 @@ static bool sendMoFromQueue(const int timeout)
     bool sent = false;
     bool started = false;
     unsigned long start = millis();
-    jsprResponse_t response;
     int initCrc = 0;
     int segmentStart;
     int segmentLength;
@@ -536,7 +533,6 @@ static bool listenForMt(void)
 static bool sendMoFromQueueAsync(void)
 {
     bool started = false;
-    jsprResponse_t response;
     imt_t * imtMo = imtQueueMoGetFirst();
 
     if(imtMo != NULL)
@@ -666,7 +662,6 @@ static bool checkMoQueue(void)
 
 void rbPoll(void)
 {
-    jsprResponse_t response;
     int segmentStart;
     int segmentStartMt;
     int segmentLength;
@@ -875,7 +870,6 @@ void rbPoll(void)
 int8_t rbGetSignal(void)
 {
     int8_t signal = -1;
-    jsprResponse_t response;
     jsprGetSignal();
     waitForJsprMessage(&response, "constellationState", JSPR_RC_NO_ERROR, 1);
     if(JSPR_RC_NO_ERROR == response.code && strcmp(response.target, "constellationState") == 0)
@@ -895,7 +889,6 @@ int8_t rbGetSignal(void)
 static bool getHwInfo(jsprHwInfo_t * hwInfo)
 {
     bool populated = false;
-    jsprResponse_t response;
     jsprGetHwInfo();
     receiveJspr(&response, "hwInfo");
     if(JSPR_RC_NO_ERROR == response.code && strcmp(response.target, "hwInfo") == 0)
@@ -952,7 +945,6 @@ int8_t rbGetBoardTemp(void)
 static bool getSimStatus(jsprSimStatus_t * simStatus)
 {
     bool populated = false;
-    jsprResponse_t response;
     jsprGetSimStatus();
     receiveJspr(&response, "simStatus");
     if(JSPR_RC_NO_ERROR == response.code && strcmp(response.target, "simStatus") == 0)
@@ -998,7 +990,6 @@ char * rbGetIccid(void)
 static bool getFirmwareInfo(jsprFirmwareInfo_t * fwInfo)
 {
     bool populated = false;
-    jsprResponse_t response;
     jsprGetFirmware(JSPR_BOOT_SOURCE_PRIMARY);
     receiveJspr(&response, "firmware");
     if(JSPR_RC_NO_ERROR == response.code && strcmp(response.target, "firmware") == 0)
@@ -1037,7 +1028,6 @@ bool rbResyncServiceConfig(void)
     bool rVal = false;
     bool isInactive = false;
     bool wasActive = false;
-    jsprResponse_t response;
     jsprOperationalState_t state;
 
     if(jsprGetOperationalState())
@@ -1144,7 +1134,6 @@ static bool checkProvisioning(uint16_t topic)
         {
             if(jsprGetMessageProvisioning())
             {
-                jsprResponse_t response;
                 receiveJspr(&response, "messageProvisioning");
                 if(JSPR_RC_NO_ERROR == response.code && strcmp(response.target, "messageProvisioning") == 0)
                 {
@@ -1194,7 +1183,6 @@ bool rbUpdateFirmware (const char * firmwareFile, updateProgressCallback progres
     int kermitRxLength = 0;
     void * contextPtr = context;
 
-    jsprResponse_t response;
     jsprOperationalState_t state;
     jsprFirmwareInfo_t firmware;
     jsprBootInfo_t bootInfo;
