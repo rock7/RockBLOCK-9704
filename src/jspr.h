@@ -106,10 +106,10 @@ typedef struct
 
 typedef enum
 {
-    NONE,
-    LOCAL,
-    REMOTE,
-    INTERNAL
+    SIM_NONE,
+    SIM_LOCAL,
+    SIM_REMOTE,
+    SIM_INTERNAL
 }availableSimInterfaces_t;
 
 typedef struct
@@ -267,6 +267,7 @@ typedef struct
 {
     jsprProvisioning_t provisioning[JSPR_MAX_TOPICS];
     uint8_t topicCount;
+    bool provisioningSet;
 } jsprMessageProvisioning_t;
 
 typedef struct

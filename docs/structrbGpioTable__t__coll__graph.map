@@ -1,5 +1,4 @@
 <map id="rbGpioTable_t" name="rbGpioTable_t">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,123,116,148"/>
-<area shape="rect" id="Node000002" href="$structgpioPin__t.html" title=" " alt="" coords="19,5,102,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="63,44,63,123,58,123,58,44"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,124,108,151"/>
+<area shape="rect" id="node2" href="$structgpioPin__t.html" title=" " alt="" coords="19,5,95,32"/>
 </map>

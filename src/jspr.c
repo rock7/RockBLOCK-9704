@@ -133,8 +133,8 @@ bool receiveJspr(jsprResponse_t * response, const char * expectedTarget)
                 }
             }
         }while(reading == true);
-    return received;
     }
+    return received;
 }
 
 bool waitForJsprMessage(jsprResponse_t * response, const char * expectedTarget, const uint32_t expectedCode, const uint32_t timeoutSeconds)
@@ -420,22 +420,22 @@ bool parseJsprGetSimInterface(char * jsprString, jsprSimInterface_t * simInterfa
                 if(strcmp(iface->valuestring, "none") == 0)
                 {
                     simInterface->ifaceSet = true;
-                    simInterface->iface = NONE;
+                    simInterface->iface = SIM_NONE;
                 }
                 else if (strcmp(iface->valuestring, "local") == 0)
                 {
                     simInterface->ifaceSet = true;
-                    simInterface->iface = LOCAL;
+                    simInterface->iface = SIM_LOCAL;
                 }
                 else if (strcmp(iface->valuestring, "remote") == 0)
                 {
                     simInterface->ifaceSet = true;
-                    simInterface->iface = REMOTE;
+                    simInterface->iface = SIM_REMOTE;
                 }
                 else if (strcmp(iface->valuestring, "internal") == 0)
                 {
                     simInterface->ifaceSet = true;
-                    simInterface->iface = INTERNAL;
+                    simInterface->iface = SIM_INTERNAL;
                 }
             }
             else
@@ -647,7 +647,7 @@ bool parseJsprUnsMessageTerminate(char * jsprString, jsprMessageTerminate_t * me
             cJSON * messageLengthMax = cJSON_GetObjectItem(root, "message_length_max");
             if(cJSON_IsNumber(messageLengthMax))
             {
-                if(messageLengthMax->valueint >= 0 && messageLengthMax->valueint <= 100001)
+                if(messageLengthMax->valueint >= 3 && messageLengthMax->valueint <= 100002)
                 {
                     messageTerminate->messageLengthMax = messageLengthMax->valueint;
                 }
@@ -986,6 +986,7 @@ bool parseJsprGetMessageProvisioning(char * jsprString, jsprMessageProvisioning_
                     }
                 }
             }
+        messageProvisioning->provisioningSet = true;
         parsed = true;
         cJSON_Delete(root);
         }

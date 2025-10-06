@@ -15,13 +15,13 @@
 
 /**
  * This script sends the contents of a selected file via the RB9704, then waits to receive a
- * message (if topic 80 is used this will be the same message that was sent out).
+ * message.
  * 
  * A serial connection will first be attempted on the selected port, if successful a request to
  * que the message will be issued (note: this will fail if the RB9704 is not provisioned
  * for the specified topic and will block until the message is fully transferred, this might
  * take a while if the signal is poor). Once the message is sent the script will display
- * any change in signal and listen for the message to be reflected back, once the message
+ * any change in signal and listen for a message to be sent back, once the message
  * has been received an attempt to shutdown the serial connection will be made.
  * 
  * Requirements:
@@ -150,6 +150,7 @@ int main(int argc, char * argv[])
         if(rbBegin(_serialDevice))
         {
             printf("Successfully started serial session with RB9704\r\n");
+            usleep(100000); //Wait at least 100ms before queueing a message the first time you run rbBegin after boot.
             //Queue and send MO
             size_t size;
             char *message = loadFile(_filepath, &size);
@@ -190,7 +191,7 @@ int main(int argc, char * argv[])
                             oldSignal = newSignal;
                         }
 
-                        usleep(100000);
+                        usleep(10000);
                     }
 
                     //End serial connection

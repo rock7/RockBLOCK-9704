@@ -3,8 +3,6 @@
 //Serial Variables
 int serialConnection;
 enum serialState serialState = CLOSED;
-char* serialPort;
-int serialBaud;
 serialContext context =
 {
     NULL, // serialInit
@@ -12,4 +10,6 @@ serialContext context =
     NULL, // serialRead
     NULL, // serialWrite
     NULL, // serialPeek
+    "",
+    230400
 };

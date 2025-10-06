@@ -8,7 +8,6 @@
 #include <stddef.h>
 #include <errno.h>
 #include <stdlib.h>
-#include <time.h>
 #include "crossplatform.h"
 
 #if defined(_WIN32)
@@ -32,16 +31,32 @@ extern enum serialState serialState;
 
 static uint8_t base64Buffer [BASE64_TEMP_BUFFER];
 static uint8_t crcBuffer [IMT_CRC_SIZE];
-static bool sending = false;
-
-extern imt_t imtMo[MO_QUEUE_SIZE];
-extern imt_t imtMt[MT_QUEUE_SIZE];
 
 static char firmwareVersion [FIRMWARE_VERSION_STRING_LEN];
 
 jsprHwInfo_t hwInfo;
 jsprSimStatus_t simStatus;
 jsprFirmwareInfo_t firmwareInfo;
+jsprMessageProvisioning_t messageProvisioningInfo;
+static jsprResponse_t response;
+
+uint32_t messageLengthAsync = 0;
+uint16_t moQueuedMessages = 0;
+bool Receivelock = false;
+bool moDropped = false;
+bool moSent = false;
+bool mtDropped = false;
+bool mtReceived = false;
+
+static const rbCallbacks_t *rbCallbacks = NULL;
+
+void rbRegisterCallbacks(const rbCallbacks_t *callbacks) 
+{
+    if (callbacks) 
+    {
+        rbCallbacks = callbacks;
+    }
+}
 
 #ifdef RB_GPIO
 bool rbBeginGpio(char * port, const rbGpioTable_t * gpioInfo, const int timeout)
@@ -120,7 +135,6 @@ static const uint16_t CRC16Table[256] =
 static bool setApi(void)
 {
     bool set = false;
-    jsprResponse_t response;
     for(int i = 0; i < 2; i++)
     {
 #ifdef ARDUINO
@@ -156,7 +170,6 @@ static bool setApi(void)
 static bool setSim(void)
 {
     bool set = false;
-    jsprResponse_t response;
     if(jsprGetSimInterface())
     {
         if (receiveJspr(&response, "simConfig"))
@@ -166,9 +179,9 @@ static bool setSim(void)
                 jsprSimInterface_t simInterface;
                 parseJsprGetSimInterface(response.json, &simInterface);
                 
-                if(!simInterface.ifaceSet || simInterface.iface != INTERNAL)
+                if(!simInterface.ifaceSet || simInterface.iface != SIM_INTERNAL)
                 {
-                    putSimInterface(INTERNAL);
+                    putSimInterface(SIM_INTERNAL);
                     receiveJspr(&response, "simConfig");
                     if ((JSPR_RC_NO_ERROR == response.code) &&
                         (strncmp(response.target, "simConfig", JSPR_MAX_TARGET_LENGTH) == 0))
@@ -182,7 +195,7 @@ static bool setSim(void)
                         }
                     }
                 }
-                else if (JSPR_RC_NO_ERROR == response.code && simInterface.iface == INTERNAL)
+                else if (JSPR_RC_NO_ERROR == response.code && simInterface.iface == SIM_INTERNAL)
                 {
                     set = true;
                 }
@@ -195,7 +208,6 @@ static bool setSim(void)
 static bool setState(void)
 {
     bool set = false;
-    jsprResponse_t response;
     if(jsprGetOperationalState())
     {
         if(receiveJspr(&response, "operationalState"))
@@ -240,7 +252,7 @@ static bool setState(void)
     return set;
 }
 
-bool rbBegin(char* port)
+bool rbBegin(const char* port)
 {
     bool began = false;
     if(SERIAL_CONTEXT_SETUP_FUNC(port, RB9704_BAUD))
@@ -313,26 +325,20 @@ static bool appendCrc(uint8_t * buffer, size_t length)
 bool rbSendMessage(const char * data, const size_t length, const int timeout)
 {
     bool sent = false;
-    int8_t queuePosition = -1;
+    bool queued = false;
     if(checkProvisioning(RAW_TOPIC))
     {
+        if (moQueuedMessages > 0)
+        {
+            imtQueueMoRemove();
+            moQueuedMessages--;
+        }
         if(data != NULL && length > 0 && length <= IMT_PAYLOAD_SIZE - IMT_CRC_SIZE)
         {
-            queuePosition = addMoToQueue(RAW_TOPIC, data, length);
-            if(queuePosition >= 0)
+            queued = imtQueueMoAdd(RAW_TOPIC, data, length);
+            if(queued)
             {
-                if(appendCrc(imtMo[queuePosition].buffer, length))
-                {
-                    imtMo[queuePosition].readyToProcess = true;
-                    if(!sending)
-                    {
-                        sent = sendMoFromQueue(timeout);
-                    }
-                }
-                else
-                {
-                    removeMoFromQueue(queuePosition); //failed to apply crc, drop message
-                }
+                sent = sendMoFromQueue(timeout);
             }
         }
     }
@@ -342,26 +348,20 @@ bool rbSendMessage(const char * data, const size_t length, const int timeout)
 bool rbSendMessageCloudloop(cloudloopTopics_t topic, const char * data, const size_t length, const int timeout)
 {
     bool sent = false;
-    int8_t queuePosition = -1;
+    bool queued = false;
     if(checkProvisioning(topic))
     {
+        if (moQueuedMessages > 0)
+        {
+            imtQueueMoRemove();
+            moQueuedMessages--;
+        }
         if(data != NULL && length > 0 && length <= IMT_PAYLOAD_SIZE - IMT_CRC_SIZE)
         {
-            queuePosition = addMoToQueue(topic, data, length);
-            if(queuePosition >= 0)
+            queued = imtQueueMoAdd(topic, data, length);
+            if(queued)
             {
-                if(appendCrc(imtMo[queuePosition].buffer, length))
-                {
-                    imtMo[queuePosition].readyToProcess = true;
-                    if(!sending)
-                    {
-                        sent = sendMoFromQueue(timeout);
-                    }
-                }
-                else
-                {
-                    removeMoFromQueue(queuePosition); //failed to apply crc, drop message
-                }
+                sent = sendMoFromQueue(timeout);
             }
         }
     }
@@ -371,26 +371,20 @@ bool rbSendMessageCloudloop(cloudloopTopics_t topic, const char * data, const si
 bool rbSendMessageAny(uint16_t topic, const char * data, const size_t length, const int timeout)
 {
     bool sent = false;
-    int8_t queuePosition = -1;
+    bool queued = false;
     if(checkProvisioning(topic))
     {
+        if (moQueuedMessages > 0)
+        {
+            imtQueueMoRemove();
+            moQueuedMessages--;
+        }
         if(data != NULL && length > 0 && length <= IMT_PAYLOAD_SIZE - IMT_CRC_SIZE)
         {
-            queuePosition = addMoToQueue(topic, data, length);
-            if(queuePosition >= 0)
+            queued = imtQueueMoAdd(topic, data, length);
+            if(queued >= 0)
             {
-                if(appendCrc(imtMo[queuePosition].buffer, length))
-                {
-                    imtMo[queuePosition].readyToProcess = true;
-                    if(!sending)
-                    {
-                        sent = sendMoFromQueue(timeout);
-                    }
-                }
-                else
-                {
-                    removeMoFromQueue(queuePosition); //failed to apply crc, drop message
-                }
+                sent = sendMoFromQueue(timeout);
             }
         }
     }
@@ -400,96 +394,82 @@ bool rbSendMessageAny(uint16_t topic, const char * data, const size_t length, co
 static bool sendMoFromQueue(const int timeout)
 {
     bool sent = false;
-    time_t start = time(NULL);
-    jsprResponse_t response;
+    bool started = false;
+    unsigned long start = millis();
     int initCrc = 0;
     int segmentStart;
     int segmentLength;
     int encodedBytes;
-    sending = true;
-    for(size_t i = 0; i < MO_QUEUE_SIZE; i++)
+    imt_t * imtMo = imtQueueMoGetFirst();
+
+    if(imtMo != NULL)
     {
-        if(imtMo[i].buffer != NULL && imtMo[i].length > 0 && imtMo[i].topic >= IMT_MIN_TOPIC_ID 
-        && imtMo[i].topic <= IMT_MAX_TOPIC_ID && imtMo[i].readyToProcess)
+        if(appendCrc(imtMo->buffer, imtMo->length))
         {
-            if(jsprPutMessageOriginate(imtMo[i].topic, imtMo[i].length + IMT_CRC_SIZE))
+            if(imtMo->buffer != NULL && imtMo->length > 0 && imtMo->topic >= IMT_MIN_TOPIC_ID 
+            && imtMo->topic <= IMT_MAX_TOPIC_ID)
             {
-                if(receiveJspr(&response, "messageOriginate"))
+                if(jsprPutMessageOriginate(imtMo->topic, imtMo->length + IMT_CRC_SIZE))
                 {
-                    if(JSPR_RC_NO_ERROR == response.code)
+                    if(receiveJspr(&response, "messageOriginate"))
                     {
-                        jsprMessageOriginate_t messageOriginate;
-                        parseJsprPutMessageOriginate(response.json, &messageOriginate);
-                        imtMo[i].id = messageOriginate.messageId;
-                        while (true)
+                        if(JSPR_RC_NO_ERROR == response.code)
                         {
-                            receiveJspr(&response, NULL);
-                            if(JSPR_RC_UNSOLICITED_MESSAGE == response.code && strcmp(response.target, "messageOriginateSegment") == 0)
+                            jsprMessageOriginate_t messageOriginate;
+                            parseJsprPutMessageOriginate(response.json, &messageOriginate);
+                            imtMo->id = messageOriginate.messageId;
+                            started = true;
+                            while (true)
                             {
-                                jsprMessageOriginateSegment_t messageOriginateSegment;
-                                parseJsprUnsMessageOriginateSegment(response.json, &messageOriginateSegment);
-                                if(messageOriginateSegment.messageId == imtMo[i].id && 
-                                messageOriginateSegment.topic == messageOriginate.topic)
+                                rbPoll();
+                                if(moDropped)
                                 {
-                                    segmentStart = messageOriginateSegment.segmentStart;
-                                    segmentLength = messageOriginateSegment.segmentLength;
-                                    encodedBytes = encodeData(imtMo[i].buffer + segmentStart, 
-                                    segmentLength, base64Buffer, BASE64_TEMP_BUFFER);
-                                    if(0 < encodedBytes)
-                                    {
-                                        jsprPutMessageOriginateSegment(&messageOriginate, segmentLength, 
-                                        segmentStart, base64Buffer);
-                                        receiveJspr(&response, "messageOriginateSegment");
-                                        if(JSPR_RC_NO_ERROR != response.code)
-                                        {
-                                            break;
-                                            removeMoFromQueue(i); //drop message
-                                        }
-                                    }
+                                    sent = false;
+                                    moDropped = false;
+                                    break;
                                 }
-                            }
-                            if(JSPR_RC_UNSOLICITED_MESSAGE == response.code && strcmp(response.target, "messageOriginateStatus") == 0)
-                            {
-                                jsprMessageOriginateStatus_t messageOriginateStatus;
-                                if(parseJsprUnsMessageOriginateStatus(response.json, &messageOriginateStatus))
+                                else if (moSent)
                                 {
-                                    if(messageOriginateStatus.finalMoStatus == MO_ACK_RECEIVED_MOS 
-                                    && imtMo[i].id == messageOriginateStatus.messageId)
-                                    {
-                                        sent = true;
-                                        removeMoFromQueue(i);
-                                        break;
-                                    }
+                                    sent = true;
+                                    moSent = false;
+                                    break;
                                 }
-                            }
-                            if (difftime(time(NULL), start) >= timeout)
-                            {
-                                sent = false;
-                                break;
+                                else if ((millis() - start) >= (timeout * 1000UL))
+                                {
+                                    sent = false;
+                                    break;
+                                }
                             }
                         }
                     }
                 }
             }
         }
+
+        if(!started)
+        {
+            imtQueueMoRemove(); //failed one of the checks, drop message
+        }
     }
-    sending = false;
     return sent;
 }
 
 size_t rbReceiveMessage(char ** buffer)
 {
     size_t length = 0;
+
     if(listenForMt())
     {
-        if(buffer != NULL)
+        imt_t * imtMt = imtQueueMtGetFirst();
+        if(buffer != NULL && imtMt != NULL)
         {
-            if(imtMt[0].buffer != NULL && imtMt[0].length > 0 && imtMt[0].topic >= IMT_MIN_TOPIC_ID &&
-                imtMt[0].topic <= IMT_MAX_TOPIC_ID && imtMt[0].readyToProcess) //check head is valid mt
+            if(imtMt->buffer != NULL && imtMt->length > 0 && imtMt->topic >= IMT_MIN_TOPIC_ID &&
+                imtMt->topic <= IMT_MAX_TOPIC_ID) //check head is valid mt
             {
-                length = (imtMt[0].length - IMT_CRC_SIZE);
-                imtMt[0].buffer[length] = '\0'; //remove crc
-                *buffer = imtMt[0].buffer;
+                length = (imtMt->length - IMT_CRC_SIZE);
+                imtMt->buffer[length] = '\0'; //remove crc
+                *buffer = imtMt->buffer;
+                imtMt->readyToProcess = false; //finished processing
             }
         }
     }
@@ -499,18 +479,20 @@ size_t rbReceiveMessage(char ** buffer)
 size_t rbReceiveMessageWithTopic(char ** buffer, uint16_t topic)
 {
     size_t length = 0;
+
     if(listenForMt())
     {
-        if(buffer != NULL)
+        imt_t * imtMt = imtQueueMtGetFirst();
+        if(buffer != NULL && imtMt != NULL)
         {
-            if(imtMt[0].buffer != NULL && imtMt[0].length > 0 && imtMt[0].topic >= IMT_MIN_TOPIC_ID &&
-                imtMt[0].topic <= IMT_MAX_TOPIC_ID && imtMt[0].readyToProcess) //check head is valid mt
+            if(imtMt->buffer != NULL && imtMt->length > 0 && imtMt->topic >= IMT_MIN_TOPIC_ID &&
+                imtMt->topic <= IMT_MAX_TOPIC_ID) //check head is valid mt
             {
-
-                length = (imtMt[0].length - IMT_CRC_SIZE);
-                imtMt[0].buffer[length] = '\0'; //remove crc
-                *buffer = imtMt[0].buffer;
-                topic = imtMt[0].topic;
+                length = (imtMt->length - IMT_CRC_SIZE);
+                imtMt->buffer[length] = '\0'; //remove crc
+                *buffer = imtMt->buffer;
+                topic = imtMt->topic;
+                imtMt->readyToProcess = false; //finished processing
             }
         }
     }
@@ -520,57 +502,27 @@ size_t rbReceiveMessageWithTopic(char ** buffer, uint16_t topic)
 static bool listenForMt(void)
 {
     bool received = false;
-    int8_t queuePosition = -1;
-    jsprResponse_t response;
-    int encodedBytes;
-    int segmentStart;
-    int segmentLength;
-    int messageLength = 0;
-    if(receiveJspr(&response, "messageTerminate"))
+
+    rbPoll();
+    imt_t * imtMt = imtQueueMtGetFirst();
+    if(imtMt != NULL)
     {
-        if(JSPR_RC_UNSOLICITED_MESSAGE == response.code && strcmp(response.target, "messageTerminate") == 0)
+        if(imtMt->readyToProcess)
         {
-            jsprMessageTerminate_t messageTerminate;
-            parseJsprUnsMessageTerminate(response.json, &messageTerminate);
-            queuePosition = addMtToQueue(messageTerminate.topic, messageTerminate.messageId, messageTerminate.messageLengthMax);
-            if (queuePosition >= 0) //returns -1 if que is full, no free spots to store mt
+            while(true)
             {
-                imtMt[queuePosition].readyToProcess = true;
-                while(true)
+                rbPoll();
+                if(mtDropped)
                 {
-                    receiveJspr(&response, NULL);
-                    if(JSPR_RC_UNSOLICITED_MESSAGE == response.code && strcmp(response.target, "messageTerminateSegment") == 0)
-                    {
-                        jsprMessageTerminateSegment_t messageTerminateSegment;
-                        parseJsprUnsMessageTerminateSegment(response.json, &messageTerminateSegment);
-                        segmentStart = messageTerminateSegment.segmentStart;
-                        segmentLength = messageTerminateSegment.segmentLength;
-                        if(imtMt[queuePosition].id == messageTerminateSegment.messageId)
-                        {
-                            encodedBytes = decodeData(messageTerminateSegment.data, messageTerminateSegment.dataLength, 
-                            imtMt[queuePosition].buffer + segmentStart, segmentLength);
-                            messageLength += segmentLength;
-                            if(0 > encodedBytes)
-                            {
-                                removeMtFromQueue(queuePosition);
-                                break;
-                            }
-                        }
-                    }
-                    if(JSPR_RC_UNSOLICITED_MESSAGE == response.code && strcmp(response.target, "messageTerminateStatus") == 0)
-                    {
-                        jsprMessageTerminateStatus_t messageTerminateStatus;
-                        if(parseJsprUnsMessageTerminateStatus(response.json, &messageTerminateStatus))
-                        {
-                            if(messageTerminateStatus.finalMtStatus == COMPLETE 
-                            && imtMt[queuePosition].id == messageTerminateStatus.messageId)
-                            {
-                                imtMt[queuePosition].length = messageLength;
-                                received = true;
-                                break;
-                            }
-                        }
-                    }
+                    received = false;
+                    mtDropped = false;
+                    break;
+                }
+                else if(mtReceived)
+                {
+                    received = true;
+                    mtReceived = false;
+                    break;
                 }
             }
         }
@@ -578,10 +530,346 @@ static bool listenForMt(void)
     return received;
 }
 
+static bool sendMoFromQueueAsync(void)
+{
+    bool started = false;
+    imt_t * imtMo = imtQueueMoGetFirst();
+
+    if(imtMo != NULL)
+    {
+        if(appendCrc(imtMo->buffer, imtMo->length))
+        {
+            if(imtMo->buffer != NULL && imtMo->length > 0 && imtMo->topic >= IMT_MIN_TOPIC_ID 
+            && imtMo->topic <= IMT_MAX_TOPIC_ID)
+            {
+                if(jsprPutMessageOriginate(imtMo->topic, imtMo->length + IMT_CRC_SIZE))
+                {
+                    if(receiveJspr(&response, "messageOriginate"))
+                    {
+                        if(JSPR_RC_NO_ERROR == response.code)
+                        {
+                            jsprMessageOriginate_t messageOriginate;
+                            parseJsprPutMessageOriginate(response.json, &messageOriginate);
+                            imtMo->id = messageOriginate.messageId;
+                            started = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        if(!started)
+        {
+            imtQueueMoRemove(); //failed one of the checks, drop message
+        }
+    }
+    return started;
+}
+
+bool rbSendMessageAsync(uint16_t topic, const char * data, const size_t length)
+{
+    bool queuedToSend = false;
+    bool queued = false;
+    if(checkProvisioning(topic))
+    {
+        if(data != NULL && length > 0 && length <= IMT_PAYLOAD_SIZE - IMT_CRC_SIZE)
+        {
+            queued = imtQueueMoAdd(topic, data, length);
+            if(queued)
+            {
+                if (moQueuedMessages == 0)
+                {
+                    queuedToSend = sendMoFromQueueAsync();
+                }
+                else
+                {
+                    queuedToSend = true;
+                }
+                moQueuedMessages += 1;
+            }
+        }
+    }
+    return queuedToSend;
+}
+
+size_t rbReceiveMessageAsync(char ** buffer)
+{
+    size_t length = 0;
+    imt_t * imtMt = imtQueueMtGetFirst();
+
+    if(imtMt != NULL)
+    {
+        if(imtMt->ready)
+        {
+            if(buffer != NULL)
+            {
+                if(imtMt->buffer != NULL && imtMt->length > 0 && imtMt->topic >= IMT_MIN_TOPIC_ID &&
+                    imtMt->topic <= IMT_MAX_TOPIC_ID && imtMt->ready) //check head is valid mt
+                {
+                    length = (imtMt->length - IMT_CRC_SIZE);
+                    imtMt->buffer[length] = '\0'; //remove crc
+                    *buffer = imtMt->buffer;
+                    imtMt->readyToProcess = false; //finished processing
+                }
+            }
+        }
+    }
+    return length;
+}
+
+void rbReceiveLockAsync(void)
+{
+    imtQueueMtLock(true);
+}
+
+void rbReceiveUnlockAsync(void)
+{
+    imtQueueMtLock(false);
+}
+
+void rbSendLockAsync(void)
+{
+    imtQueueMoLock(true);
+}
+
+void rbSendUnlockAsync(void)
+{
+    imtQueueMoLock(false);
+}
+
+bool rbAcknowledgeReceiveHeadAsync(void)
+{
+    bool acknowledged = false;
+    if(imtQueueMtRemove())
+    {
+        acknowledged = true;
+    }
+    return acknowledged;
+}
+
+static bool checkMoQueue(void)
+{
+    bool success = false;
+    if(moQueuedMessages > 0) //check if any more messages are queued
+    {
+        if(sendMoFromQueueAsync()) //send the next message
+        {
+            success = true;
+        }
+    }
+    return success;
+}
+
+void rbPoll(void)
+{
+    int segmentStart;
+    int segmentStartMt;
+    int segmentLength;
+    int segmentLengthMt;
+    int encodedBytes;
+    int decodedBytes;
+    bool mtQueued;
+    imt_t * imtMo = imtQueueMoGetFirst();
+    if(context.serialPeek() > 0)
+    {
+        if(receiveJspr(&response, NULL))
+        {
+            //MO JSPR
+            if(imtMo != NULL)
+            {
+                if(JSPR_RC_UNSOLICITED_MESSAGE == response.code && strcmp(response.target, "messageOriginateSegment") == 0)
+                {
+                    jsprMessageOriginateSegment_t messageOriginateSegment;
+                    parseJsprUnsMessageOriginateSegment(response.json, &messageOriginateSegment);
+                    if(messageOriginateSegment.messageId == imtMo->id && 
+                    messageOriginateSegment.topic == imtMo->topic)
+                    {
+                        segmentStart = messageOriginateSegment.segmentStart;
+                        segmentLength = messageOriginateSegment.segmentLength;
+                        encodedBytes = encodeData(imtMo->buffer + segmentStart, 
+                        segmentLength, base64Buffer, BASE64_TEMP_BUFFER);
+                        if(0 < encodedBytes)
+                        {
+                            jsprMessageOriginate_t messageOriginate;
+                            messageOriginate.messageId = imtMo->id;
+                            messageOriginate.topic = imtMo->topic;
+                            jsprPutMessageOriginateSegment(&messageOriginate, segmentLength, 
+                            segmentStart, base64Buffer);
+                        }
+                    }
+                }
+                if(JSPR_RC_NO_ERROR != response.code && JSPR_RC_UNSOLICITED_MESSAGE != response.code && strcmp(response.target, "messageOriginateSegment") == 0)
+                {
+                    jsprMessageOriginateSegment_t messageOriginateSegment;
+                    if(parseJsprUnsMessageOriginateSegment(response.json, &messageOriginateSegment))
+                    {
+                        if(imtMo->id == messageOriginateSegment.messageId)
+                        {
+                    
+                            if(rbCallbacks && rbCallbacks->moMessageComplete)
+                            {
+                                rbCallbacks->moMessageComplete(imtMo->id, RB_MSG_STATUS_FAIL);
+                            }
+                            else
+                            {
+                                moDropped = true;
+                            }
+                            imtQueueMoRemove(); //drop message
+                            moQueuedMessages -= 1;
+                            checkMoQueue();
+                        }
+                    }
+                }
+                if(JSPR_RC_UNSOLICITED_MESSAGE == response.code && strcmp(response.target, "messageOriginateStatus") == 0)
+                {
+                    jsprMessageOriginateStatus_t messageOriginateStatus;
+                    if(parseJsprUnsMessageOriginateStatus(response.json, &messageOriginateStatus))
+                    {
+                        if(imtMo->id == messageOriginateStatus.messageId)
+                        {
+                            if(messageOriginateStatus.finalMoStatus == MO_ACK_RECEIVED_MOS)
+                            {
+                                if(rbCallbacks && rbCallbacks->moMessageComplete)
+                                {
+                                    rbCallbacks->moMessageComplete(imtMo->id, RB_MSG_STATUS_OK);
+                                }
+                                else
+                                {
+                                    moSent = true;
+                                }
+                            }
+                            else
+                            {
+                                if(rbCallbacks && rbCallbacks->moMessageComplete)
+                                {
+                                    rbCallbacks->moMessageComplete(imtMo->id, RB_MSG_STATUS_FAIL);
+                                }
+                                else
+                                {
+                                    moDropped = true;
+                                }
+                            }
+                            imtQueueMoRemove();
+                            moQueuedMessages -= 1;
+                            checkMoQueue();
+                        }
+                    }
+                }
+            }
+            //MT JSPR
+            if(JSPR_RC_UNSOLICITED_MESSAGE == response.code && strcmp(response.target, "messageTerminate") == 0)
+            {
+                jsprMessageTerminate_t messageTerminate;
+                parseJsprUnsMessageTerminate(response.json, &messageTerminate);
+                mtQueued = imtQueueMtAdd(messageTerminate.topic, messageTerminate.messageId, messageTerminate.messageLengthMax);
+                imt_t * imtMt = imtQueueMtGetLast();
+                if (mtQueued) //returns -1 if que is full, no free spots to store mt
+                {
+                    if(imtMt != NULL)
+                    {
+                        imtMt->readyToProcess = true;
+                    }
+                }
+                else
+                {
+                    if(rbCallbacks && rbCallbacks->mtMessageComplete)
+                    {
+                        rbCallbacks->mtMessageComplete(messageTerminate.messageId, RB_MSG_STATUS_FAIL);
+                    }
+                }
+            }
+            if(JSPR_RC_UNSOLICITED_MESSAGE == response.code && strcmp(response.target, "messageTerminateSegment") == 0)
+            {
+                imt_t * imtMt = imtQueueMtGetLast();
+                if(imtMt != NULL)
+                {
+                    if(imtMt->readyToProcess)
+                    {
+                        jsprMessageTerminateSegment_t messageTerminateSegment;
+                        parseJsprUnsMessageTerminateSegment(response.json, &messageTerminateSegment);
+                        segmentStartMt = messageTerminateSegment.segmentStart;
+                        segmentLengthMt = messageTerminateSegment.segmentLength;
+                        if(imtMt->id == messageTerminateSegment.messageId)
+                        {
+                            decodedBytes = decodeData(messageTerminateSegment.data, messageTerminateSegment.dataLength, 
+                            imtMt->buffer + segmentStartMt, segmentLengthMt);
+                            messageLengthAsync += segmentLengthMt;
+                            if(0 > decodedBytes)
+                            {
+                                if(rbCallbacks && rbCallbacks->mtMessageComplete)
+                                {
+                                    rbCallbacks->mtMessageComplete(imtMt->id, RB_MSG_STATUS_FAIL);
+                                }
+                                else
+                                {
+                                    mtDropped = true;
+                                }
+                                imtQueueMtRemove();
+                            }
+                        }
+                    }
+                }
+            }
+            if(JSPR_RC_UNSOLICITED_MESSAGE == response.code && strcmp(response.target, "messageTerminateStatus") == 0)
+            {
+                imt_t * imtMt = imtQueueMtGetLast();
+                if(imtMt != NULL)
+                {
+                    if(imtMt->readyToProcess)
+                    {
+                        jsprMessageTerminateStatus_t messageTerminateStatus;
+                        if(parseJsprUnsMessageTerminateStatus(response.json, &messageTerminateStatus))
+                        {
+                            if(imtMt->id == messageTerminateStatus.messageId)
+                            {
+                                if(messageTerminateStatus.finalMtStatus == COMPLETE)
+                                {
+                                    imtMt->length = messageLengthAsync;
+                                    messageLengthAsync = 0;
+                                    imtMt->ready = true;
+                                    if(rbCallbacks && rbCallbacks->mtMessageComplete)
+                                    {
+                                        rbCallbacks->mtMessageComplete(imtMt->id, RB_MSG_STATUS_OK);
+                                    }
+                                    else
+                                    {
+                                        mtReceived = true;
+                                    }
+                                }
+                                else
+                                {
+                                    if(rbCallbacks && rbCallbacks->mtMessageComplete)
+                                    {
+                                        rbCallbacks->mtMessageComplete(imtMt->id, RB_MSG_STATUS_FAIL);
+                                    }
+                                    else
+                                    {
+                                        mtDropped = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if(JSPR_RC_UNSOLICITED_MESSAGE == response.code && strcmp(response.target, "constellationState") == 0)
+            {
+                jsprConstellationState_t constellationState;
+                if(parseJsprGetSignal(response.json, &constellationState))
+                {
+                    if(rbCallbacks && rbCallbacks->constellationState)
+                    {
+                        rbCallbacks->constellationState(&constellationState);
+                    }
+                }
+            }
+        }
+    }
+}
+
 int8_t rbGetSignal(void)
 {
     int8_t signal = -1;
-    jsprResponse_t response;
     jsprGetSignal();
     waitForJsprMessage(&response, "constellationState", JSPR_RC_NO_ERROR, 1);
     if(JSPR_RC_NO_ERROR == response.code && strcmp(response.target, "constellationState") == 0)
@@ -601,7 +889,6 @@ int8_t rbGetSignal(void)
 static bool getHwInfo(jsprHwInfo_t * hwInfo)
 {
     bool populated = false;
-    jsprResponse_t response;
     jsprGetHwInfo();
     receiveJspr(&response, "hwInfo");
     if(JSPR_RC_NO_ERROR == response.code && strcmp(response.target, "hwInfo") == 0)
@@ -658,7 +945,6 @@ int8_t rbGetBoardTemp(void)
 static bool getSimStatus(jsprSimStatus_t * simStatus)
 {
     bool populated = false;
-    jsprResponse_t response;
     jsprGetSimStatus();
     receiveJspr(&response, "simStatus");
     if(JSPR_RC_NO_ERROR == response.code && strcmp(response.target, "simStatus") == 0)
@@ -704,7 +990,6 @@ char * rbGetIccid(void)
 static bool getFirmwareInfo(jsprFirmwareInfo_t * fwInfo)
 {
     bool populated = false;
-    jsprResponse_t response;
     jsprGetFirmware(JSPR_BOOT_SOURCE_PRIMARY);
     receiveJspr(&response, "firmware");
     if(JSPR_RC_NO_ERROR == response.code && strcmp(response.target, "firmware") == 0)
@@ -738,6 +1023,64 @@ char * rbGetFirmwareVersion(void)
     return firmwareVersion;
 }
 
+bool rbResyncServiceConfig(void)
+{
+    bool rVal = false;
+    bool isInactive = false;
+    bool wasActive = false;
+    jsprOperationalState_t state;
+
+    if(jsprGetOperationalState())
+    {
+        // Wait for 200 Operational State
+        if (waitForJsprMessage(&response, "operationalState", JSPR_RC_NO_ERROR, 1) == true)
+        {
+            parseJsprGetOperationalState(response.json, &state);
+            if (state.operationalState == INACTIVE)
+            {
+                isInactive = true;
+            }
+            else if (state.operationalState == ACTIVE)
+            {
+                wasActive = true;
+                putOperationalState(INACTIVE);
+                // Look for 299 Operational State, this indicates it is actually inactive
+                if (waitForJsprMessage(&response, "operationalState", JSPR_RC_UNSOLICITED_MESSAGE, 1) == true)
+                {
+                    parseJsprGetOperationalState(response.json, &state);
+                    isInactive = state.operationalState == INACTIVE;
+                }
+            }
+        }
+    }
+
+    if (isInactive == true)
+    {
+        if (jsprPutServiceConfig(true) == true)
+        {
+            if (waitForJsprMessage(&response, "serviceConfig", JSPR_RC_NO_ERROR, 1) == true)
+            {
+                if (wasActive != true)
+                {
+                    rVal = true;
+                }
+                else
+                {
+                    putOperationalState(ACTIVE);
+                    // Look for 299 Operational State, this indicates it is actually active again
+                    if (waitForJsprMessage(&response, "operationalState", JSPR_RC_UNSOLICITED_MESSAGE, 1) == true)
+                    {
+                        parseJsprGetOperationalState(response.json, &state);
+                        rVal = (state.operationalState == ACTIVE);
+                    }
+                }
+            }
+        }
+    }
+
+    return rVal;
+}
+
 static uint16_t calculateCrc(const uint8_t * buffer, const size_t bufferLength, const uint16_t initialCRC)
 {
     uint16_t crc = (uint16_t)initialCRC;
@@ -769,26 +1112,51 @@ bool rbEnd(void)
 static bool checkProvisioning(uint16_t topic)
 {
     bool provisioned = false;
+    int count = 0;
 
     if(topic >= IMT_MIN_TOPIC_ID && topic <= IMT_MAX_TOPIC_ID)
     {
-        if(jsprGetMessageProvisioning())
+        if (messageProvisioningInfo.provisioningSet)
         {
-            jsprResponse_t response;
-            receiveJspr(&response, "messageProvisioning");
-            if(JSPR_RC_NO_ERROR == response.code && strcmp(response.target, "messageProvisioning") == 0)
+            count = messageProvisioningInfo.topicCount;
+            if(count > 0)
             {
-                jsprMessageProvisioning_t messageProvisioning;
-                if(parseJsprGetMessageProvisioning(response.json, &messageProvisioning))
+                for (int i = 0; i < count && i < JSPR_MAX_TOPICS; i++)
                 {
-                    int count = messageProvisioning.topicCount;
-                    if(count > 0)
+                    if(messageProvisioningInfo.provisioning[i].topicId == topic)
                     {
-                        for (int i = 0; i < count && i < JSPR_MAX_TOPICS; i++)
+                        provisioned = true;
+                    }
+                }
+            }
+        }
+        else
+        {
+            if(jsprGetMessageProvisioning())
+            {
+                receiveJspr(&response, "messageProvisioning");
+                if(JSPR_RC_NO_ERROR == response.code && strcmp(response.target, "messageProvisioning") == 0)
+                {
+                    jsprMessageProvisioning_t messageProvisioning;
+                    if(parseJsprGetMessageProvisioning(response.json, &messageProvisioning))
+                    {
+                        if(messageProvisioning.provisioningSet)
                         {
-                            if(messageProvisioning.provisioning[i].topicId == topic)
+                            if(rbCallbacks && rbCallbacks->messageProvisioning)
                             {
-                                provisioned = true;
+                                rbCallbacks->messageProvisioning(&messageProvisioning);
+                            }
+                        }
+                        messageProvisioningInfo = messageProvisioning;
+                        count = messageProvisioning.topicCount;
+                        if(count > 0)
+                        {
+                            for (int i = 0; i < count && i < JSPR_MAX_TOPICS; i++)
+                            {
+                                if(messageProvisioning.provisioning[i].topicId == topic)
+                                {
+                                    provisioned = true;
+                                }
                             }
                         }
                     }
@@ -815,7 +1183,6 @@ bool rbUpdateFirmware (const char * firmwareFile, updateProgressCallback progres
     int kermitRxLength = 0;
     void * contextPtr = context;
 
-    jsprResponse_t response;
     jsprOperationalState_t state;
     jsprFirmwareInfo_t firmware;
     jsprBootInfo_t bootInfo;

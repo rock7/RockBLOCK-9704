@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['rb9704_5fbaud_0',['RB9704_BAUD',['../rockblock__9704_8h.html#af79a63831651dc127235016bce24687d',1,'rockblock_9704.h']]],
-  ['rx_5fbuffer_5fsize_1',['RX_BUFFER_SIZE',['../jspr_8h.html#a739a2a1a0047c98ac1b18ecd25dac092',1,'jspr.h']]]
+  ['serial_5fcontext_5fsetup_5ffunc_793',['SERIAL_CONTEXT_SETUP_FUNC',['../rockblock__9704_8h.html#a9f747b119512888d3b90759ada2244ca',1,'rockblock_9704.h']]],
+  ['serial_5fport_5flength_794',['SERIAL_PORT_LENGTH',['../serial_8h.html#a07d44f7cf8161150c5abf031c59b25c6',1,'serial.h']]]
 ];

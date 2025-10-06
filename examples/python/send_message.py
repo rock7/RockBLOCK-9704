@@ -29,7 +29,7 @@ if __name__ == '__main__':
         connected = rb.begin(args.device)
 
         if connected:
-
+            sleep(0.1); #Wait at least 100ms before queueing a message the first time you run rbBegin after boot.
             # Get RockBlock information
             print("Board temperature: \t", rb.get_board_temp())
             print("Hardware version: \t", rb.get_hardware_version())

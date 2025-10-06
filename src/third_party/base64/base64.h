@@ -1,3 +1,4 @@
+#ifndef ARDUINO_ARCH_MBED
 /**
  * \file base64.h
  *
@@ -80,3 +81,4 @@ int mbedtls_base64_decode( unsigned char *dst, size_t dlen, size_t *olen,
 #endif
 
 #endif /* base64.h */
+#endif

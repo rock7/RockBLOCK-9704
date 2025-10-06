@@ -61,19 +61,19 @@ bool putSimInterface(const availableSimInterfaces_t iface)
 
     switch (iface)
     {
-        case NONE:
+        case SIM_NONE:
             rVal =  jsprPutSimInterface("none");
         break;
 
-        case LOCAL:
+        case SIM_LOCAL:
             rVal =  jsprPutSimInterface("local");
         break;
 
-        case REMOTE:
+        case SIM_REMOTE:
             rVal =  jsprPutSimInterface("remote");
         break;
 
-        case INTERNAL:
+        case SIM_INTERNAL:
         // Fall through
         default:
             rVal =  jsprPutSimInterface("internal");
@@ -210,6 +210,10 @@ bool jsprPutMessageOriginate(const uint16_t topic, const size_t length)
     if (rc > 0)
     {
         messageReference++;
+        if(messageReference > 100)
+        {
+            messageReference = 1;
+        }
         const size_t putMessageOriginateStrLen = (const size_t)rc;
         if (context.serialWrite != NULL)
         {
@@ -369,6 +373,27 @@ bool jsprGetSimStatus(void)
         if(sendJspr(getSimStatusStr, JSPR_GET_SIM_STATUS_LEN) == JSPR_GET_SIM_STATUS_LEN)
         {
             rVal = true;
+        }
+    }
+    return rVal;
+}
+
+bool jsprPutServiceConfig(const bool resync)
+{
+    bool rVal = false;
+    int rc = 0;
+
+    rc = snprintf(jsprCommandBuffer, sizeof(jsprCommandBuffer), "PUT serviceConfig {\"resync\": %s}\r", resync ? "true" : "false");
+
+    if (rc > 0)
+    {
+        const size_t putServiceConfigLen = (const size_t)rc;
+        if (context.serialWrite != NULL)
+        {
+            if(sendJspr(jsprCommandBuffer, putServiceConfigLen) == putServiceConfigLen)
+            {
+                rVal = true;
+            }
         }
     }
     return rVal;

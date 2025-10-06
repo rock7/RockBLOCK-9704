@@ -152,6 +152,7 @@ int main(int argc, char * argv[])
         if(rbBegin(_serialDevice))
         {
             printf("Current Firmware Version: %s\n", rbGetFirmwareVersion());
+            usleep(100000); //Wait at least 100ms before queueing a message the first time you run rbBegin after boot.
 
             if (rbUpdateFirmware (_firmwareFile, progressCallback, NULL) == true)
             {
