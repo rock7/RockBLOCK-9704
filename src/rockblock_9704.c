@@ -331,7 +331,6 @@ bool rbSendMessage(const char * data, const size_t length, const int timeout)
         if (moQueuedMessages > 0)
         {
             imtQueueMoRemove();
-            moQueuedMessages--;
         }
         if(data != NULL && length > 0 && length <= IMT_PAYLOAD_SIZE - IMT_CRC_SIZE)
         {
@@ -354,7 +353,6 @@ bool rbSendMessageCloudloop(cloudloopTopics_t topic, const char * data, const si
         if (moQueuedMessages > 0)
         {
             imtQueueMoRemove();
-            moQueuedMessages--;
         }
         if(data != NULL && length > 0 && length <= IMT_PAYLOAD_SIZE - IMT_CRC_SIZE)
         {
@@ -377,7 +375,6 @@ bool rbSendMessageAny(uint16_t topic, const char * data, const size_t length, co
         if (moQueuedMessages > 0)
         {
             imtQueueMoRemove();
-            moQueuedMessages--;
         }
         if(data != NULL && length > 0 && length <= IMT_PAYLOAD_SIZE - IMT_CRC_SIZE)
         {
@@ -715,7 +712,6 @@ void rbPoll(void)
                                 moDropped = true;
                             }
                             imtQueueMoRemove(); //drop message
-                            moQueuedMessages -= 1;
                             checkMoQueue();
                         }
                     }
@@ -750,7 +746,6 @@ void rbPoll(void)
                                 }
                             }
                             imtQueueMoRemove();
-                            moQueuedMessages -= 1;
                             checkMoQueue();
                         }
                     }
