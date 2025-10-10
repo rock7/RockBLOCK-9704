@@ -75,7 +75,6 @@ set(HARDWARE_INFO_BIN hardwareInfo)
 set(CUSTOM_MESSAGE_BIN customMessage)
 set(CUSTOM_FILE_BIN customFileMessage)
 set(FW_UPDATE_BIN firmwareUpdate)
-set(GPIO_FILE_BIN gpioPiHat)
 set(GPIO_CUSTOM_BIN gpioCustom)
 set(ASYNC_SEND_RECEIVE_BIN asyncSendReceive)
 
@@ -129,9 +128,6 @@ target_include_directories(${ASYNC_SEND_RECEIVE_BIN} PRIVATE ${SRC_DIR})
 
 
 if (GPIO_ENABLED)
-    add_executable(${GPIO_FILE_BIN} ${EXAMPLE_DIR}/gpioPiHat.c)
-    target_include_directories(${GPIO_FILE_BIN} PRIVATE ${SRC_DIR})
-    target_link_libraries(${GPIO_FILE_BIN} PRIVATE ${IRIDIUM_IMT_LIB})
     add_executable(${GPIO_CUSTOM_BIN} ${EXAMPLE_DIR}/gpioCustom.c)
     target_include_directories(${GPIO_CUSTOM_BIN} PRIVATE ${SRC_DIR})
     target_link_libraries(${GPIO_CUSTOM_BIN} PRIVATE ${IRIDIUM_IMT_LIB})
