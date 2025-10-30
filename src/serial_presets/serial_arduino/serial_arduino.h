@@ -1,6 +1,9 @@
 #ifndef SERIAL_ARDUINO_H
 #define SERIAL_ARDUINO_H
 
+#include <Stream.h>
+#include "Arduino.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -54,7 +57,7 @@ int peekArduino(void);
  * @param baud The baud rate for communication (e.g., 9600, 115200), should be 230400 for JSPR.
  * @return true if the context was set successfully, false otherwise.
  */
-bool setContextArduino(const char * port, const uint32_t baud);
+bool setContextArduino(Stream &port, const uint32_t baud);
 
 #ifdef __cplusplus
 }

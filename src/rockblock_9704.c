@@ -1,3 +1,5 @@
+#ifndef ARDUINO
+
 #include "rockblock_9704.h"
 #include "jspr_command.h"
 #include "serial.h"
@@ -1326,4 +1328,6 @@ bool rbUpdateFirmware (const char * firmwareFile, updateProgressCallback progres
 
     return firmwareUpdated;
 }
+#endif
+
 #endif

@@ -1,6 +1,14 @@
 #ifndef ROCKBLOCK_9704_H
 #define ROCKBLOCK_9704_H
 
+#if defined(__linux__) || defined(__APPLE__)
+    #include "serial_presets/serial_linux/serial_linux.h"
+#elif defined(_WIN32)
+    #include "serial_presets/serial_windows/serial_windows.h"
+#elif ARDUINO
+    #include "serial_presets/serial_arduino/serial_arduino.h"
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -173,7 +181,11 @@ typedef enum
  * @param port pointer to port name.
  * @return bool depicting success or failure.
  */
+#ifdef ARDUINO
+bool rbBegin(Stream &port);
+#else
 bool rbBegin(const char * port);
+#endif
 
 /**
  * @brief Uninitialise/close the the serial connection.
