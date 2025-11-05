@@ -1,8 +1,6 @@
 #ifdef ARDUINO
 #include "serial_arduino.h"
 #include "../../serial.h"
-#include <Stream.h>
-#include "Arduino.h"
 
 //Serial Variables
 extern int serialConnection;
@@ -38,35 +36,11 @@ int peekArduino(void)
     return (int)serialPortArduino.available();
 }
 
-bool setContextArduino(const char * port, const uint32_t baud)
+bool setContextArduino(Stream &port, const uint32_t baud)
 {
-    strncpy(context.serialPort, port, SERIAL_PORT_LENGTH);
-    if(strcmp(context.serialPort, "Serial1") == 0)
-    {
-        serialPortArduino = Serial1;
-    }
-#if defined(AVR_MEGA2560) || defined(ARDUINO_SAM_DUE) || defined(ARDUINO_GIGA)
-    else if(strcmp(context.serialPort, "Serial2") == 0)
-    {
-        serialPortArduino = Serial2;
-    }
-    else if(strcmp(context.serialPort, "Serial3") == 0)
-    {
-        serialPortArduino = Serial3;
-    }
-#if defined(ARDUINO_GIGA)
-    else if(strcmp(context.serialPort, "Serial4") == 0)
-    {
-        serialPortArduino = Serial4;
-    }
-#endif
-#endif
-    else
-    {
-        serialPortArduino = Serial1;
-    }
+bool set = false;
 
-    bool set = false;
+    serialPortArduino = port;
     context.serialBaud = baud;
     context.serialInit = openPortArduino;
     context.serialDeInit = closePortArduino;

@@ -16,14 +16,6 @@ extern "C" {
 #include <unistd.h>
 #endif
 
-#if defined(__linux__) || defined(__APPLE__)
-    #include "serial_presets/serial_linux/serial_linux.h"
-#elif defined(_WIN32)
-    #include "serial_presets/serial_windows/serial_windows.h"
-#elif ARDUINO
-    #include "serial_presets/serial_arduino/serial_arduino.h"
-#endif
-
 #define SERIAL_PORT_LENGTH 50U // Should be more than enough, don't want to use PATH_MAX as it will be wasteful
 
 // Callback functions which will link to the serial interface

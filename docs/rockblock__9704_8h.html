@@ -79,7 +79,8 @@ $(function() {
 
 <p>The RockBLOCK 9704 library. Maintained by Ground Control (<a href="https://www.groundcontrol.com/">https://www.groundcontrol.com/</a>) and license under the MIT License.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="serial_8h_source.html">serial.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;serial_presets/serial_linux/serial_linux.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="serial_8h_source.html">serial.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="jspr_8h_source.html">jspr.h</a>&quot;</code><br />
 <code>#include &lt;stdio.h&gt;</code><br />
 <code>#include &lt;stdint.h&gt;</code><br />
@@ -244,15 +245,15 @@ Functions</h2></td></tr>
 <tr class="memitem:a7ddd0b60dbdc2cb7e5b8ea5b301463c0"><td class="memItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8h.html#a7ddd0b60dbdc2cb7e5b8ea5b301463c0">decodeData</a> (const char *srcBuffer, const size_t srcLength, char *destBuffer, const size_t destLength)</td></tr>
 <tr class="memdesc:a7ddd0b60dbdc2cb7e5b8ea5b301463c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decode base64 data back into binary.  <a href="rockblock__9704_8h.html#a7ddd0b60dbdc2cb7e5b8ea5b301463c0">More...</a><br /></td></tr>
 <tr class="separator:a7ddd0b60dbdc2cb7e5b8ea5b301463c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff6d96e3fefc29b6a58e89640b959eb2"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8h.html#aff6d96e3fefc29b6a58e89640b959eb2">setApi</a> (void)</td></tr>
-<tr class="memdesc:aff6d96e3fefc29b6a58e89640b959eb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the modem API version.  <a href="rockblock__9704_8h.html#aff6d96e3fefc29b6a58e89640b959eb2">More...</a><br /></td></tr>
-<tr class="separator:aff6d96e3fefc29b6a58e89640b959eb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c24945fe471ab4b8d0658ff7142d156"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8h.html#a5c24945fe471ab4b8d0658ff7142d156">setSim</a> (void)</td></tr>
-<tr class="memdesc:a5c24945fe471ab4b8d0658ff7142d156"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise SIM card configuration.  <a href="rockblock__9704_8h.html#a5c24945fe471ab4b8d0658ff7142d156">More...</a><br /></td></tr>
-<tr class="separator:a5c24945fe471ab4b8d0658ff7142d156"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a37371022bcd960750108be87d2da8cad"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8h.html#a37371022bcd960750108be87d2da8cad">setState</a> (void)</td></tr>
-<tr class="memdesc:a37371022bcd960750108be87d2da8cad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set operational state for the modem.  <a href="rockblock__9704_8h.html#a37371022bcd960750108be87d2da8cad">More...</a><br /></td></tr>
-<tr class="separator:a37371022bcd960750108be87d2da8cad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6e4440a13f39579a198dc61b41c394d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8h.html#af6e4440a13f39579a198dc61b41c394d">setApi</a> (void)</td></tr>
+<tr class="memdesc:af6e4440a13f39579a198dc61b41c394d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the modem API version.  <a href="rockblock__9704_8h.html#af6e4440a13f39579a198dc61b41c394d">More...</a><br /></td></tr>
+<tr class="separator:af6e4440a13f39579a198dc61b41c394d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d28e5c13a6130318b74a4be7146d6db"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8h.html#a8d28e5c13a6130318b74a4be7146d6db">setSim</a> (void)</td></tr>
+<tr class="memdesc:a8d28e5c13a6130318b74a4be7146d6db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise SIM card configuration.  <a href="rockblock__9704_8h.html#a8d28e5c13a6130318b74a4be7146d6db">More...</a><br /></td></tr>
+<tr class="separator:a8d28e5c13a6130318b74a4be7146d6db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab40f63b8b31b53284af875375d1b0520"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8h.html#ab40f63b8b31b53284af875375d1b0520">setState</a> (void)</td></tr>
+<tr class="memdesc:ab40f63b8b31b53284af875375d1b0520"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set operational state for the modem.  <a href="rockblock__9704_8h.html#ab40f63b8b31b53284af875375d1b0520">More...</a><br /></td></tr>
+<tr class="separator:ab40f63b8b31b53284af875375d1b0520"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4383e5f9960cc720f581cd18a765bb42"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rockblock__9704_8h.html#a4383e5f9960cc720f581cd18a765bb42">checkProvisioning</a> (uint16_t topic)</td></tr>
 <tr class="memdesc:a4383e5f9960cc720f581cd18a765bb42"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the given topic is provisioned.  <a href="rockblock__9704_8h.html#a4383e5f9960cc720f581cd18a765bb42">More...</a><br /></td></tr>
 <tr class="separator:a4383e5f9960cc720f581cd18a765bb42"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1737,28 +1738,20 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aff6d96e3fefc29b6a58e89640b959eb2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aff6d96e3fefc29b6a58e89640b959eb2">&#9670;&nbsp;</a></span>setApi()</h2>
+<a id="af6e4440a13f39579a198dc61b41c394d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af6e4440a13f39579a198dc61b41c394d">&#9670;&nbsp;</a></span>setApi()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static bool setApi </td>
+          <td class="memname">bool setApi </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set the modem API version. </p>
@@ -1766,28 +1759,20 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a5c24945fe471ab4b8d0658ff7142d156"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5c24945fe471ab4b8d0658ff7142d156">&#9670;&nbsp;</a></span>setSim()</h2>
+<a id="a8d28e5c13a6130318b74a4be7146d6db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d28e5c13a6130318b74a4be7146d6db">&#9670;&nbsp;</a></span>setSim()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static bool setSim </td>
+          <td class="memname">bool setSim </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Initialise SIM card configuration. </p>
@@ -1795,28 +1780,20 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a37371022bcd960750108be87d2da8cad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a37371022bcd960750108be87d2da8cad">&#9670;&nbsp;</a></span>setState()</h2>
+<a id="ab40f63b8b31b53284af875375d1b0520"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab40f63b8b31b53284af875375d1b0520">&#9670;&nbsp;</a></span>setState()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static bool setState </td>
+          <td class="memname">bool setState </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set operational state for the modem. </p>

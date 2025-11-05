@@ -132,7 +132,7 @@ static const uint16_t CRC16Table[256] =
   0x6e17, 0x7e36, 0x4e55, 0x5e74, 0x2e93, 0x3eb2, 0x0ed1, 0x1ef0
 };
 
-static bool setApi(void)
+bool setApi(void)
 {
     bool set = false;
     for(int i = 0; i < 2; i++)
@@ -167,7 +167,7 @@ static bool setApi(void)
     return set;
 }
 
-static bool setSim(void)
+bool setSim(void)
 {
     bool set = false;
     if(jsprGetSimInterface())
@@ -205,7 +205,7 @@ static bool setSim(void)
     return set;
 }
 
-static bool setState(void)
+bool setState(void)
 {
     bool set = false;
     if(jsprGetOperationalState())
@@ -252,6 +252,7 @@ static bool setState(void)
     return set;
 }
 
+#ifndef ARDUINO
 bool rbBegin(const char* port)
 {
     bool began = false;
@@ -278,13 +279,14 @@ bool rbBegin(const char* port)
     }
     return began;
 }
+#endif
 
 static size_t encodeData(const char * srcBuffer, const size_t srcLength, char * destBuffer, const size_t destLength)
 {
     size_t encodedBytes = -1;
     if(srcBuffer != NULL && srcLength > 0 && destBuffer != NULL && destLength > 0)
     {
-        int err = mbedtls_base64_encode(destBuffer, destLength, &encodedBytes, srcBuffer, srcLength);
+        int err = mbedtls_base64_encode((unsigned char*)destBuffer, destLength, &encodedBytes, (unsigned char*)srcBuffer, srcLength);
         if (0 != err)
         {
             encodedBytes = -1;
@@ -298,7 +300,7 @@ static size_t decodeData(const char * srcBuffer, const size_t srcLength, char * 
     size_t decodedBytes = -1;
     if(srcBuffer != NULL && srcLength > 0 && destBuffer != NULL && destLength > 0)
     {
-        int err = mbedtls_base64_decode(destBuffer, destLength, &decodedBytes, srcBuffer, srcLength);
+        int err = mbedtls_base64_decode((unsigned char*)destBuffer, destLength, &decodedBytes, (unsigned char*)srcBuffer, srcLength);
         if (0 != err)
         {
             decodedBytes = -1;
@@ -465,7 +467,7 @@ size_t rbReceiveMessage(char ** buffer)
             {
                 length = (imtMt->length - IMT_CRC_SIZE);
                 imtMt->buffer[length] = '\0'; //remove crc
-                *buffer = imtMt->buffer;
+                *buffer = (char*)imtMt->buffer;
                 imtMt->readyToProcess = false; //finished processing
             }
         }
@@ -487,7 +489,7 @@ size_t rbReceiveMessageWithTopic(char ** buffer, uint16_t topic)
             {
                 length = (imtMt->length - IMT_CRC_SIZE);
                 imtMt->buffer[length] = '\0'; //remove crc
-                *buffer = imtMt->buffer;
+                *buffer = (char*)imtMt->buffer;
                 topic = imtMt->topic;
                 imtMt->readyToProcess = false; //finished processing
             }
@@ -605,7 +607,7 @@ size_t rbReceiveMessageAsync(char ** buffer)
                 {
                     length = (imtMt->length - IMT_CRC_SIZE);
                     imtMt->buffer[length] = '\0'; //remove crc
-                    *buffer = imtMt->buffer;
+                    *buffer = (char*)imtMt->buffer;
                     imtMt->readyToProcess = false; //finished processing
                 }
             }
@@ -683,15 +685,15 @@ void rbPoll(void)
                     {
                         segmentStart = messageOriginateSegment.segmentStart;
                         segmentLength = messageOriginateSegment.segmentLength;
-                        encodedBytes = encodeData(imtMo->buffer + segmentStart, 
-                        segmentLength, base64Buffer, BASE64_TEMP_BUFFER);
+                        encodedBytes = encodeData((char*)imtMo->buffer + segmentStart, 
+                        segmentLength, (char*)base64Buffer, BASE64_TEMP_BUFFER);
                         if(0 < encodedBytes)
                         {
                             jsprMessageOriginate_t messageOriginate;
                             messageOriginate.messageId = imtMo->id;
                             messageOriginate.topic = imtMo->topic;
                             jsprPutMessageOriginateSegment(&messageOriginate, segmentLength, 
-                            segmentStart, base64Buffer);
+                            segmentStart, (char*)base64Buffer);
                         }
                     }
                 }
@@ -787,7 +789,7 @@ void rbPoll(void)
                         if(imtMt->id == messageTerminateSegment.messageId)
                         {
                             decodedBytes = decodeData(messageTerminateSegment.data, messageTerminateSegment.dataLength, 
-                            imtMt->buffer + segmentStartMt, segmentLengthMt);
+                            (char*)imtMt->buffer + segmentStartMt, segmentLengthMt);
                             messageLengthAsync += segmentLengthMt;
                             if(0 > decodedBytes)
                             {
