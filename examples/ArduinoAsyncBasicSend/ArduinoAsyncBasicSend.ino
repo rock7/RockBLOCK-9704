@@ -79,7 +79,7 @@ void setup() {
   Serial1.begin(230400, SERIAL_8N1, 21, 22);
   delay(1000);
   Serial.println("Starting\r\n");
-  if(rbBegin("Serial1"))
+  if(rbBegin(Serial1))
   {
       delay(1000);
       //Register Callbacks

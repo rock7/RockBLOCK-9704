@@ -26,7 +26,7 @@ void setup() {
   Serial.begin(9600);
   Serial1.begin(230400);
   delay(1000);
-  if(rbBegin("Serial1"))
+  if(rbBegin(Serial1))
   {
       Serial.println("Successfully started serial session with RB9704\r\n");
       delay(100); //Wait at least 100ms before queueing a message the first time you run rbBegin after boot.
