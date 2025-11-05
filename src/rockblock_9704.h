@@ -1,38 +1,18 @@
 #ifndef ROCKBLOCK_9704_H
 #define ROCKBLOCK_9704_H
 
-#if defined(__linux__) || defined(__APPLE__)
-    #include "serial_presets/serial_linux/serial_linux.h"
-#elif defined(_WIN32)
-    #include "serial_presets/serial_windows/serial_windows.h"
-#elif defined(ARDUINO)
-    #ifdef __cplusplus
-        #include "serial_presets/serial_arduino/serial_arduino.h"
-    #endif
-#endif
-
 /**
  * @file rockblock_9704.h
  * @brief The RockBLOCK 9704 library. Maintained by Ground Control (https://www.groundcontrol.com/)
  * and license under the MIT License.
  */
 
-#ifdef ARDUINO
-#ifdef __cplusplus
-/**
- * @brief Initialise the the serial connection in the detected context (or user defined),
- * if successful continue to set the API, SIM & state of the modem in order
- * to be ready for messaging. (ARDUINO VERSION)
- * 
- * @note Make sure you wait at least 100ms after calling this function for the first time after 
- * reboot before doing anything else to prevent unexpected behaviour. This gives the modem time 
- * to acknowledge its new settings.
- * 
- * @param port reference to serial object.
- * @return bool depicting success or failure.
- */
-bool rbBegin(Stream &port);
-#endif
+#if defined(__linux__) || defined(__APPLE__)
+    #include "serial_presets/serial_linux/serial_linux.h"
+#elif defined(_WIN32)
+    #include "serial_presets/serial_windows/serial_windows.h"
+#elif defined(ARDUINO) && defined(__cplusplus)
+    #include "serial_presets/serial_arduino/serial_arduino.h"
 #endif
 
 #ifdef __cplusplus
@@ -189,20 +169,39 @@ typedef enum
 } cloudloopTopics_t;
 
 
-/**
- * @brief Initialise the the serial connection in the detected context (or user defined),
- * if successful continue to set the API, SIM & state of the modem in order
- * to be ready for messaging.
- * 
- * @note Make sure you wait at least 100ms after calling this function for the first time after 
- * reboot before doing anything else to prevent unexpected behaviour. This gives the modem time 
- * to acknowledge its new settings.
- * 
- * @param port pointer to port name.
- * @return bool depicting success or failure.
- */
-#ifndef ARDUINO
-bool rbBegin(const char * port);
+#if defined(ARDUINO) && defined(__cplusplus)
+    } // End extern "C"
+
+    /**
+     * @brief Initialise the the serial connection in the detected context (or user defined),
+     * if successful continue to set the API, SIM & state of the modem in order
+     * to be ready for messaging. (ARDUINO VERSION)
+     * 
+     * @note Make sure you wait at least 100ms after calling this function for the first time after 
+     * reboot before doing anything else to prevent unexpected behaviour. This gives the modem time 
+     * to acknowledge its new settings.
+     * 
+     * @param port reference to serial object.
+     * @return bool depicting success or failure.
+     */
+    bool rbBegin(Stream &port);
+
+    // Redefine extern C
+    extern "C" {
+#else
+    /**
+     * @brief Initialise the the serial connection in the detected context (or user defined),
+     * if successful continue to set the API, SIM & state of the modem in order
+     * to be ready for messaging.
+     * 
+     * @note Make sure you wait at least 100ms after calling this function for the first time after 
+     * reboot before doing anything else to prevent unexpected behaviour. This gives the modem time 
+     * to acknowledge its new settings.
+     * 
+     * @param port pointer to port name.
+     * @return bool depicting success or failure.
+     */
+    bool rbBegin(const char * port);
 #endif
 
 /**
