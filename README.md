@@ -471,6 +471,8 @@ This library provides a simple blocking API for communicating with the RockBLOCK
 #### **Non-Blocking Receive**
   Calling the receive function will not block until a message is received, it can timeout listening for unsolicited MT message, so it is advised to wrap this call in receive loop/thread, refer to our examples showing this. It's important to note that due to the non-blocking nature of the receive function it needs to called very frequently, in our examples 10ms is sufficient, failing to call this function frequently will result in missed messages.
 
+  **NOTE:** When using other library functions in a receive loop, **MAKE SURE** you execute the receiving function at the top of the loop, before executing any other library functions. Not following this will cause **MISSING MESSAGES.**
+
   Only call receive when:
   - You have good signal and a clear view of the sky
   - You handle it in a way you keep calling it until you have a message.
