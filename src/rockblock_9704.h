@@ -542,6 +542,12 @@ static size_t encodeData(const char * srcBuffer, const size_t srcLength, char * 
 static size_t decodeData(const char * srcBuffer, const size_t srcLength, char * destBuffer, const size_t destLength);
 
 /**
+ * @brief Clear any stale data leftover in serial buffers.
+ *
+ */
+void clearLeftoverData(void);
+
+/**
  * @brief Set the modem API version.
  *
  * @return true if successful, false otherwise.
