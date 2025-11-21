@@ -15,6 +15,7 @@ bool rbBegin(Stream &port)
         {
             if(context.serialInit())
             {
+                clearLeftoverData();
                 serialState = OPEN;
                 if(setApi())
                 {

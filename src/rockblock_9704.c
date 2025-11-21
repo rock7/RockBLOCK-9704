@@ -132,6 +132,24 @@ static const uint16_t CRC16Table[256] =
   0x6e17, 0x7e36, 0x4e55, 0x5e74, 0x2e93, 0x3eb2, 0x0ed1, 0x1ef0
 };
 
+void clearLeftoverData(void)
+{
+char garbageData[32];
+int available;
+
+    if(context.serialRead != NULL && context.serialPeek != NULL)
+    {
+        while((available = context.serialPeek()) > 0)
+        {
+            uint16_t garbageDataSize = (available > sizeof(garbageData))
+                                        ? sizeof(garbageData)
+                                        : (uint16_t)available;
+
+            context.serialRead(garbageData, garbageDataSize);
+        }
+    }
+}
+
 bool setApi(void)
 {
     bool set = false;
@@ -262,6 +280,7 @@ bool rbBegin(const char* port)
         {
             if(context.serialInit())
             {
+                clearLeftoverData();
                 serialState = OPEN;
                 if(setApi())
                 {

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['tx_5fbuffer_5fsize_795',['TX_BUFFER_SIZE',['../jspr_8h.html#a9ab33647617098646990fe263600b650',1,'jspr.h']]]
+  ['tx_5fbuffer_5fsize_797',['TX_BUFFER_SIZE',['../jspr_8h.html#a9ab33647617098646990fe263600b650',1,'jspr.h']]]
 ];
