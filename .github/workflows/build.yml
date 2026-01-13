@@ -13,27 +13,20 @@ jobs:
     strategy:
       matrix:
         os: [ windows-latest, macos-latest, macos-13, ubuntu-latest, ubuntu-24.04-arm ]
+        python: [3.9, 3.10, 3.11, 3.12, 3.13, 3.14]
 
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      
+      - uses: actions/setup-python@v6
         with:
-          python-version: |
-            3.8
-            3.9
-            3.10
-            3.11
-            3.12
-            3.13
+          python-version: '${{ matrix.python }}'
+      - run: python -m pip install -r requirements.txt
+      - run: python -m cibuildwheel --output-dir wheelhouse
+        env:
+          CIBW_PROJECT_REQUIRES_PYTHON: '${{ matrix.python }}'
 
-      - name: install dependencies
-        run: python -m pip install -r requirements.txt
-
-      - name: build wheels
-        run: python -m cibuildwheel --output-dir wheelhouse
-
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: rockblock-9704-python-${{ matrix.os }}
           path: wheelhouse/*
