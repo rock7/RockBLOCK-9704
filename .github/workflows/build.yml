@@ -12,7 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ windows-latest, macos-latest, macos-13, ubuntu-latest, ubuntu-24.04-arm ]
+        os: [ windows-latest, macos-latest, macos-15-intel, ubuntu-latest, ubuntu-24.04-arm ]
         python: [3.9, 3.10, 3.11, 3.12, 3.13, 3.14]
 
     steps:
