@@ -28,7 +28,7 @@ jobs:
 
       - uses: actions/upload-artifact@v6
         with:
-          name: rockblock-9704-python-${{ matrix.os }}
+          name: rockblock-9704-python-{{ matrix.python}}-${{ matrix.os }}
           path: wheelhouse/*
           retention-days: 3
           overwrite: true
