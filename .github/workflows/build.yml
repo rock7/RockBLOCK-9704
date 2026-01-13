@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   build_wheels:
-    name: build wheels on ${{ matrix.os }}
+    name: build wheels for python ${{ matrix.python }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
