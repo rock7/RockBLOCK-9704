@@ -8,8 +8,8 @@ jobs:
     name: publish wheels to pypi
     runs-on: ubuntu-latest
     environment:
-      name: testpypi
-      url: https://test.pypi.org/legacy/
+      name: Release
+      url: https://pypi.org/p/rockblock9704
     permissions:
       id-token: write
 
