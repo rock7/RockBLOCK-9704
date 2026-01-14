@@ -12,7 +12,7 @@ RockBLOCK 9704
 Requirements
 ============
 
-- Python 3.8+
+- Python 3.10+
 
 - A `RockBLOCK 9704 <https://www.groundcontrol.com/product/rockblock-9704/>`_
 

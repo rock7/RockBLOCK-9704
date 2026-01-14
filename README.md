@@ -162,7 +162,7 @@ e.g., python send_message.py --device /dev/ttyUSB2
 
 **Dependencies:**
 
-- Download and install [Python](https://www.python.org/downloads/)  >= 3.8.
+- Download and install [Python](https://www.python.org/downloads/)  >= 3.10.
 - Download and install [CMake](https://cmake.org/download/) >= 3.16.
 
 **Build:**
