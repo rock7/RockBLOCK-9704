@@ -254,7 +254,7 @@ Replace `<ARCH>` with `x64`, `Win32`, `ARM64`, etc.
 - Download and install [CMake](https://cmake.org/download/) >= 3.16.
 - [git](https://git-scm.com/downloads/linux).
 - build-essentials.
-- (Optional) [libgpiod](https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git) >= 3.1.1 for GPIO pin control.
+- (Optional) [libgpiod](https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git) >= 2.3 for GPIO pin control.
 
 **Install libgpiod:**
 
