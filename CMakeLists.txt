@@ -5,6 +5,7 @@ enable_language(C)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 option(BUILD_PYTHON_SHARED_LIBRARY "Set to ON to enable building of python shared library" OFF)
+option(BUILD_EXAMPLES "Set to OFF to disable building of example binaries" ON)
 
 if(DEFINED DEBUG AND DEBUG STREQUAL "ON")
     add_definitions(-DDEBUG)
@@ -72,16 +73,6 @@ if (HAS_PARENT)
     set(RB9704_LIB ${IRIDIUM_IMT_LIB} PARENT_SCOPE)
 endif()
 
-
-# Example binaries
-set(CL_RAW_BIN cloudloopRaw)
-set(HARDWARE_INFO_BIN hardwareInfo)
-set(CUSTOM_MESSAGE_BIN customMessage)
-set(CUSTOM_FILE_BIN customFileMessage)
-set(FW_UPDATE_BIN firmwareUpdate)
-set(GPIO_CUSTOM_BIN gpioCustom)
-set(ASYNC_SEND_RECEIVE_BIN asyncSendReceive)
-
 include_directories(${SRC_DIR}
     ${KERMIT_DIR}
     ${KERMIT_IO_DIR})
@@ -118,56 +109,68 @@ if (BUILD_PYTHON_SHARED_LIBRARY STREQUAL "ON")
     set_target_properties(${PYTHON_SHARED_LIB} PROPERTIES OUTPUT_NAME ${PYTHON_SHARED_LIB})
 endif()
 
-add_executable(${CL_RAW_BIN} ${EXAMPLE_DIR}/cloudloopRaw.c)
-add_executable(${HARDWARE_INFO_BIN} ${EXAMPLE_DIR}/hardwareInfo.c)
-add_executable(${CUSTOM_MESSAGE_BIN} ${EXAMPLE_DIR}/customMessage.c)
-add_executable(${CUSTOM_FILE_BIN} ${EXAMPLE_DIR}/customFileMessage.c)
-add_executable(${ASYNC_SEND_RECEIVE_BIN} ${EXAMPLE_DIR}/asyncSendReceive.c)
+if (BUILD_EXAMPLES STREQUAL "ON")
+    # Example binaries
+    set(CL_RAW_BIN cloudloopRaw)
+    set(HARDWARE_INFO_BIN hardwareInfo)
+    set(CUSTOM_MESSAGE_BIN customMessage)
+    set(CUSTOM_FILE_BIN customFileMessage)
+    set(FW_UPDATE_BIN firmwareUpdate)
+    set(GPIO_CUSTOM_BIN gpioCustom)
+    set(ASYNC_SEND_RECEIVE_BIN asyncSendReceive)
 
-target_include_directories(${CL_RAW_BIN} PRIVATE ${SRC_DIR})
-target_include_directories(${HARDWARE_INFO_BIN} PRIVATE ${SRC_DIR})
-target_include_directories(${CUSTOM_MESSAGE_BIN} PRIVATE ${SRC_DIR})
-target_include_directories(${CUSTOM_FILE_BIN} PRIVATE ${SRC_DIR})
-target_include_directories(${ASYNC_SEND_RECEIVE_BIN} PRIVATE ${SRC_DIR})
+    add_executable(${CL_RAW_BIN} ${EXAMPLE_DIR}/cloudloopRaw.c)
+    add_executable(${HARDWARE_INFO_BIN} ${EXAMPLE_DIR}/hardwareInfo.c)
+    add_executable(${CUSTOM_MESSAGE_BIN} ${EXAMPLE_DIR}/customMessage.c)
+    add_executable(${CUSTOM_FILE_BIN} ${EXAMPLE_DIR}/customFileMessage.c)
+    add_executable(${ASYNC_SEND_RECEIVE_BIN} ${EXAMPLE_DIR}/asyncSendReceive.c)
+
+    target_include_directories(${CL_RAW_BIN} PRIVATE ${SRC_DIR})
+    target_include_directories(${HARDWARE_INFO_BIN} PRIVATE ${SRC_DIR})
+    target_include_directories(${CUSTOM_MESSAGE_BIN} PRIVATE ${SRC_DIR})
+    target_include_directories(${CUSTOM_FILE_BIN} PRIVATE ${SRC_DIR})
+    target_include_directories(${ASYNC_SEND_RECEIVE_BIN} PRIVATE ${SRC_DIR})
 
 
-if (GPIO_ENABLED)
-    add_executable(${GPIO_CUSTOM_BIN} ${EXAMPLE_DIR}/gpioCustom.c)
-    target_include_directories(${GPIO_CUSTOM_BIN} PRIVATE ${SRC_DIR})
-    target_link_libraries(${GPIO_CUSTOM_BIN} PRIVATE ${IRIDIUM_IMT_LIB})
-endif()
-
-if(WIN32)
-    add_library(${WINDOWS_GET_OPT_LIB} ${WINDOWS_GET_OPT_DIR}/getopt.c)
-    include_directories(${WINDOWS_GET_OPT_DIR})
-
-    target_link_libraries(${CL_RAW_BIN} PRIVATE ${IRIDIUM_IMT_LIB} ${WINDOWS_GET_OPT_LIB})
-    target_link_libraries(${HARDWARE_INFO_BIN} PRIVATE ${IRIDIUM_IMT_LIB} ${WINDOWS_GET_OPT_LIB})
-    target_link_libraries(${CUSTOM_MESSAGE_BIN} PRIVATE ${IRIDIUM_IMT_LIB} ${WINDOWS_GET_OPT_LIB})
-    target_link_libraries(${CUSTOM_FILE_BIN} PRIVATE ${IRIDIUM_IMT_LIB} ${WINDOWS_GET_OPT_LIB})
-    target_link_libraries(${ASYNC_SEND_RECEIVE_BIN} PRIVATE ${IRIDIUM_IMT_LIB} ${WINDOWS_GET_OPT_LIB})
-else()
-    target_link_libraries(${CL_RAW_BIN} PRIVATE ${IRIDIUM_IMT_LIB})
-    target_link_libraries(${HARDWARE_INFO_BIN} PRIVATE ${IRIDIUM_IMT_LIB})
-    target_link_libraries(${CUSTOM_MESSAGE_BIN} PRIVATE ${IRIDIUM_IMT_LIB})
-    target_link_libraries(${CUSTOM_FILE_BIN} PRIVATE ${IRIDIUM_IMT_LIB})
-    target_link_libraries(${ASYNC_SEND_RECEIVE_BIN} PRIVATE ${IRIDIUM_IMT_LIB})
-endif()
-
-if (DEFINED FW_UPDATE AND FW_UPDATE STREQUAL "ON")
-    add_compile_definitions(KERMIT)
-    add_library(${KERMIT_LIB} ${KERMIT_IO_DIR}/kermit_io.c ${KERMIT_DIR}/kermit.c)
-    target_include_directories(${KERMIT_LIB} PRIVATE ${SRC_DIR} ${KERMIT_DIR})
-
-    add_executable(${FW_UPDATE_BIN} ${EXAMPLE_DIR}/firmware-update.c)
-
-    target_include_directories(${FW_UPDATE_BIN} PRIVATE ${SRC_DIR} ${KERMIT_IO_DIR})
+    if (GPIO_ENABLED)
+        add_executable(${GPIO_CUSTOM_BIN} ${EXAMPLE_DIR}/gpioCustom.c)
+        target_include_directories(${GPIO_CUSTOM_BIN} PRIVATE ${SRC_DIR})
+        target_link_libraries(${GPIO_CUSTOM_BIN} PRIVATE ${IRIDIUM_IMT_LIB})
+    endif()
 
     if(WIN32)
-        target_link_libraries(${FW_UPDATE_BIN} PRIVATE ${IRIDIUM_IMT_LIB} ${KERMIT_LIB} ${WINDOWS_GET_OPT_LIB})
+        add_library(${WINDOWS_GET_OPT_LIB} ${WINDOWS_GET_OPT_DIR}/getopt.c)
+        include_directories(${WINDOWS_GET_OPT_DIR})
+
+        target_link_libraries(${CL_RAW_BIN} PRIVATE ${IRIDIUM_IMT_LIB} ${WINDOWS_GET_OPT_LIB})
+        target_link_libraries(${HARDWARE_INFO_BIN} PRIVATE ${IRIDIUM_IMT_LIB} ${WINDOWS_GET_OPT_LIB})
+        target_link_libraries(${CUSTOM_MESSAGE_BIN} PRIVATE ${IRIDIUM_IMT_LIB} ${WINDOWS_GET_OPT_LIB})
+        target_link_libraries(${CUSTOM_FILE_BIN} PRIVATE ${IRIDIUM_IMT_LIB} ${WINDOWS_GET_OPT_LIB})
+        target_link_libraries(${ASYNC_SEND_RECEIVE_BIN} PRIVATE ${IRIDIUM_IMT_LIB} ${WINDOWS_GET_OPT_LIB})
     else()
-        target_link_libraries(${FW_UPDATE_BIN} PRIVATE ${IRIDIUM_IMT_LIB} ${KERMIT_LIB})
+        target_link_libraries(${CL_RAW_BIN} PRIVATE ${IRIDIUM_IMT_LIB})
+        target_link_libraries(${HARDWARE_INFO_BIN} PRIVATE ${IRIDIUM_IMT_LIB})
+        target_link_libraries(${CUSTOM_MESSAGE_BIN} PRIVATE ${IRIDIUM_IMT_LIB})
+        target_link_libraries(${CUSTOM_FILE_BIN} PRIVATE ${IRIDIUM_IMT_LIB})
+        target_link_libraries(${ASYNC_SEND_RECEIVE_BIN} PRIVATE ${IRIDIUM_IMT_LIB})
     endif()
+
+    if (DEFINED FW_UPDATE AND FW_UPDATE STREQUAL "ON")
+        add_compile_definitions(KERMIT)
+        add_library(${KERMIT_LIB} ${KERMIT_IO_DIR}/kermit_io.c ${KERMIT_DIR}/kermit.c)
+        target_include_directories(${KERMIT_LIB} PRIVATE ${SRC_DIR} ${KERMIT_DIR})
+
+        add_executable(${FW_UPDATE_BIN} ${EXAMPLE_DIR}/firmware-update.c)
+
+        target_include_directories(${FW_UPDATE_BIN} PRIVATE ${SRC_DIR} ${KERMIT_IO_DIR})
+
+        if(WIN32)
+            target_link_libraries(${FW_UPDATE_BIN} PRIVATE ${IRIDIUM_IMT_LIB} ${KERMIT_LIB} ${WINDOWS_GET_OPT_LIB})
+        else()
+            target_link_libraries(${FW_UPDATE_BIN} PRIVATE ${IRIDIUM_IMT_LIB} ${KERMIT_LIB})
+        endif()
+    endif()
+
 endif()
 
 # Doxygen documentation generation
