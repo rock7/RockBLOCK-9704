@@ -20,7 +20,7 @@ add_library(
     ${THIRD_PARTY_DIR}/base64/base64.c)
 
 if (GPIO_ENABLED)
-    target_link_libraries(${IRIDIUM_IMT_LIB} PUBLIC ${LIB_GPIOD})
+    target_link_libraries(${IRIDIUM_IMT_LIB} PUBLIC ${LIB_GPIOD_LIBRARIES})
 endif()
 
 if (DEFINED FW_UPDATE AND FW_UPDATE STREQUAL "ON")

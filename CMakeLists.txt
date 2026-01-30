@@ -19,9 +19,13 @@ if(DEFINED IMT_PAYLOAD_SIZE)
 endif()
 
 # Check for libgpiod
-find_library(LIB_GPIOD gpiod)
+find_package(PkgConfig)
 
-if (NOT LIB_GPIOD)
+if(PKG_CONFIG_FOUND)
+    pkg_check_modules(LIB_GPIOD libgpiod>=2.3)
+endif()
+
+if (NOT LIB_GPIOD_FOUND)
     message(STATUS "GPIO support is DISABLED (libgpiod not found)")
     set(GPIO_ENABLED FALSE CACHE BOOL "Set if libgpiod is available")
 else()
