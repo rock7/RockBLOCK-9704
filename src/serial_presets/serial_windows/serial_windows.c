@@ -13,7 +13,7 @@ extern serialContext context;
 bool setContextWindows(const char * port, const uint32_t baud)
 {
     bool set = false;
-    strncpy(context.serialPort, port, SERIAL_PORT_LENGTH);
+    snprintf(context.serialPort, SERIAL_PORT_LENGTH, "\\\\.\\%s", port);
     context.serialBaud = baud;
     context.serialInit = openPortWindows;
     context.serialDeInit = closePortWindows;
