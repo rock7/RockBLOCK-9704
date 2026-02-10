@@ -109,8 +109,11 @@ bool receiveJspr(jsprResponse_t * response, const char * expectedTarget)
                     targetStart = &jsprRxBuffer[JSPR_RESULT_CODE_LENGTH + 1];
                     targetEnd = strchr(targetStart, ' ');
                     targetLength = targetEnd - targetStart;
-                    memcpy(response->target, targetStart, targetLength);
-                    response->target[targetLength] = '\0';
+                    if(targetLength < JSPR_MAX_TARGET_LENGTH)
+                    {
+                        memcpy(response->target, targetStart, targetLength);
+                        response->target[targetLength] = '\0';
+                    }
 
                     if (expectedTarget != NULL)
                     {
@@ -125,8 +128,11 @@ bool receiveJspr(jsprResponse_t * response, const char * expectedTarget)
 
                     jsonStart = strchr(targetStart, '{');
                     response->jsonSize = strchr(targetStart, '\0') - jsonStart;
-                    strncpy(response->json, jsonStart, response->jsonSize);
-                    response->json[response->jsonSize] = '\0';
+                    if(response->jsonSize < JSPR_MAX_JSON_LENGTH)
+                    {
+                        strncpy(response->json, jsonStart, response->jsonSize);
+                        response->json[response->jsonSize] = '\0';
+                    }
                     reading = false;
                     gotResponse = true;
                     received = true;
