@@ -40,7 +40,6 @@ Further documentation for hardware and specifications can be found on our docume
     - [⬆️ Sending Mobile-Originated (MO) Messages (Async)](#%EF%B8%8F-sending-mobile-originated-mo-messages-async)
     - [⬇️ Receiving Mobile-Terminated (MT) Messages (Async)](#%EF%B8%8F-receiving-mobile-terminated-mt-messages-async)
   - [↗️ Adjusting library size (Queue & Payload)](#%EF%B8%8F-adjusting-library-size)
-- [❓ Frequently Imagined Questions (FIQ)](#-frequently-imagined-questions-fiq)
 - [❓ Frequently Asked Questions (FAQ)](#-frequently-asked-questions-faq)
 - [⚖️ License](#%EF%B8%8F-license)
 
