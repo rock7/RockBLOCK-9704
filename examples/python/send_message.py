@@ -35,13 +35,6 @@ if __name__ == '__main__':
             print("Hardware version: \t", rb.get_hardware_version())
             print("9704 Modem IMEI: \t", rb.get_imei())
 
-            # Wait for signal
-            while rb.get_signal() < 1:
-                print("Waiting for signal...")
-                sleep(2)
-
-            print("Signal acquired!")
-
             # Send message with a custom 60s timeout
             sent = rb.send_message(b"Hello, world!", timeout=60)
 

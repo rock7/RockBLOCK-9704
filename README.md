@@ -444,7 +444,7 @@ This library provides a simple blocking API for communicating with the RockBLOCK
   The RockBLOCK 9704 modem requires a **clear view of the sky** to reliably connect to Iridium satellites.
 
 #### **Before Communication**  
-  Always **check signal strength** before attempting to send or receive data. Poor placement (e.g., indoors, under cover, or near obstructions) can cause timeouts or message failures.
+  If your device is going to remain in a static place, we recommend you initially check the average signal strength. It is not recommended to check the signal strength before sending every message as this can waste valuable time, however doing an initial signal survey can give you an idea if your device placement is adequate and there isn't anything seriously obstructing your view (e.g., indoors, under cover, trees, or other obstructions).
 
 #### **Recommended Practice**  
   Ensure the antenna has **an unobstructed view of the sky** during operation to improve signal strength and reduce message latency.
@@ -653,22 +653,6 @@ rbRegisterCallbacks(&myCallbacks);
 
 ---
 
-## ❓ Frequently Imagined Questions (FIQ)
-
-> **Q:** Can I send memes to space?
-> 
-> **A:** Technically yes, if you compress them enough.
->
-> **Q:** How fast is it?
->
-> **A:** About as fast as a satellite flying over your head at Mach 20.
->
-> **Q:** Can it survive being strapped to a rocket?
->
-> **A:** The modem, yes. Your nerves, maybe not.
-
----
-
 ## ❓ **Frequently Asked Questions (FAQ)**
 
 > **Q:** What are topics?
@@ -694,6 +678,22 @@ rbRegisterCallbacks(&myCallbacks);
 > **Q:** Why is the send message function failing the first time I call it after rebooting the device? (418 Error in Debug).
 >
 > **A:** When we call `rbBegin()` we send a couple commands to the 9704 modem to set it up, like the simConfig and operationalState, the modem needs some time (100ms or more) after changing these, otherwise it may not be ready to send a message, these only reset if changed manually or the RockBLOCK is rebooted, which is why your code might fail the first time but works every time after that until rebooted. To fix this simply put a 100ms or bigger delay after calling `rbBegin()`.
+>
+> **Q:** Why am I seeing `segment_not_supplied` in my debug output when using the async functions to try and send a message?
+>
+> **A:** When attempting to send a message that is over the maximum segment size (1447 Bytes) the modem will ask that the message is split into multiple segments (as long as the total data remains under 100k Bytes). The modem will then prompt the library to supply these segments with a specific length for each one. The library handles this slightly differently depending on which functions you're using (sync/async). Each segment **has** to be delivered to the modem within **300ms** of being prompted, in sync mode this is handled for you, however in async mode you need to make sure to call `rbPoll()` often enough that the library can reply in time, for reliability we recommend calling `rbPoll()` at least every 50ms.
+>
+> **Q:** Should I be waiting for a good signal before attempting to send a message?
+>
+> **A:** No. We recommend transmitting immediately and implementing a retry strategy if it fails. Iridium satellites cross the sky in about 7 minutes, and a signal strength check takes valuable seconds. A satellite showing strong signal may move behind an obstruction before your transmission completes. Conversely, a reading of zero bars doesn't mean failure — another satellite may become visible during the transmission window.
+Recommended retry strategy:
+>
+>- Attempt transmission.
+>- If it fails, retry within 0–5 seconds (repeat twice).
+>- If still unsuccessful, wait a random 0–30 seconds before retrying (repeat twice).
+>- If these attempts fail, increase the delay to several minutes.
+>
+>You're only charged for successful transmissions, so failed attempts cost nothing. This approach handles network variability far more effectively than pre-checking signal. For a more in-depth view on how signal strength works, see here: https://docs.groundcontrol.com/iot/signal_strength
 
 ---
 
