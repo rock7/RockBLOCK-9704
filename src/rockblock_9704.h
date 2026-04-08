@@ -314,7 +314,7 @@ void rbReceiveUnlockAsync(void);
  * @brief Locks the sending queue so that old messages aren't discarded 
  * when incoming ones arrive.
  * 
- * * @note The queue is unlocked by default, so there is no need to call 
+ * * @note The queue is locked by default, so there is no need to call 
  * this function unless rbSendUnlockAsync() was previously used.
  */
 void rbSendLockAsync(void);
