@@ -137,7 +137,10 @@ bool imtQueueMoRemove(void)
 
         imtMo.head = (tempHead + 1) % imtMo.maxLength;
         imtMo.count--;
-        moQueuedMessages--;
+        if(moQueuedMessages > 0)
+        {
+            moQueuedMessages--;
+        }
         removed = true;
     }
     return removed;
