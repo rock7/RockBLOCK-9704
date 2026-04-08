@@ -603,7 +603,11 @@ bool rbSendMessageAsync(uint16_t topic, const char * data, const size_t length)
                 {
                     queuedToSend = true;
                 }
-                moQueuedMessages += 1;
+
+                if(queuedToSend)
+                {
+                    moQueuedMessages += 1;
+                }
             }
         }
     }
