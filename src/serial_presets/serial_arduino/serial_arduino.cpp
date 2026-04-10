@@ -5,13 +5,13 @@
 //Serial Variables
 extern int serialConnection;
 extern enum serialState serialState;
-Stream &serialPortArduino = Serial1;
+Stream *serialPortArduino;
 extern serialContext context;
 
 bool openPortArduino()
 {
     serialState = OPEN;
-    serialPortArduino.setTimeout(1000);
+    serialPortArduino->setTimeout(1000);
     return true;
 }
 
@@ -23,24 +23,24 @@ bool closePortArduino()
 
 int readArduino(char * bytes, const uint16_t length)
 {
-    return (int)serialPortArduino.readBytes(bytes, length);
+    return (int)serialPortArduino->readBytes(bytes, length);
 }
 
 int writeArduino(const char * data, const uint16_t length)
 {
-    return (int)serialPortArduino.write(data, length);
+    return (int)serialPortArduino->write(data, length);
 }
 
 int peekArduino(void)
 {
-    return (int)serialPortArduino.available();
+    return (int)serialPortArduino->available();
 }
 
 bool setContextArduino(Stream &port, const uint32_t baud)
 {
 bool set = false;
 
-    serialPortArduino = port;
+    serialPortArduino = &port;
     context.serialBaud = baud;
     context.serialInit = openPortArduino;
     context.serialDeInit = closePortArduino;
