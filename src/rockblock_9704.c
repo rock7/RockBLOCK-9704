@@ -332,13 +332,10 @@ static bool appendCrc(uint8_t * buffer, size_t length)
 {
     bool appended = false;
     uint16_t crc = calculateCrc(buffer, length, 0);
-    if (crc > 0)
-    {
-        crcBuffer[0] = (crc >> 8) & 0xFFU;
-        crcBuffer[1] = crc & 0xFFU;
-        memcpy(buffer + length, crcBuffer, IMT_CRC_SIZE);
-        appended = true;
-    }
+    crcBuffer[0] = (crc >> 8) & 0xFFU;
+    crcBuffer[1] = crc & 0xFFU;
+    memcpy(buffer + length, crcBuffer, IMT_CRC_SIZE);
+    appended = true;
     memset(crcBuffer, 0, IMT_CRC_SIZE);
     return appended;
 }
