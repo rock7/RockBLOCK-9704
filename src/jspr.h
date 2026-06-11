@@ -23,6 +23,7 @@ extern "C" {
 #define JSPR_VERSION_INFO_BUILD_INFO_LEN 50U
 #define JSPR_BOOT_INFO_IMAGE_TYPE_LEN 11U
 #define JSPR_BOOT_INFO_HASH_LEN 65U
+#define JSPR_STATUS_ACTION 7U
 
 #define JSPR_TOPIC_NAME_MAX_LENGTH 57U
 #define JSPR_MAX_TOPICS 20U
@@ -226,6 +227,7 @@ typedef struct
 {
     uint16_t topic;
     uint8_t messageId;
+    char action [JSPR_STATUS_ACTION];
     jsprFinalMoStatus_t finalMoStatus;
 } jsprMessageOriginateStatus_t;
 
