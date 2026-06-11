@@ -11,13 +11,15 @@ static PyObject *py_messageProvisioning_cb = NULL;
 static PyObject *py_moMessageComplete_cb = NULL;
 static PyObject *py_mtMessageComplete_cb = NULL;
 static PyObject *py_constellationState_cb = NULL;
+static PyObject *py_moMessageStarted_cb = NULL;
 
 //global callback structure
 static rbCallbacks_t g_callbacks = {
     .messageProvisioning = NULL,
     .moMessageComplete = NULL,
     .mtMessageComplete = NULL,
-    .constellationState = NULL
+    .constellationState = NULL,
+    .moMessageStarted = NULL
 };
 
 void message_provisioning_callback(const jsprMessageProvisioning_t *messageProvisioning) {
@@ -129,6 +131,25 @@ void constellation_state_callback(const jsprConstellationState_t *constellationS
     }
 }
 
+void mo_message_started_callback(const uint16_t id) {
+
+    if (py_moMessageStarted_cb && PyCallable_Check(py_moMessageStarted_cb)) {
+
+        PyGILState_STATE gstate = PyGILState_Ensure();
+
+        PyObject *result = PyObject_CallFunction(py_moMessageStarted_cb, "I", id);
+
+        if (!result) {
+            PyErr_Print();
+        }
+        else {
+            Py_DECREF(result);
+        }
+
+        PyGILState_Release(gstate);
+    }
+}
+
 static PyObject *py_set_message_provisioning_callback(PyObject *self, PyObject *args) {
 
     PyObject *cb;
@@ -215,6 +236,29 @@ static PyObject *py_set_constellation_state_callback(PyObject *self, PyObject *a
     py_constellationState_cb = cb;
 
     g_callbacks.constellationState = constellation_state_callback;
+
+    rbRegisterCallbacks(&g_callbacks);
+
+    Py_RETURN_NONE;
+}
+
+static PyObject *py_set_mo_message_started_callback(PyObject *self, PyObject *args) {
+
+    PyObject *cb;
+
+    if (!PyArg_ParseTuple(args, "O", &cb))
+        return NULL;
+
+    if (!PyCallable_Check(cb)) {
+        PyErr_SetString(PyExc_TypeError, "moMessageStarted must be callable");
+        return NULL;
+    }
+
+    Py_XINCREF(cb);
+    Py_XDECREF(py_moMessageStarted_cb);
+    py_moMessageStarted_cb = cb;
+
+    g_callbacks.moMessageStarted = mo_message_started_callback;
 
     rbRegisterCallbacks(&g_callbacks);
 
@@ -590,6 +634,22 @@ static PyObject *py_resyncServiceConfig(PyObject *self, PyObject *args) {
   return Py_BuildValue("i", result);
 }
 
+static PyObject *py_cancelMessage(PyObject *self, PyObject *args) {
+
+    int result, topic, id;
+
+    if (!_PyArg_ParseTuple_SizeT(args, "ii", &topic, &id)) {
+
+        return NULL;
+
+    }
+
+    result = rbCancelMessage(topic, id);
+
+    return Py_BuildValue("i", result);
+
+}
+
 static PyMethodDef rockblockMethods[] = {
     {"get_signal", py_getSignal, METH_VARARGS, "Function for getting the modem signal quality"},
     {"begin", py_rbBegin, METH_VARARGS, "Function for starting serial connection to modem"},
@@ -614,6 +674,7 @@ static PyMethodDef rockblockMethods[] = {
     {"set_mo_message_complete_callback", py_set_mo_message_complete_callback, METH_VARARGS, "Function which registers the user defined mo message callback for asynchronous functionality"},
     {"set_mt_message_complete_callback", py_set_mt_message_complete_callback, METH_VARARGS, "Function which registers the user defined mt message callback for asynchronous functionality"},
     {"set_constellation_state_callback", py_set_constellation_state_callback, METH_VARARGS, "Function which registers the user defined signal level callback for asynchronous functionality"},
+    {"set_mo_message_started_callback", py_set_mo_message_started_callback, METH_VARARGS, "Function which registers the user defined mo message started callback for asynchronous functionality"},
     {"get_hardware_version", py_getHardwareVersion, METH_VARARGS, "Function for getting hardware version"},
     {"get_serial_number", py_getSerialNumber, METH_VARARGS, "Function for getting serial number"},
     {"get_imei", py_getImei, METH_VARARGS, "Function for getting IMEI"},
@@ -623,6 +684,7 @@ static PyMethodDef rockblockMethods[] = {
     {"get_iccid", py_getIccid, METH_VARARGS, "Function for getting iccid"},
     {"get_firmware_version", py_getFirmwareVersion, METH_VARARGS, "Function for getting firmware version"},
     {"resync_service_config", py_resyncServiceConfig, METH_VARARGS, "Function for forcing service configuration resync"},
+    {"cancel_message", py_cancelMessage, METH_VARARGS, "Function for cancelling a message accepted by the modem"},
     {NULL, NULL, 0, NULL}
 };
 
