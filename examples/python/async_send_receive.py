@@ -1,6 +1,7 @@
 import argparse
 from rockblock9704 import *
 from time import sleep
+import time
 
 #This example code showcases the asynchronous capabilities of this library by setting
 #the necessary callbacks, queuing and sending a message, listening for any incoming message
@@ -22,10 +23,14 @@ from time import sleep
 #RB9704 needs to be provisioned for messaging topic 244 (RAW).
 #Have an open view of the sky where a good signal can be obtained.
 
+MESSAGE_CANCELLATION = False #Set this to true if you want to test message cancellation.
+MESSAGE_CANCELLATION_TIMEOUT = 60 #Set this to the time you want to wait before cancelling a message.
+
 messages_sent = 0
 messages_received = 0
 received_new_message = False
 current_signal = 0
+message_id = -1
 
 def on_provision(messageProvisioning):
     if messageProvisioning["provisioningSet"]:
@@ -54,12 +59,19 @@ def on_signal(state):
         print(f"\033[1;34mCurrent Signal: {state['signalBars']}\033[0m")
         current_signal = state["signalBars"]
 
+def on_mo_started(id):
+    global message_id
+    print(f"\033[1;34mMessage started: ID={id}\033[0m")
+    message_id = id
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='receive-message', description="Python example to send IMT message on RockBLOCK 9704.")
     parser.add_argument("--device",
                         help="Serial port of RockBLOCK 9704")
 
     args = parser.parse_args()
+
+    timeStamp = time.monotonic()
 
     if (args.device):
 
@@ -69,6 +81,7 @@ if __name__ == '__main__':
         rb.set_mo_message_complete_callback(mo_message_complete=on_mo)
         rb.set_mt_message_complete_callback(mt_message_complete=on_mt)
         rb.set_constellation_state_callback(constellation_state=on_signal)
+        rb.set_mo_message_started_callback(mo_message_started=on_mo_started)
         # Begin serial communication
         connected = rb.begin(args.device)
 
@@ -109,6 +122,12 @@ if __name__ == '__main__':
 
                 if messages_acknowledged >= 1:
                     break
+
+                if time.monotonic() - timeStamp >= 60:
+                    if message_id > 0:
+                        rb.cancel_message(244, message_id)
+                        timeStamp = time.monotonic()
+                        message_id = -1
 
             if(rb.end()):
                 print("Serial connection terminated successfully")

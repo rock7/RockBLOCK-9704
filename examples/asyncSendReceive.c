@@ -43,7 +43,7 @@
 */
 
 #define MESSAGE_CANCELLATION false //Set this to true if you want to test message cancellation.
-#define MESSAGE_CANCELLATION_TIME 60.0 //Set this to the time you want to wait before cancelling a message.
+#define MESSAGE_CANCELLATION_TIMEOUT 60.0 //Set this to the time you want to wait before cancelling a message.
 
 static char _serialDevice[PATH_MAX];
 static volatile bool _run = true;
@@ -274,7 +274,7 @@ int main(int argc, char * argv[])
 
                 if(MESSAGE_CANCELLATION)
                 {
-                    if(difftime(time(NULL), timeStamp) >= 60.0)
+                    if(difftime(time(NULL), timeStamp) >= MESSAGE_CANCELLATION_TIMEOUT)
                     {
                         if(messageId > 0)
                         {
