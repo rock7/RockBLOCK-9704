@@ -89,6 +89,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a7f3102a20186c85fa360e242a3fa6639"><td class="memItemLeft" align="right" valign="top">void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structrbCallbacks__t.html#a7f3102a20186c85fa360e242a3fa6639">constellationState</a> )(const <a class="el" href="structjsprConstellationState__t.html">jsprConstellationState_t</a> *state)</td></tr>
 <tr class="memdesc:a7f3102a20186c85fa360e242a3fa6639"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for the constellationState (signal) has been updated.  <a href="structrbCallbacks__t.html#a7f3102a20186c85fa360e242a3fa6639">More...</a><br /></td></tr>
 <tr class="separator:a7f3102a20186c85fa360e242a3fa6639"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcc2016255cf221f9c8543f792f37238"><td class="memItemLeft" align="right" valign="top">void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structrbCallbacks__t.html#adcc2016255cf221f9c8543f792f37238">moMessageStarted</a> )(const uint16_t id)</td></tr>
+<tr class="memdesc:adcc2016255cf221f9c8543f792f37238"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for when a mobile-originated (MO) message request has been accepted by the modem.  <a href="structrbCallbacks__t.html#adcc2016255cf221f9c8543f792f37238">More...</a><br /></td></tr>
+<tr class="separator:adcc2016255cf221f9c8543f792f37238"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Struct containing user defined callback functions for asynchronous operations. </p>
@@ -155,6 +158,28 @@ Public Attributes</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">id</td><td>Unique Identifier of the message. </td></tr>
     <tr><td class="paramname">status</td><td>Enum indicating result of processing (-1 for failure &amp; 1 for success). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="adcc2016255cf221f9c8543f792f37238"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adcc2016255cf221f9c8543f792f37238">&#9670;&nbsp;</a></span>moMessageStarted</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void(* rbCallbacks_t::moMessageStarted) (const uint16_t id)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Callback for when a mobile-originated (MO) message request has been accepted by the modem. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>Unique Identifier of the message. </td></tr>
   </table>
   </dd>
 </dl>
