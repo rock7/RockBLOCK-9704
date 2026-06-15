@@ -87,6 +87,13 @@ typedef struct
      * @param state Pointer to the updated constellation state structure.
      */
     void (*constellationState)(const jsprConstellationState_t *state);
+
+    /**
+     * @brief Callback for when a mobile-originated (MO) message request has been accepted by the modem.
+     * 
+     * @param id Unique Identifier of the message.
+     */
+    void (*moMessageStarted)(const uint16_t id);
 } rbCallbacks_t;
 
 /**
@@ -338,6 +345,20 @@ void rbSendUnlockAsync(void);
  *  handled by rbPoll().
  */
 bool rbSendMessageAsync(uint16_t topic, const char * data, const size_t length);
+
+/**
+ * @brief Cancel a message.
+ * 
+ * @param topic uint16_t topic.
+ * @param id uint16_t message ID.
+ * 
+ * @return bool depicting whether the command was sent successfully.
+ * 
+ * * @note This function will attempt to cancel a message which has already been 
+ * accepted by the modem. Can be used at any point after the moMessageStarted 
+ * callback has been called with a valid message ID.
+ */
+bool rbCancelMessage(const uint16_t topic, const uint16_t id);
 
 /**
  * @brief Polling function that handles all incoming communication from the modem.

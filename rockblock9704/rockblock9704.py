@@ -210,6 +210,14 @@ class RockBlock9704:
         """
         return _rb.set_constellation_state_callback(constellation_state)
 
+    def set_mo_message_started_callback(self, mo_message_started = None):
+        """
+        Register the user defined mo message started callback in the library.
+        :param mo_message_started: Callback that runs when a message has been accepted by the modem,
+        provides the message id.
+        """
+        return _rb.set_mo_message_started_callback(mo_message_started)
+
     def get_hardware_version(self) -> str:
         """
         Get RockBLOCK 9704 hardware version
@@ -272,3 +280,13 @@ class RockBlock9704:
         :return: bool depicting the serviceConfig command was sent successfully
         """
         return _rb.resync_service_config()
+
+    def cancel_message(self, topic: int = None, id: int = None) -> bool:
+        """
+        Cancels a message which has already been accepted by the modem.
+        :param topic: topic used to send the message
+        :param id: message ID obtained from the mo_message_started callback
+        :return: bool depicting whether the command to cancel the message has been sent successfully
+        """
+        if topic is not None and id is not None:
+            return _rb.cancel_message(topic, id)

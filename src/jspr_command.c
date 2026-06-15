@@ -398,3 +398,25 @@ bool jsprPutServiceConfig(const bool resync)
     }
     return rVal;
 }
+
+bool jsprPutMessageOriginateStatus(jsprMessageOriginateStatus_t * messageOriginateStatus)
+{
+    bool rVal = false;
+    int rc = 0;
+
+    rc = snprintf(jsprCommandBuffer, sizeof(jsprCommandBuffer), "PUT messageOriginateStatus {\"topic_id\": %d, \"message_id\": %d, \"action\": \"%s\"}\r",
+     messageOriginateStatus->topic, messageOriginateStatus->messageId, messageOriginateStatus->action);
+
+    if (rc > 0)
+    {
+        const size_t putMessageOriginateStatusLen = (const size_t)rc;
+        if (context.serialWrite != NULL)
+        {
+            if(sendJspr(jsprCommandBuffer, putMessageOriginateStatusLen) == putMessageOriginateStatusLen)
+            {
+                rVal = true;
+            }
+        }
+    }
+    return rVal;
+}

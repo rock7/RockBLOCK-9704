@@ -567,6 +567,11 @@ static bool sendMoFromQueueAsync(void)
                             parseJsprPutMessageOriginate(response.json, &messageOriginate);
                             imtMo->id = messageOriginate.messageId;
                             started = true;
+
+                            if(rbCallbacks && rbCallbacks->moMessageStarted)
+                            {
+                                rbCallbacks->moMessageStarted(imtMo->id);
+                            }
                         }
                     }
                 }
@@ -609,6 +614,23 @@ bool rbSendMessageAsync(uint16_t topic, const char * data, const size_t length)
         }
     }
     return queuedToSend;
+}
+
+bool rbCancelMessage(const uint16_t topic, const uint16_t id)
+{
+    bool commandSent = false;
+
+    jsprMessageOriginateStatus_t messageOriginateStatus;
+    messageOriginateStatus.topic = topic;
+    messageOriginateStatus.messageId = id;
+    memcpy(messageOriginateStatus.action, "cancel", JSPR_STATUS_ACTION);
+    
+    if(jsprPutMessageOriginateStatus(&messageOriginateStatus))
+    {
+        commandSent = true;
+    }
+
+    return commandSent;
 }
 
 size_t rbReceiveMessageAsync(char ** buffer)
@@ -724,7 +746,6 @@ void rbPoll(void)
                     {
                         if(imtMo->id == messageOriginateSegment.messageId)
                         {
-                    
                             if(rbCallbacks && rbCallbacks->moMessageComplete)
                             {
                                 rbCallbacks->moMessageComplete(imtMo->id, RB_MSG_STATUS_FAIL);

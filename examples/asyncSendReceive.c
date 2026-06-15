@@ -4,6 +4,7 @@
 #include <getopt.h>
 #include <limits.h>
 #include "crossplatform.h"
+#include <time.h>
 
 #if defined(_WIN32)
 #include <io.h>
@@ -41,6 +42,9 @@
  * 
 */
 
+#define MESSAGE_CANCELLATION false //Set this to true if you want to test message cancellation.
+#define MESSAGE_CANCELLATION_TIMEOUT 60.0 //Set this to the time you want to wait before cancelling a message.
+
 static char _serialDevice[PATH_MAX];
 static volatile bool _run = true;
 
@@ -48,6 +52,7 @@ int messagesSent = 0;
 int messagesReceived = 0;
 int currentSignal = 0;
 bool receivedNewMessage = false;
+int messageId = -1;
 
 typedef enum
 {
@@ -123,6 +128,12 @@ void onConstellationState(const jsprConstellationState_t *state)
     }
 }
 
+void onMoStarted(const uint16_t id)
+{
+    printf("\033[1;32mMO Started: ID = %u\033[0m\r\n", id);
+    messageId = id;
+}
+
 int main(int argc, char * argv[])
 {
     returnCode_t rVal = SUCCESS;
@@ -135,6 +146,12 @@ int main(int argc, char * argv[])
     int messagesAcknowledged = 0;
     signal(SIGINT, signal_handler);
     signal(SIGTERM, signal_handler);
+    time_t timeStamp = 0;
+
+    if(MESSAGE_CANCELLATION)
+    {
+        timeStamp = time(NULL);
+    }
 
     while ((opt = getopt_long(argc, argv, "d:h", _longOptions, NULL)) != -1)
     {
@@ -165,7 +182,8 @@ int main(int argc, char * argv[])
         .messageProvisioning = onMessageProvisioning,
         .moMessageComplete = onMoComplete,
         .mtMessageComplete = onMtComplete,
-        .constellationState = onConstellationState
+        .constellationState = onConstellationState,
+        .moMessageStarted = onMoStarted
         };
         //Register Callbacks
         rbRegisterCallbacks(&myCallbacks);
@@ -250,6 +268,19 @@ int main(int argc, char * argv[])
                         if(messagesAcknowledged >= 5)
                         {
                             break; //quit
+                        }
+                    }
+                }
+
+                if(MESSAGE_CANCELLATION)
+                {
+                    if(difftime(time(NULL), timeStamp) >= MESSAGE_CANCELLATION_TIMEOUT)
+                    {
+                        if(messageId > 0)
+                        {
+                            rbCancelMessage(RAW_TOPIC, messageId);
+                            timeStamp = time(NULL);
+                            messageId = -1;
                         }
                     }
                 }
