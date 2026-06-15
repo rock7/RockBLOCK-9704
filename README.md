@@ -612,6 +612,18 @@ void onConstellationState(const jsprConstellationState_t *state)
 }
 ```
 
+#### **moStarted**
+This callback will run every time an mo message has been accepted by the modem and is then either passed down to the modem or in the process of doing so. Below we print the message ID and store the value, in case later on we wanted to call `rbCancelMessage(const uint16_t topic, const uint16_t id)`.
+```c
+int messageId = -1;
+
+void onMoStarted(const uint16_t id)
+{
+    printf("\033[1;32mMO Started: ID = %u\033[0m\r\n", id);
+    messageId = id;
+}
+```
+
 #### **Register callbacks**
 Finally at the start of our script we assign and register our callbacks with the library.
 ```c
@@ -621,7 +633,8 @@ rbCallbacks_t myCallbacks =
 .messageProvisioning = onMessageProvisioning,
 .moMessageComplete = onMoComplete,
 .mtMessageComplete = onMtComplete,
-.constellationState = onConstellationState
+.constellationState = onConstellationState,
+.moMessageStarted = onMoStarted
 };
 //Register Callbacks
 rbRegisterCallbacks(&myCallbacks);
@@ -637,6 +650,14 @@ rbRegisterCallbacks(&myCallbacks);
 
 #### **Non-blocking Transmit**
   Simply call `rbSendMessageAsync(...)` to queue your message, then continue with your code, making sure that the interval between calling `rbPoll()` is at most **50ms** (`rbPoll()` needs to be called at least every **50ms**).
+
+#### **Cancelling a Message**
+Cancelling a message after it has been accepted by the modem is possible in the library. It's important to note that the steps below will only **attempt** to cancel the message, meaning is certain scenarios where the transmit of the message has already begun it might be too late. Below steps outline how this should be done:
+
+- Setup the `moMessageStarted` callback which will provide you with the message ID once the modem has accepted a message.
+- Call `rbCancelMessage()` with the correct topic ID and the message ID from the callback.
+- Modem will attempt to cancel the message, if cancelled successfully the moMessageComplete callback will be called with the same message ID and a status of `RB_MSG_STATUS_FAIL = -1`.
+- If `rbCancelMessage()` was called with the wrong message ID or too late the message will not be cancelled and `moMessageComplete` will be called with `RB_MSG_STATUS_OK = 1` when the message sends.
 
 ### ⬇️ Receiving Mobile-Terminated (MT) Messages (Async)
 
