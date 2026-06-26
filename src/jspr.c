@@ -48,9 +48,9 @@ bool receiveJspr(jsprResponse_t * response, const char * expectedTarget)
     size_t resultCodeIndexStart = 0;
     char * jsonStart = NULL;
 
-    clearResponse(response); //make sure we're dealing with an empty structure
     if((context.serialRead != NULL) && (response != NULL))
     {
+        clearResponse(response); //make sure we're dealing with an empty structure
         memset(jsprRxBuffer, 0 , RX_BUFFER_SIZE);
         do
         {
@@ -69,6 +69,12 @@ bool receiveJspr(jsprResponse_t * response, const char * expectedTarget)
                     break;
                 }
                 pos++;
+            }
+
+            if(pos >= (RX_BUFFER_SIZE - 1)) //Condition for buffer filling up when potentially missing the \r
+            {
+                reading = false;
+                break;
             }
 
             if(validResponse == true)
@@ -103,11 +109,16 @@ bool receiveJspr(jsprResponse_t * response, const char * expectedTarget)
 
                     if (resultCodeIndexStart > 0)
                     {
-                        memmove(jsprRxBuffer, &jsprRxBuffer[resultCodeIndexStart], (pos - resultCodeIndexStart));
+                        memmove(jsprRxBuffer, &jsprRxBuffer[resultCodeIndexStart], (pos - resultCodeIndexStart + 1)); //+1 for null terminator
                     }
 
                     targetStart = &jsprRxBuffer[JSPR_RESULT_CODE_LENGTH + 1];
                     targetEnd = strchr(targetStart, ' ');
+                    if(targetEnd == NULL)
+                    {
+                        reading = false;
+                        break;
+                    }
                     targetLength = targetEnd - targetStart;
                     if(targetLength < JSPR_MAX_TARGET_LENGTH)
                     {
@@ -121,12 +132,17 @@ bool receiveJspr(jsprResponse_t * response, const char * expectedTarget)
                         {
                             pos = 0;
                             memset(jsprRxBuffer, 0 , RX_BUFFER_SIZE);
-                            memset(response, 0, sizeof(response));
+                            memset(response, 0, sizeof(*response));
                             continue;
                         }
                     }
 
                     jsonStart = strchr(targetStart, '{');
+                    if(jsonStart == NULL)
+                    {
+                        reading = false;
+                        break;
+                    }
                     response->jsonSize = strchr(targetStart, '\0') - jsonStart;
                     if(response->jsonSize < JSPR_MAX_JSON_LENGTH)
                     {
@@ -337,7 +353,7 @@ bool parseJsprFirmwareInfo(const char * jsprString, jsprFirmwareInfo_t * firmwar
 
     if ((jsprString != NULL) && (firmwareInfo != NULL))
     {
-        cJSON *json = cJSON_Parse(jsprString);
+        json = cJSON_Parse(jsprString);
         if (json != NULL)
         {
             slot = cJSON_GetObjectItem(json, "slot");
@@ -718,8 +734,14 @@ bool parseJsprUnsMessageTerminateSegment(char * jsprString, jsprMessageTerminate
             if(cJSON_IsString(data))
             {
                 memset(messageTerminateSegment->data, 0, JSPR_MAX_SEGMENT_LENGTH);
-                memcpy(messageTerminateSegment->data, data->valuestring, strlen(data->valuestring));
-                messageTerminateSegment->dataLength = strlen(data->valuestring);
+                size_t copyLen = strlen(data->valuestring);
+                if (copyLen >= JSPR_MAX_SEGMENT_LENGTH) //This should never be true unless data is corrupted
+                {
+                    copyLen = JSPR_MAX_SEGMENT_LENGTH - 1;
+                }
+                memcpy(messageTerminateSegment->data, data->valuestring, copyLen);
+                messageTerminateSegment->data[copyLen] = '\0';
+                messageTerminateSegment->dataLength = copyLen;
             }
         parsed = true;
         cJSON_Delete(root);
@@ -882,22 +904,22 @@ bool parseJsprUnsMessageTerminateStatus(char * jsprString, jsprMessageTerminateS
                     messageTerminateStatus->messageId = messageId->valueint;
                 }
             }
-            cJSON * finalMoStatus = cJSON_GetObjectItem(root, "final_mt_status");
-            if(cJSON_IsString(finalMoStatus))
+            cJSON * finalMtStatus = cJSON_GetObjectItem(root, "final_mt_status");
+            if(cJSON_IsString(finalMtStatus))
             {
-                if(strcmp(finalMoStatus->valuestring, "complete") == 0)
+                if(strcmp(finalMtStatus->valuestring, "complete") == 0)
                 {
                     messageTerminateStatus->finalMtStatus = COMPLETE;
                 }
-                else if (strcmp(finalMoStatus->valuestring, "message_timed_out") == 0)
+                else if (strcmp(finalMtStatus->valuestring, "message_timed_out") == 0)
                 {
                     messageTerminateStatus->finalMtStatus = MESSAGE_TIMED_OUT;
                 }
-                else if (strcmp(finalMoStatus->valuestring, "message_cancelled") == 0)
+                else if (strcmp(finalMtStatus->valuestring, "message_cancelled") == 0)
                 {
                     messageTerminateStatus->finalMtStatus = MESSAGE_CANCELLED;
                 }
-                else if (strcmp(finalMoStatus->valuestring, "crc_error_in_transfer") == 0)
+                else if (strcmp(finalMtStatus->valuestring, "crc_error_in_transfer") == 0)
                 {
                     messageTerminateStatus->finalMtStatus = CRC_ERROR_IN_TRANSFER;
                 }
@@ -939,7 +961,7 @@ bool parseJsprGetMessageProvisioning(char * jsprString, jsprMessageProvisioning_
                         cJSON * topicName = cJSON_GetObjectItem(topic, "topic_name");
                         if(cJSON_IsString(topicName))
                         {
-                            if(strlen(topicName->valuestring) <= JSPR_TOPIC_NAME_MAX_LENGTH)
+                            if(strlen(topicName->valuestring) < JSPR_TOPIC_NAME_MAX_LENGTH)
                             {
                                 memset(messageProvisioning->provisioning[i].topicName, 0, JSPR_TOPIC_NAME_MAX_LENGTH);
                                 memcpy(messageProvisioning->provisioning[i].topicName, topicName->valuestring, strlen(topicName->valuestring));
@@ -997,19 +1019,19 @@ bool parseJsprGetHwInfo(char * jsprString, jsprHwInfo_t * hwInfo)
             if(cJSON_IsString(hwVersion))
             {
                 memset(hwInfo->hwVersion, 0, JSPR_HW_VERSION_MAX_LENGTH);
-                memcpy(hwInfo->hwVersion, hwVersion->valuestring, JSPR_HW_VERSION_MAX_LENGTH - 1);
+                strncpy(hwInfo->hwVersion, hwVersion->valuestring, JSPR_HW_VERSION_MAX_LENGTH - 1);
             }
             cJSON * serialNumber = cJSON_GetObjectItem(root, "serial_number");
             if(cJSON_IsString(serialNumber))
             {
                 memset(hwInfo->serialNumber, 0, JSPR_SERIAL_NUMBER_MAX_LENGTH);
-                memcpy(hwInfo->serialNumber, serialNumber->valuestring, JSPR_SERIAL_NUMBER_MAX_LENGTH - 1);
+                strncpy(hwInfo->serialNumber, serialNumber->valuestring, JSPR_SERIAL_NUMBER_MAX_LENGTH - 1);
             }
             cJSON * imei = cJSON_GetObjectItem(root, "imei");
             if(cJSON_IsString(imei))
             {
                 memset(hwInfo->imei, 0, JSPR_IMEI_MAX_LENGTH);
-                memcpy(hwInfo->imei, imei->valuestring, JSPR_IMEI_MAX_LENGTH - 1);
+                strncpy(hwInfo->imei, imei->valuestring, JSPR_IMEI_MAX_LENGTH - 1);
             }
             cJSON * boardTemp = cJSON_GetObjectItem(root, "board_temp");
             if(cJSON_IsNumber(boardTemp))
@@ -1046,7 +1068,7 @@ bool parseJsprGetSimStatus(char * jsprString, jsprSimStatus_t * simStatus)
             if(cJSON_IsString(iccid))
             {
                 memset(simStatus->iccid, 0, JSPR_ICCID_MAX_LENGTH);
-                memcpy(simStatus->iccid, iccid->valuestring, JSPR_ICCID_MAX_LENGTH - 1);
+                strncpy(simStatus->iccid, iccid->valuestring, JSPR_ICCID_MAX_LENGTH - 1);
             }
         parsed = true;
         cJSON_Delete(root);
