@@ -111,7 +111,7 @@ class RockBlock9704:
         else:
             return _rb.send_message_any(topic, message, timeout)
 
-    def send_message_async(self, message: bytes, topic: int = None) -> bool:
+    def send_message_async(self, message: bytes, topic: int = None) -> bool | None:
         """
         Sends a message from the RockBLOCK 9704 asynchronously
         :param message: bytes to send
@@ -132,7 +132,7 @@ class RockBlock9704:
         else:
             return _rb.receive_message_with_topic(topic)
         
-    def receive_message_async(self, topic: int = None) -> bytes:
+    def receive_message_async(self, topic: int = None) -> bytes | None:
         """
         Check asynchronously for messages sent to the RockBLOCK 9704
         :param topic: optional to only get messages sent to this topic
@@ -281,7 +281,7 @@ class RockBlock9704:
         """
         return _rb.resync_service_config()
 
-    def cancel_message(self, topic: int = None, id: int = None) -> bool:
+    def cancel_message(self, topic: int = None, id: int = None) -> bool | None:
         """
         Cancels a message which has already been accepted by the modem.
         :param topic: topic used to send the message
