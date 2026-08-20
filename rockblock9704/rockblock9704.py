@@ -121,7 +121,7 @@ class RockBlock9704:
         if topic is not None:
             return _rb.send_message_async(topic, message)
 
-    def receive_message(self, topic: int = None) -> bytes:
+    def receive_message(self, topic: int = None) -> bytes | None:
         """
         Check for messages sent to the RockBLOCK 9704
         :param topic: optional to only get messages sent to this topic
