@@ -116,7 +116,7 @@ class RockBlock9704:
         Sends a message from the RockBLOCK 9704 asynchronously
         :param message: bytes to send
         :param topic: optional topic to send to (defaults to raw topic)
-        :return: boolean indicating success
+        :return: boolean indicating success or None
         """
         if topic is not None:
             return _rb.send_message_async(topic, message)
@@ -125,7 +125,7 @@ class RockBlock9704:
         """
         Check for messages sent to the RockBLOCK 9704
         :param topic: optional to only get messages sent to this topic
-        :return: byte string message
+        :return: byte string message or None
         """
         if topic is None:
             return _rb.receive_message()
@@ -136,7 +136,7 @@ class RockBlock9704:
         """
         Check asynchronously for messages sent to the RockBLOCK 9704
         :param topic: optional to only get messages sent to this topic
-        :return: byte string message
+        :return: byte string message or None
         """
         if topic is None:
             return _rb.receive_message_async()
@@ -218,24 +218,24 @@ class RockBlock9704:
         """
         return _rb.set_mo_message_started_callback(mo_message_started)
 
-    def get_hardware_version(self) -> str:
+    def get_hardware_version(self) -> str | None:
         """
         Get RockBLOCK 9704 hardware version
-        :return: version string
+        :return: version string or None
         """
         return _rb.get_hardware_version()
 
-    def get_serial_number(self) -> str:
+    def get_serial_number(self) -> str | None:
         """
         Get RockBLOCK 9704 serial number
-        :return: serial string
+        :return: serial string or None
         """
         return _rb.get_serial_number()
 
-    def get_imei(self) -> str:
+    def get_imei(self) -> str | None:
         """
         Get modem IMEI
-        :return: IMEI string
+        :return: IMEI string or None
         """
         return _rb.get_imei()
 
@@ -260,10 +260,10 @@ class RockBlock9704:
         """
         return _rb.get_sim_connected()
 
-    def get_iccid(self) -> str:
+    def get_iccid(self) -> str | None:
         """
         Get ICCID of SIM
-        :return: ICCID string
+        :return: ICCID string or None
         """
         return _rb.get_iccid()
 
@@ -286,7 +286,7 @@ class RockBlock9704:
         Cancels a message which has already been accepted by the modem.
         :param topic: topic used to send the message
         :param id: message ID obtained from the mo_message_started callback
-        :return: bool depicting whether the command to cancel the message has been sent successfully
+        :return: bool depicting whether the command to cancel the message has been sent successfully or None
         """
         if topic is not None and id is not None:
             return _rb.cancel_message(topic, id)
