@@ -286,7 +286,7 @@ static PyObject *py_rbBegin(PyObject *self, PyObject *args) {
 
     result = rbBegin(port);
 
-    return Py_BuildValue("i", result);
+    return PyBool_FromLong(result);
 
 }
 
@@ -296,7 +296,7 @@ static PyObject *py_rbEnd(PyObject *self, PyObject *args) {
 
     result = rbEnd();
 
-    return Py_BuildValue("i", result);
+    return PyBool_FromLong(result);
 
 }
 #ifdef RB_GPIO
@@ -354,7 +354,7 @@ static PyObject *py_rbBeginGpio(PyObject *self, PyObject *args) {
 
     result = rbBeginGpio(port, &gpioInfo, timeout);
 
-    return Py_BuildValue("i", result);
+    return PyBool_FromLong(result);
 
 }
 
@@ -411,7 +411,7 @@ static PyObject *py_rbEndGpio(PyObject *self, PyObject *args) {
 
     result = rbEndGpio(&gpioInfo);
 
-    return Py_BuildValue("i", result);
+    return PyBool_FromLong(result);
 
 }
 #endif
@@ -430,7 +430,7 @@ static PyObject *py_sendMessage(PyObject *self, PyObject *args) {
 
     result = rbSendMessage(data, length, timeout);
 
-    return Py_BuildValue("i", result);
+    return PyBool_FromLong(result);
 
 }
 
@@ -449,7 +449,7 @@ static PyObject *py_sendMessageAny(PyObject *self, PyObject *args) {
 
     result = rbSendMessageAny(topic, data, length, timeout);
 
-    return Py_BuildValue("i", result);
+    return PyBool_FromLong(result);
 
 }
 
@@ -467,7 +467,7 @@ static PyObject *py_sendMessageAsync(PyObject *self, PyObject *args) {
 
     result = rbSendMessageAsync(topic, data, length);
 
-    return Py_BuildValue("i", result);
+    return PyBool_FromLong(result);
 
 }
 
@@ -539,7 +539,7 @@ static PyObject *py_rbAcknowledgeReceiveHeadAsync(PyObject *self, PyObject *args
 
     result = rbAcknowledgeReceiveHeadAsync();
 
-    return Py_BuildValue("i", result);
+    return PyBool_FromLong(result);
 
 }
 
@@ -604,14 +604,14 @@ static PyObject *py_getBoardTemp(PyObject *self, PyObject *args) {
 static PyObject *py_getCardPresent(PyObject *self, PyObject *args) {
 
   int result = rbGetCardPresent();
-  return Py_BuildValue("i", result);
+  return PyBool_FromLong(result);
 
 }
 
 static PyObject *py_getSimConnected(PyObject *self, PyObject *args) {
 
   int result = rbGetSimConnected();
-  return Py_BuildValue("i", result);
+  return PyBool_FromLong(result);
 
 }
 
@@ -631,7 +631,7 @@ static PyObject *py_getFirmwareVersion(PyObject *self, PyObject *args) {
 
 static PyObject *py_resyncServiceConfig(PyObject *self, PyObject *args) {
   int result = rbResyncServiceConfig();
-  return Py_BuildValue("i", result);
+  return PyBool_FromLong(result);
 }
 
 static PyObject *py_cancelMessage(PyObject *self, PyObject *args) {
@@ -646,7 +646,7 @@ static PyObject *py_cancelMessage(PyObject *self, PyObject *args) {
 
     result = rbCancelMessage(topic, id);
 
-    return Py_BuildValue("i", result);
+    return PyBool_FromLong(result);
 
 }
 
