@@ -33,7 +33,7 @@ void message_provisioning_callback(const jsprMessageProvisioning_t *messageProvi
         for (int i = 0; i < messageProvisioning->topicCount; i++) {
             const jsprProvisioning_t *prov = &messageProvisioning->provisioning[i];
 
-            PyObject *pyTopic = Py_BuildValue("{s:s,s:i,s:i,s:i,s:i}", 
+            PyObject *pyTopic = Py_BuildValue("{s:s,s:i,s:i,s:I,s:i}",
                                                 "topicName", prov->topicName,
                                                 "topicId", prov->topicId,
                                                 "priority", (int)prov->priority,
