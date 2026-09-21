@@ -210,6 +210,8 @@ bool parseJsprBootInfo(const char * jsprString, jsprBootInfo_t * bootInfo)
 
     if ((jsprString != NULL) && (bootInfo != NULL))
     {
+        memset(bootInfo, 0, sizeof(*bootInfo));
+
         json = cJSON_Parse(jsprString);
 
         if (json != NULL)
@@ -284,6 +286,8 @@ bool parseJsprGetApiVersion(char * jsprString, jsprApiVersion_t * apiVersion)
 
     if ((jsprString != NULL) && (apiVersion != NULL))
     {
+        memset(apiVersion, 0, sizeof(*apiVersion));
+
         cJSON * root = cJSON_Parse(jsprString);
         if (root != NULL)
         {
@@ -353,6 +357,8 @@ bool parseJsprFirmwareInfo(const char * jsprString, jsprFirmwareInfo_t * firmwar
 
     if ((jsprString != NULL) && (firmwareInfo != NULL))
     {
+        memset(firmwareInfo, 0, sizeof(*firmwareInfo));
+
         json = cJSON_Parse(jsprString);
         if (json != NULL)
         {
@@ -433,6 +439,8 @@ bool parseJsprGetSimInterface(char * jsprString, jsprSimInterface_t * simInterfa
 
     if ((jsprString != NULL) && (simInterface != NULL))
     {
+        memset(simInterface, 0, sizeof(*simInterface));
+
         cJSON * root = cJSON_Parse(jsprString);
         if (root != NULL)
         {
@@ -478,6 +486,8 @@ bool parseJsprGetOperationalState(char * jsprString, jsprOperationalState_t * op
 
     if ((jsprString != NULL) && (operationalState != NULL))
     {
+        memset(operationalState, 0, sizeof(*operationalState));
+
         cJSON * root = cJSON_Parse(jsprString);
         if (root != NULL)
         {
@@ -546,6 +556,8 @@ bool parseJsprPutMessageOriginate(char * jsprString, jsprMessageOriginate_t  * m
 
     if ((jsprString != NULL) && (messageOriginate != NULL))
     {
+        memset(messageOriginate, 0, sizeof(*messageOriginate));
+
         cJSON * root = cJSON_Parse(jsprString);
         if (root != NULL)
         {
@@ -607,6 +619,8 @@ bool parseJsprUnsMessageOriginateSegment(char * jsprString, jsprMessageOriginate
 
     if ((jsprString != NULL) && (messageOriginateSegment != NULL))
     {
+        memset(messageOriginateSegment, 0, sizeof(*messageOriginateSegment));
+
         cJSON * root = cJSON_Parse(jsprString);
         if (root != NULL)
         {
@@ -655,6 +669,8 @@ bool parseJsprUnsMessageTerminate(char * jsprString, jsprMessageTerminate_t * me
 
     if ((jsprString != NULL) && (messageTerminate != NULL))
     {
+        memset(messageTerminate, 0, sizeof(*messageTerminate));
+
         cJSON * root = cJSON_Parse(jsprString);
         if (root != NULL)
         {
@@ -695,6 +711,8 @@ bool parseJsprUnsMessageTerminateSegment(char * jsprString, jsprMessageTerminate
 
     if ((jsprString != NULL) && (messageTerminateSegment != NULL))
     {
+        memset(messageTerminateSegment, 0, sizeof(*messageTerminateSegment));
+
         cJSON * root = cJSON_Parse(jsprString);
         if (root != NULL)
         {
@@ -756,6 +774,8 @@ bool parseJsprGetSignal(char * jsprString, jsprConstellationState_t * signal)
 
     if ((jsprString != NULL) && (signal != NULL))
     {
+        memset(signal, 0, sizeof(*signal));
+
         cJSON * root = cJSON_Parse(jsprString);
         if (root != NULL)
         {
@@ -793,6 +813,8 @@ bool parseJsprUnsMessageOriginateStatus(char * jsprString, jsprMessageOriginateS
 
     if ((jsprString != NULL) && (messageOriginateStatus != NULL))
     {
+        memset(messageOriginateStatus, 0, sizeof(*messageOriginateStatus));
+
         cJSON * root = cJSON_Parse(jsprString);
         if (root != NULL)
         {
@@ -885,6 +907,8 @@ bool parseJsprUnsMessageTerminateStatus(char * jsprString, jsprMessageTerminateS
 
     if ((jsprString != NULL) && (messageTerminateStatus != NULL))
     {
+        memset(messageTerminateStatus, 0, sizeof(*messageTerminateStatus));
+
         cJSON * root = cJSON_Parse(jsprString);
         if (root != NULL)
         {
@@ -937,6 +961,8 @@ bool parseJsprGetMessageProvisioning(char * jsprString, jsprMessageProvisioning_
 
     if ((jsprString != NULL) && (messageProvisioning != NULL))
     {
+        memset(messageProvisioning, 0, sizeof(*messageProvisioning));
+
         cJSON * root = cJSON_Parse(jsprString);
         if (root != NULL)
         {
@@ -995,6 +1021,22 @@ bool parseJsprGetMessageProvisioning(char * jsprString, jsprMessageProvisioning_
                                 messageProvisioning->provisioning[i].priority = LOW_PRIORITY;
                             }
                         }
+                        cJSON * discardTimeSeconds = cJSON_GetObjectItem(topic, "discard_time_seconds");
+                        if(cJSON_IsNumber(discardTimeSeconds))
+                        {
+                            if(discardTimeSeconds->valueint >= 0 && discardTimeSeconds->valueint <= 604800)
+                            {
+                                messageProvisioning->provisioning[i].discardTimeSeconds = discardTimeSeconds->valueint;
+                            }
+                        }
+                        cJSON * maxQueueDepth = cJSON_GetObjectItem(topic, "max_queue_depth");
+                        if(cJSON_IsNumber(maxQueueDepth))
+                        {
+                            if(maxQueueDepth->valueint >= 1 && maxQueueDepth->valueint <= 99)
+                            {
+                                messageProvisioning->provisioning[i].maxQueueDepth = maxQueueDepth->valueint;
+                            }
+                        }
                     }
                 }
             }
@@ -1012,6 +1054,8 @@ bool parseJsprGetHwInfo(char * jsprString, jsprHwInfo_t * hwInfo)
 
     if ((jsprString != NULL) && (hwInfo != NULL))
     {
+        memset(hwInfo, 0, sizeof(*hwInfo));
+
         cJSON * root = cJSON_Parse(jsprString);
         if (root != NULL)
         {
@@ -1051,6 +1095,8 @@ bool parseJsprGetSimStatus(char * jsprString, jsprSimStatus_t * simStatus)
 
     if ((jsprString != NULL) && (simStatus != NULL))
     {
+        memset(simStatus, 0, sizeof(*simStatus));
+
         cJSON * root = cJSON_Parse(jsprString);
         if (root != NULL)
         {
