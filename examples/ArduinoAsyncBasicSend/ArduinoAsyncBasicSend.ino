@@ -33,7 +33,13 @@ void onMessageProvisioning(const jsprMessageProvisioning_t *messageProvisioning)
             Serial.print("Topic name: ");
             Serial.print(messageProvisioning->provisioning[i].topicName);
             Serial.print(", Topic number: ");
-            Serial.println(messageProvisioning->provisioning[i].topicId);
+            Serial.print(messageProvisioning->provisioning[i].topicId);
+            Serial.print(", Priority: ");
+            Serial.print(messageProvisioning->provisioning[i].priority);
+            Serial.print(", Discard time (s): ");
+            Serial.print(messageProvisioning->provisioning[i].discardTimeSeconds);
+            Serial.print(", Max queue depth: ");
+            Serial.println(messageProvisioning->provisioning[i].maxQueueDepth);
         }
     }
 }

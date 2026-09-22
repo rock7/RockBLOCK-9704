@@ -92,8 +92,12 @@ void onMessageProvisioning(const jsprMessageProvisioning_t *messageProvisioning)
         printf("\033[1;32mProvisioned topics:\033[0m\r\n");
         for(int i = 0; i < messageProvisioning->topicCount; i++)
         {
-            printf("\033[1;32mTopic name: %s, Topic number: %d\033[0m\r\n", 
-            messageProvisioning->provisioning[i].topicName, messageProvisioning->provisioning[i].topicId);
+            printf("\033[1;32mTopic name: %s, Topic number: %d, Priority: %d, Discard time (s): %u, Max queue depth: %u,\033[0m\r\n",
+            messageProvisioning->provisioning[i].topicName,
+            messageProvisioning->provisioning[i].topicId,
+            messageProvisioning->provisioning[i].priority,
+            messageProvisioning->provisioning[i].discardTimeSeconds,
+            messageProvisioning->provisioning[i].maxQueueDepth);
         }
     }
 }
