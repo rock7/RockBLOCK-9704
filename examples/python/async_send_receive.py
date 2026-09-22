@@ -36,7 +36,7 @@ def on_provision(messageProvisioning):
     if messageProvisioning["provisioningSet"]:
         print(f"\033[1;32mProvisioned for {messageProvisioning['topicCount']} topics\033[0m")
         for topic in messageProvisioning["provisioning"]:
-            print(f"\033[1;32mTopic name: {topic['topicName']}, Topic number: {topic['topicId']}\033[0m")
+            print(f"\033[1;32mTopic name: {topic['topicName']}, Topic number: {topic['topicId']}, Priority: {topic['priority']}, Discard time (s): {topic['discardTimeSeconds']}, Max queue depth: {topic['maxQueueDepth']}\033[0m")
 
 def on_mo(id, status):
     global messages_sent
