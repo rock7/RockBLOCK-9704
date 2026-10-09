@@ -28,7 +28,9 @@
  * every message sent. The onConstellationState callback will be called anytime either the signal level or
  * signal bars have changed although in this example we will only print the change in signal bars. Finally
  * the script will constantly wait for incoming messages, by waiting for the onMtComplete callback to be called,
- * then store and acknowledge them to clear space for others.
+ * then store and acknowledge them to clear space for others. Message activity status notifications are also
+ * enabled, the onMessageActivityStatus callback will be called whenever the modem starts or stops transferring
+ * messages (requires modem JSPR API version 1.6.0 or later).
  * 
  * Requirements:
  * RB9704 needs to be provisioned for messaging topic 244 (RAW).
@@ -138,6 +140,11 @@ void onMoStarted(const uint16_t id)
     messageId = id;
 }
 
+void onMessageActivityStatus(const bool active)
+{
+    printf("\033[1;35mMessaging Active: %s\033[0m\r\n", active ? "true" : "false");
+}
+
 int main(int argc, char * argv[])
 {
     returnCode_t rVal = SUCCESS;
@@ -187,7 +194,8 @@ int main(int argc, char * argv[])
         .moMessageComplete = onMoComplete,
         .mtMessageComplete = onMtComplete,
         .constellationState = onConstellationState,
-        .moMessageStarted = onMoStarted
+        .moMessageStarted = onMoStarted,
+        .messageActivityStatus = onMessageActivityStatus
         };
         //Register Callbacks
         rbRegisterCallbacks(&myCallbacks);
@@ -195,6 +203,11 @@ int main(int argc, char * argv[])
         if(rbBegin(_serialDevice))
         {
             printf("Successfully started serial session with RB9704\r\n");
+            //Enable message activity status notifications, these are disabled after every power cycle
+            if(!rbSetMessageActivityStatus(true))
+            {
+                printf("Failed to enable message activity status notifications\r\n");
+            }
             usleep(100000); //Wait at least 100ms before queueing a message the first time you run rbBegin after boot.
             //Queue and send 5 messages
             const char *message = "Message 0";

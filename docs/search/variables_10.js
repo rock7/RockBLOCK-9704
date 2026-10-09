@@ -1,9 +1,22 @@
 var searchData=
 [
-  ['tail_653',['tail',['../structimt__queue__t.html#a058074072f2141cfa6abac55557e4909',1,'imt_queue_t']]],
-  ['target_654',['target',['../structjsprResponse__t.html#a28b6948b76aea25bce42ca0d245d5e89',1,'jsprResponse_t']]],
-  ['topic_655',['topic',['../structimt__t.html#a2f221c4bb67e97e590c93df4e9bfd9b7',1,'imt_t::topic()'],['../structjsprMessageOriginate__t.html#a6193d8f3e945090d69579b2025014e26',1,'jsprMessageOriginate_t::topic()'],['../structjsprMessageOriginateSegment__t.html#ad1d892c66b035085f12b9601fe17d3bf',1,'jsprMessageOriginateSegment_t::topic()'],['../structjsprMessageTerminate__t.html#a4eca8b23a58ab0664b63b441e6317ca1',1,'jsprMessageTerminate_t::topic()'],['../structjsprMessageTerminateSegment__t.html#a9e25de40311ddee6a1c3e66aae3f97fb',1,'jsprMessageTerminateSegment_t::topic()'],['../structjsprMessageOriginateStatus__t.html#a97dd571bd16dbe97b3b69b8e5d2d66b7',1,'jsprMessageOriginateStatus_t::topic()'],['../structjsprMessageTerminateStatus__t.html#a4ec627f800a3c3674828ba32b23e47dc',1,'jsprMessageTerminateStatus_t::topic()']]],
-  ['topiccount_656',['topicCount',['../structjsprMessageProvisioning__t.html#a1246cf3d8374269ff77a4acdc94758e9',1,'jsprMessageProvisioning_t']]],
-  ['topicid_657',['topicId',['../structjsprProvisioning__t.html#a53d458c5ea4a3bbb3ac83e0246ca409d',1,'jsprProvisioning_t']]],
-  ['topicname_658',['topicName',['../structjsprProvisioning__t.html#ac88ccf0e25776a9e57f818c5d57c84aa',1,'jsprProvisioning_t']]]
+  ['segmentlength_0',['segmentlength',['../structjsprMessageTerminateSegment__t.html#ab1e5738cd627668a99fe80d0521f21f4',1,'jsprMessageTerminateSegment_t::segmentLength'],['../structjsprMessageOriginateSegment__t.html#a1980362f4310736bf8057535635d5309',1,'jsprMessageOriginateSegment_t::segmentLength']]],
+  ['segmentstart_1',['segmentstart',['../structjsprMessageOriginateSegment__t.html#acfb4efd7067b1bf0ad90f44f8278bf13',1,'jsprMessageOriginateSegment_t::segmentStart'],['../structjsprMessageTerminateSegment__t.html#a01de251c7f44fd5d29d3cdc57e06c78c',1,'jsprMessageTerminateSegment_t::segmentStart']]],
+  ['serialbaud_2',['serialBaud',['../structserialContext.html#ab7504c91fc8361bb6011a8a7c48474fc',1,'serialContext']]],
+  ['serialconnection_3',['serialConnection',['../serial_8c.html#a86667cd4c54e677d062a3449ee53db4b',1,'serial.c']]],
+  ['serialdeinit_4',['serialDeInit',['../structserialContext.html#a17222a2c27f0caa66caa96eaca0640be',1,'serialContext']]],
+  ['serialinit_5',['serialInit',['../structserialContext.html#a7fa1aa380ddf605edbce5c713f653837',1,'serialContext']]],
+  ['serialnumber_6',['serialNumber',['../structjsprHwInfo__t.html#a40b8fa6fe51d549fc8815e5ec27fdec8',1,'jsprHwInfo_t']]],
+  ['serialpeek_7',['serialPeek',['../structserialContext.html#a1472ad2a380afa1f719c9fe11759fce9',1,'serialContext']]],
+  ['serialport_8',['serialPort',['../structserialContext.html#ac6e8641fa50bb855eddd20e46b2b562b',1,'serialContext']]],
+  ['serialread_9',['serialRead',['../structserialContext.html#a3f94e7345e51eed4360478dd68275787',1,'serialContext']]],
+  ['serialstate_10',['serialstate',['../serial_8c.html#ae62bd010bc76a0b096696cd95490d512',1,'serialState:&#160;serial.c'],['../rockblock__9704_8c.html#ae62bd010bc76a0b096696cd95490d512',1,'serialState:&#160;serial.c']]],
+  ['serialwrite_11',['serialWrite',['../structserialContext.html#a01fb51a7c1db8352c88bc61c8bdb9451',1,'serialContext']]],
+  ['signalbars_12',['signalBars',['../structjsprConstellationState__t.html#a792a039e2390a5f49aad7060c039f430',1,'jsprConstellationState_t']]],
+  ['signallevel_13',['signalLevel',['../structjsprConstellationState__t.html#a9be3304c520f7790f479513b69359764',1,'jsprConstellationState_t']]],
+  ['simconnected_14',['simConnected',['../structjsprSimStatus__t.html#abb2104321907332a736e896ef527a346',1,'jsprSimStatus_t']]],
+  ['simstatus_15',['simStatus',['../rockblock__9704_8c.html#a7a1773db64ec42bb57bd008860df16af',1,'rockblock_9704.c']]],
+  ['slot_16',['slot',['../structjsprFirmwareInfo__t.html#a2b244b645b5b8bc7b5fbbe503162fb12',1,'jsprFirmwareInfo_t']]],
+  ['supportedversioncount_17',['supportedVersionCount',['../structjsprApiVersion__t.html#ae7cdb2880602d1f340286f19a647b22a',1,'jsprApiVersion_t']]],
+  ['supportedversions_18',['supportedVersions',['../structjsprApiVersion__t.html#aa80d2c121fdffe585243ddfd780598a5',1,'jsprApiVersion_t']]]
 ];

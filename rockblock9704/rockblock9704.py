@@ -218,6 +218,15 @@ class RockBlock9704:
         """
         return _rb.set_mo_message_started_callback(mo_message_started)
 
+    def set_message_activity_status_callback(self, message_activity_status = None):
+        """
+        Register the user defined message activity status callback in the library.
+        Notifications must be enabled with set_message_activity_status(True).
+        :param message_activity_status: Callback that runs when the messaging activity has changed,
+        provides a bool, True when the modem is or intends to be sending/receiving messages.
+        """
+        return _rb.set_message_activity_status_callback(message_activity_status)
+
     def get_hardware_version(self) -> str | None:
         """
         Get RockBLOCK 9704 hardware version
@@ -280,6 +289,23 @@ class RockBlock9704:
         :return: bool depicting the serviceConfig command was sent successfully
         """
         return _rb.resync_service_config()
+
+    def set_message_activity_status(self, enabled: bool) -> bool:
+        """
+        Enable or disable unsolicited message activity status notifications, these are disabled after a power cycle.
+        Requires modem JSPR API version 1.6.0 or later.
+        :param enabled: True to enable notifications, False to disable
+        :return: bool depicting success
+        """
+        return _rb.set_message_activity_status(enabled)
+
+    def get_message_activity_status(self) -> dict | None:
+        """
+        Get the message activity status from the modem.
+        Requires modem JSPR API version 1.6.0 or later.
+        :return: dictionary with "enabled" and "active" bools or None
+        """
+        return _rb.get_message_activity_status()
 
     def cancel_message(self, topic: int = None, id: int = None) -> bool | None:
         """

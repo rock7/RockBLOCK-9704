@@ -17,6 +17,7 @@ static uint8_t jsprCommandBuffer [COMMAND_MAX_LEN];
 #define JSPR_BOOT_SOURCE_STR_LEN 9U
 #define JSPR_GET_FIRMWARE_LEN 16U
 #define JSPR_GET_SIM_STATUS_LEN 17U
+#define JSPR_GET_MESSAGE_ACTIVITY_STATUS_LEN 29U
 
 bool jsprGetApiVersion(void)
 {
@@ -413,6 +414,41 @@ bool jsprPutMessageOriginateStatus(jsprMessageOriginateStatus_t * messageOrigina
         if (context.serialWrite != NULL)
         {
             if(sendJspr(jsprCommandBuffer, putMessageOriginateStatusLen) == putMessageOriginateStatusLen)
+            {
+                rVal = true;
+            }
+        }
+    }
+    return rVal;
+}
+
+bool jsprGetMessageActivityStatus(void)
+{
+    bool rVal = false;
+    const char getMessageActivityStatusStr[JSPR_GET_MESSAGE_ACTIVITY_STATUS_LEN] = "GET messageActivityStatus {}\r";
+    if (context.serialWrite != NULL)
+    {
+        if(sendJspr(getMessageActivityStatusStr, JSPR_GET_MESSAGE_ACTIVITY_STATUS_LEN) == JSPR_GET_MESSAGE_ACTIVITY_STATUS_LEN)
+        {
+            rVal = true;
+        }
+    }
+    return rVal;
+}
+
+bool jsprPutMessageActivityStatus(const bool enabled)
+{
+    bool rVal = false;
+    int rc = 0;
+
+    rc = snprintf(jsprCommandBuffer, sizeof(jsprCommandBuffer), "PUT messageActivityStatus {\"enabled\": %s}\r", enabled ? "true" : "false");
+
+    if (rc > 0)
+    {
+        const size_t putMessageActivityStatusLen = (const size_t)rc;
+        if (context.serialWrite != NULL)
+        {
+            if(sendJspr(jsprCommandBuffer, putMessageActivityStatusLen) == putMessageActivityStatusLen)
             {
                 rVal = true;
             }

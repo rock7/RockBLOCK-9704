@@ -27,6 +27,8 @@ bool jsprPutFirmware(const jsprBootSource_t slot);
 bool jsprGetSimStatus(void);
 bool jsprPutServiceConfig(const bool resync);
 bool jsprPutMessageOriginateStatus(jsprMessageOriginateStatus_t * messageOriginateStatus);
+bool jsprGetMessageActivityStatus(void);
+bool jsprPutMessageActivityStatus(const bool enabled);
 
 bool putSimInterface(availableSimInterfaces_t iface);
 bool putOperationalState(availableOperationalStates_t state);

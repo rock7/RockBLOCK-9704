@@ -546,6 +546,20 @@ typedef struct {
      * @param state Pointer to the updated constellation state structure.
      */
     void (*constellationState)(const jsprConstellationState_t *state);
+
+    /**
+     * @brief Callback for when a mobile-originated (MO) message request has been accepted by the modem.
+     * 
+     * @param id Unique Identifier of the message.
+     */
+    void (*moMessageStarted)(const uint16_t id);
+
+    /**
+     * @brief Callback for when the messaging activity status has changed.
+     * 
+     * @param active True when the modem has MO or MT messages to transfer.
+     */
+    void (*messageActivityStatus)(const bool active);
 } rbCallbacks_t;
 ```
 
@@ -624,6 +638,20 @@ void onMoStarted(const uint16_t id)
 }
 ```
 
+#### **messageActivityStatus**
+This callback will run every time the modem's messaging service changes between active and inactive. `active` is true when the modem has MO or MT messages to transfer and is, or intends to be, sending/receiving them, and false once no message transfer is ongoing or required. This can be useful for knowing when it is safe to power down.
+
+These notifications are disabled by default and after every power cycle, so call `rbSetMessageActivityStatus(true)` after `rbBegin(...)` to enable them. The current status can also be read at any time with `rbGetMessageActivityStatus(...)`. This requires modem JSPR API version 1.6.0 or later.
+```c
+bool modemBusy = false;
+
+void onMessageActivityStatus(const bool active)
+{
+    printf("Messaging active: %s\r\n", active ? "true" : "false");
+    modemBusy = active;
+}
+```
+
 #### **Register callbacks**
 Finally at the start of our script we assign and register our callbacks with the library.
 ```c
@@ -634,7 +662,8 @@ rbCallbacks_t myCallbacks =
 .moMessageComplete = onMoComplete,
 .mtMessageComplete = onMtComplete,
 .constellationState = onConstellationState,
-.moMessageStarted = onMoStarted
+.moMessageStarted = onMoStarted,
+.messageActivityStatus = onMessageActivityStatus
 };
 //Register Callbacks
 rbRegisterCallbacks(&myCallbacks);

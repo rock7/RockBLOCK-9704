@@ -1,9 +1,5 @@
 var searchData=
 [
-  ['fault_45',['FAULT',['../jspr_8h.html#a7b94d36039cbe65d670e3308153f5f3bab7f3a434cd7c576917ad58613673c571',1,'jspr.h']]],
-  ['finalmostatus_46',['finalMoStatus',['../structjsprMessageOriginateStatus__t.html#aeccba614f52259177a75126703794ec9',1,'jsprMessageOriginateStatus_t']]],
-  ['finalmtstatus_47',['finalMtStatus',['../structjsprMessageTerminateStatus__t.html#a7c7954675ddf14a9ad42f0aa71fe50a8',1,'jsprMessageTerminateStatus_t']]],
-  ['firmware_5fversion_5fstring_5flen_48',['FIRMWARE_VERSION_STRING_LEN',['../rockblock__9704_8c.html#ae4bd1659041ca64ead6444117164402b',1,'rockblock_9704.c']]],
-  ['firmwareinfo_49',['firmwareInfo',['../rockblock__9704_8c.html#af8ae92a0afbba9af5521df101fffee98',1,'rockblock_9704.c']]],
-  ['firmwareversion_50',['firmwareVersion',['../rockblock__9704_8c.html#a9b5303f50999184fac92ebefb1f5aa10',1,'rockblock_9704.c']]]
+  ['enabled_0',['enabled',['../structjsprMessageActivityStatus__t.html#a29180fd3c82a56737e3e26f07d64eda7',1,'jsprMessageActivityStatus_t']]],
+  ['encodedata_1',['encodedata',['../rockblock__9704_8c.html#a414b5af067281d5a57b0b7d2f93d4850',1,'encodeData(const char *srcBuffer, const size_t srcLength, char *destBuffer, const size_t destLength):&#160;rockblock_9704.c'],['../rockblock__9704_8h.html#a414b5af067281d5a57b0b7d2f93d4850',1,'encodeData(const char *srcBuffer, const size_t srcLength, char *destBuffer, const size_t destLength):&#160;rockblock_9704.h']]]
 ];

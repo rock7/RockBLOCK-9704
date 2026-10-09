@@ -1,7 +1,4 @@
 var searchData=
 [
-  ['finalmostatus_567',['finalMoStatus',['../structjsprMessageOriginateStatus__t.html#aeccba614f52259177a75126703794ec9',1,'jsprMessageOriginateStatus_t']]],
-  ['finalmtstatus_568',['finalMtStatus',['../structjsprMessageTerminateStatus__t.html#a7c7954675ddf14a9ad42f0aa71fe50a8',1,'jsprMessageTerminateStatus_t']]],
-  ['firmwareinfo_569',['firmwareInfo',['../rockblock__9704_8c.html#af8ae92a0afbba9af5521df101fffee98',1,'rockblock_9704.c']]],
-  ['firmwareversion_570',['firmwareVersion',['../rockblock__9704_8c.html#a9b5303f50999184fac92ebefb1f5aa10',1,'rockblock_9704.c']]]
+  ['enabled_0',['enabled',['../structjsprMessageActivityStatus__t.html#a29180fd3c82a56737e3e26f07d64eda7',1,'jsprMessageActivityStatus_t']]]
 ];
