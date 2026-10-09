@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['kermitdata_592',['kermitData',['../rockblock__9704_8c.html#a999cdb53fc486a4a235ae4927e39605b',1,'rockblock_9704.c']]],
-  ['kermitresponse_593',['kermitResponse',['../rockblock__9704_8c.html#a145b214c32e1f8ddd5a913017765ae73',1,'rockblock_9704.c']]],
-  ['kermitstatus_594',['kermitStatus',['../rockblock__9704_8c.html#a9c780db3ce5df26a7176f5725e50e566',1,'rockblock_9704.c']]]
+  ['json_0',['json',['../structjsprResponse__t.html#aeb741140f02ff3c4e5dc1b2efe7f6f55',1,'jsprResponse_t']]],
+  ['jsonsize_1',['jsonSize',['../structjsprResponse__t.html#a9963636521ec05fd002937b784a0f848',1,'jsprResponse_t']]],
+  ['jsprcommandbuffer_2',['jsprCommandBuffer',['../jspr__command_8c.html#aec530b9881a9ee2273ffecef8e40366b',1,'jspr_command.c']]],
+  ['jsprrxbuffer_3',['jsprRxBuffer',['../jspr_8c.html#a1b1e8178c06ad78f0529ea8cd466a8e0',1,'jspr.c']]]
 ];

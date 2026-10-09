@@ -1,10 +1,9 @@
 var searchData=
 [
-  ['rbcallbacks_627',['rbCallbacks',['../rockblock__9704_8c.html#a56c8cc991feb4774a419faef37b88643',1,'rockblock_9704.c']]],
-  ['ready_628',['ready',['../structimt__t.html#a411a73f1ff229a603d73a2d7662e15e8',1,'imt_t']]],
-  ['readytoprocess_629',['readyToProcess',['../structimt__t.html#a0d4d1b4e5367b2fae1119ec38871512d',1,'imt_t']]],
-  ['reason_630',['reason',['../structjsprOperationalState__t.html#a58e66b4b5e28801d283c4cabafb93560',1,'jsprOperationalState_t']]],
-  ['receivelock_631',['Receivelock',['../rockblock__9704_8c.html#a447b2b296b2e673caf442727f463be5a',1,'rockblock_9704.c']]],
-  ['requestreference_632',['requestReference',['../structjsprMessageOriginate__t.html#a527a1867027e49a62c692154d48e1dcb',1,'jsprMessageOriginate_t']]],
-  ['response_633',['response',['../rockblock__9704_8c.html#a13f8ed6aa8a46bbcb9612ddfd4480e09',1,'rockblock_9704.c']]]
+  ['patch_0',['patch',['../structjsprDottedVersion__t.html#a2b56da250c97d508e36384f89fe18c2e',1,'jsprDottedVersion_t']]],
+  ['pin_1',['pin',['../structgpioPin__t.html#a01b8746f0a5c0a07d73ab39bcd2255a4',1,'gpioPin_t']]],
+  ['powerenable_2',['powerEnable',['../structrbGpioTable__t.html#aded34ec110cd1e8113d160b8ab659c4c',1,'rbGpioTable_t']]],
+  ['priority_3',['priority',['../structjsprProvisioning__t.html#ae997d97525a3bf2abe6f46e72c809713',1,'jsprProvisioning_t']]],
+  ['provisioning_4',['provisioning',['../structjsprMessageProvisioning__t.html#a7d8c4816238d828f794b507b36a58abb',1,'jsprMessageProvisioning_t']]],
+  ['provisioningset_5',['provisioningSet',['../structjsprMessageProvisioning__t.html#a89b81bc0743ae45fb7879221a373cf4e',1,'jsprMessageProvisioning_t']]]
 ];
