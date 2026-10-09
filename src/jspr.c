@@ -499,8 +499,8 @@ bool parseJsprGetSimInterface(char * jsprString, jsprSimInterface_t * simInterfa
             {
                 simInterface->ifaceSet = false;
             }
-        parsed = true;
-        cJSON_Delete(root);
+            parsed = true;
+            cJSON_Delete(root);
         }
     }
 
@@ -569,8 +569,8 @@ bool parseJsprGetOperationalState(char * jsprString, jsprOperationalState_t * op
             {
                 operationalState->operationalStateSet = false;
             }
-        parsed = true;
-        cJSON_Delete(root);
+            parsed = true;
+            cJSON_Delete(root);
         }
     }
 
@@ -633,8 +633,8 @@ bool parseJsprPutMessageOriginate(char * jsprString, jsprMessageOriginate_t  * m
                     }
                 }
             }
-        parsed = true;
-        cJSON_Delete(root);
+            parsed = true;
+            cJSON_Delete(root);
         }
     }
     return parsed;
@@ -683,8 +683,8 @@ bool parseJsprUnsMessageOriginateSegment(char * jsprString, jsprMessageOriginate
                     messageOriginateSegment->messageId = messageId->valueint;
                 }
             }
-        parsed = true;
-        cJSON_Delete(root);
+            parsed = true;
+            cJSON_Delete(root);
         }
     }
     return parsed;
@@ -725,8 +725,8 @@ bool parseJsprUnsMessageTerminate(char * jsprString, jsprMessageTerminate_t * me
                     messageTerminate->messageId = messageId->valueint;
                 }
             }
-        parsed = true;
-        cJSON_Delete(root);
+            parsed = true;
+            cJSON_Delete(root);
         }
     }
     return parsed;
@@ -788,8 +788,8 @@ bool parseJsprUnsMessageTerminateSegment(char * jsprString, jsprMessageTerminate
                 messageTerminateSegment->data[copyLen] = '\0';
                 messageTerminateSegment->dataLength = copyLen;
             }
-        parsed = true;
-        cJSON_Delete(root);
+            parsed = true;
+            cJSON_Delete(root);
         }
     }
     return parsed;
@@ -827,8 +827,8 @@ bool parseJsprGetSignal(char * jsprString, jsprConstellationState_t * signal)
                     signal->signalBars = signalBars->valueint;
                 }
             }
-        parsed = true;
-        cJSON_Delete(root);
+            parsed = true;
+            cJSON_Delete(root);
         }
     }
     return parsed;
@@ -921,8 +921,8 @@ bool parseJsprUnsMessageOriginateStatus(char * jsprString, jsprMessageOriginateS
                     messageOriginateStatus->finalMoStatus = USER_SUPPLIED_CRC_ERROR_MOS;
                 }
             }
-        parsed = true;
-        cJSON_Delete(root);
+            parsed = true;
+            cJSON_Delete(root);
         }
     }
     return parsed;
@@ -975,8 +975,8 @@ bool parseJsprUnsMessageTerminateStatus(char * jsprString, jsprMessageTerminateS
                     messageTerminateStatus->finalMtStatus = CRC_ERROR_IN_TRANSFER;
                 }
             }
-        parsed = true;
-        cJSON_Delete(root);
+            parsed = true;
+            cJSON_Delete(root);
         }
     }
     return parsed;
@@ -1067,9 +1067,9 @@ bool parseJsprGetMessageProvisioning(char * jsprString, jsprMessageProvisioning_
                     }
                 }
             }
-        messageProvisioning->provisioningSet = true;
-        parsed = true;
-        cJSON_Delete(root);
+            messageProvisioning->provisioningSet = true;
+            parsed = true;
+            cJSON_Delete(root);
         }
     }
     return parsed;
@@ -1109,8 +1109,8 @@ bool parseJsprGetHwInfo(char * jsprString, jsprHwInfo_t * hwInfo)
             {
                 hwInfo->boardTemp = boardTemp->valueint;
             }
-        parsed = true;
-        cJSON_Delete(root);
+            parsed = true;
+            cJSON_Delete(root);
         }
     }
     return parsed;
@@ -1143,8 +1143,8 @@ bool parseJsprGetSimStatus(char * jsprString, jsprSimStatus_t * simStatus)
                 memset(simStatus->iccid, 0, JSPR_ICCID_MAX_LENGTH);
                 strncpy(simStatus->iccid, iccid->valuestring, JSPR_ICCID_MAX_LENGTH - 1);
             }
-        parsed = true;
-        cJSON_Delete(root);
+            parsed = true;
+            cJSON_Delete(root);
         }
     }
     return parsed;
@@ -1172,7 +1172,7 @@ bool parseJsprMessageActivityStatus(const char * jsprString, jsprMessageActivity
                 messageActivityStatus->active = cJSON_IsTrue(active);
                 parsed = true;
             }
-        cJSON_Delete(root);
+            cJSON_Delete(root);
         }
     }
     return parsed;
