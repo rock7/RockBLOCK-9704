@@ -287,7 +287,16 @@ typedef struct
     char iccid[JSPR_ICCID_MAX_LENGTH];
 } jsprSimStatus_t;
 
+typedef struct
+{
+    bool enabled;
+    bool active;
+} jsprMessageActivityStatus_t;
+
+typedef void (*jsprUnsolicitedHandler_t)(const jsprResponse_t * response);
+
 //internal functions
+void setJsprUnsolicitedHandler(jsprUnsolicitedHandler_t handler);
 int sendJspr(const char * buffer, size_t length);
 bool receiveJspr(jsprResponse_t * response, const char * expectedTarget);
 bool waitForJsprMessage(jsprResponse_t * response, const char * expectedTarget, const uint32_t expectedCode, const uint32_t timeoutSeconds);
@@ -307,6 +316,7 @@ bool parseJsprUnsMessageTerminateStatus(char * jsprString, jsprMessageTerminateS
 bool parseJsprGetMessageProvisioning(char * jsprString, jsprMessageProvisioning_t * messageProvisioning);
 bool parseJsprGetHwInfo(char * jsprString, jsprHwInfo_t * hwInfo);
 bool parseJsprGetSimStatus(char * jsprString, jsprSimStatus_t * simStatus);
+bool parseJsprMessageActivityStatus(const char * jsprString, jsprMessageActivityStatus_t * messageActivityStatus);
 
 #ifdef __cplusplus
 }

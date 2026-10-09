@@ -15,6 +15,7 @@
 //Messaging Variables
 int messageReference = 1;
 static uint8_t jsprRxBuffer [RX_BUFFER_SIZE];
+static jsprUnsolicitedHandler_t unsolicitedHandler = NULL;
 extern serialContext context;
 
 int sendJspr(const char *buffer, size_t length)
@@ -130,6 +131,21 @@ bool receiveJspr(jsprResponse_t * response, const char * expectedTarget)
                     {
                         if (strncmp(response->target, expectedTarget, JSPR_MAX_TARGET_LENGTH) !=0)
                         {
+                            // Pass unsolicited messages to the handler rather than silently dropping them
+                            if ((JSPR_RC_UNSOLICITED_MESSAGE == response->code) && (unsolicitedHandler != NULL))
+                            {
+                                jsonStart = strchr(targetStart, '{');
+                                if (jsonStart != NULL)
+                                {
+                                    response->jsonSize = strchr(targetStart, '\0') - jsonStart;
+                                    if (response->jsonSize < JSPR_MAX_JSON_LENGTH)
+                                    {
+                                        strncpy(response->json, jsonStart, response->jsonSize);
+                                        response->json[response->jsonSize] = '\0';
+                                        unsolicitedHandler(response);
+                                    }
+                                }
+                            }
                             pos = 0;
                             memset(jsprRxBuffer, 0 , RX_BUFFER_SIZE);
                             memset(response, 0, sizeof(*response));
@@ -159,6 +175,11 @@ bool receiveJspr(jsprResponse_t * response, const char * expectedTarget)
     return received;
 }
 
+void setJsprUnsolicitedHandler(jsprUnsolicitedHandler_t handler)
+{
+    unsolicitedHandler = handler;
+}
+
 bool waitForJsprMessage(jsprResponse_t * response, const char * expectedTarget, const uint32_t expectedCode, const uint32_t timeoutSeconds)
 {
     bool gotMessage = false;
@@ -173,6 +194,12 @@ bool waitForJsprMessage(jsprResponse_t * response, const char * expectedTarget, 
         {
             gotMessage = true;
             break;
+        }
+
+        // Same target but unsolicited, e.g. a 299 arriving while waiting for a 200
+        if ((JSPR_RC_UNSOLICITED_MESSAGE == response->code) && (unsolicitedHandler != NULL))
+        {
+            unsolicitedHandler(response);
         }
 
         if ((millis() - startTime) > timeoutSeconds * 1000)
@@ -1117,6 +1144,34 @@ bool parseJsprGetSimStatus(char * jsprString, jsprSimStatus_t * simStatus)
                 strncpy(simStatus->iccid, iccid->valuestring, JSPR_ICCID_MAX_LENGTH - 1);
             }
         parsed = true;
+        cJSON_Delete(root);
+        }
+    }
+    return parsed;
+}
+
+bool parseJsprMessageActivityStatus(const char * jsprString, jsprMessageActivityStatus_t * messageActivityStatus)
+{
+    bool parsed = false;
+
+    if ((jsprString != NULL) && (messageActivityStatus != NULL))
+    {
+        memset(messageActivityStatus, 0, sizeof(*messageActivityStatus));
+
+        cJSON * root = cJSON_Parse(jsprString);
+        if (root != NULL)
+        {
+            cJSON * enabled = cJSON_GetObjectItem(root, "enabled");
+            if(cJSON_IsBool(enabled))
+            {
+                messageActivityStatus->enabled = cJSON_IsTrue(enabled);
+            }
+            cJSON * active = cJSON_GetObjectItem(root, "active");
+            if(cJSON_IsBool(active))
+            {
+                messageActivityStatus->active = cJSON_IsTrue(active);
+                parsed = true;
+            }
         cJSON_Delete(root);
         }
     }

@@ -49,12 +49,31 @@ bool mtDropped = false;
 bool mtReceived = false;
 
 static const rbCallbacks_t *rbCallbacks = NULL;
+static bool messageActivityPending = false;
+static bool messageActivityPendingActive = false;
+
+// Called by the JSPR layer for unsolicited messages received while waiting for another response.
+// Only records the latest state, the user callback is then called from rbPoll() so it is never
+// run in the middle of a JSPR receive.
+static void onUnsolicitedWhileWaiting(const jsprResponse_t * unsolicited)
+{
+    if(strcmp(unsolicited->target, "messageActivityStatus") == 0)
+    {
+        jsprMessageActivityStatus_t messageActivityStatus;
+        if(parseJsprMessageActivityStatus(unsolicited->json, &messageActivityStatus))
+        {
+            messageActivityPendingActive = messageActivityStatus.active;
+            messageActivityPending = true;
+        }
+    }
+}
 
 void rbRegisterCallbacks(const rbCallbacks_t *callbacks) 
 {
     if (callbacks) 
     {
         rbCallbacks = callbacks;
+        setJsprUnsolicitedHandler(onUnsolicitedWhileWaiting);
     }
 }
 
@@ -711,6 +730,14 @@ void rbPoll(void)
     int decodedBytes;
     bool mtQueued;
     imt_t * imtMo = imtQueueMoGetFirst();
+    if(messageActivityPending)
+    {
+        messageActivityPending = false;
+        if(rbCallbacks && rbCallbacks->messageActivityStatus)
+        {
+            rbCallbacks->messageActivityStatus(messageActivityPendingActive);
+        }
+    }
     if(context.serialPeek() > 0)
     {
         if(receiveJspr(&response, NULL))
@@ -898,6 +925,18 @@ void rbPoll(void)
                     if(rbCallbacks && rbCallbacks->constellationState)
                     {
                         rbCallbacks->constellationState(&constellationState);
+                    }
+                }
+            }
+            if(JSPR_RC_UNSOLICITED_MESSAGE == response.code && strcmp(response.target, "messageActivityStatus") == 0)
+            {
+                jsprMessageActivityStatus_t messageActivityStatus;
+                if(parseJsprMessageActivityStatus(response.json, &messageActivityStatus))
+                {
+                    messageActivityPending = false;
+                    if(rbCallbacks && rbCallbacks->messageActivityStatus)
+                    {
+                        rbCallbacks->messageActivityStatus(messageActivityStatus.active);
                     }
                 }
             }
@@ -1117,6 +1156,35 @@ bool rbResyncServiceConfig(void)
     }
 
     return rVal;
+}
+
+bool rbSetMessageActivityStatus(const bool enabled)
+{
+    bool set = false;
+    if(jsprPutMessageActivityStatus(enabled))
+    {
+        if(waitForJsprMessage(&response, "messageActivityStatus", JSPR_RC_NO_ERROR, 1))
+        {
+            set = true;
+        }
+    }
+    return set;
+}
+
+bool rbGetMessageActivityStatus(jsprMessageActivityStatus_t * status)
+{
+    bool populated = false;
+    if(status != NULL)
+    {
+        if(jsprGetMessageActivityStatus())
+        {
+            if(waitForJsprMessage(&response, "messageActivityStatus", JSPR_RC_NO_ERROR, 1))
+            {
+                populated = parseJsprMessageActivityStatus(response.json, status);
+            }
+        }
+    }
+    return populated;
 }
 
 static uint16_t calculateCrc(const uint8_t * buffer, const size_t bufferLength, const uint16_t initialCRC)

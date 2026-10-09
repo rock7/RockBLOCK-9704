@@ -94,6 +94,18 @@ typedef struct
      * @param id Unique Identifier of the message.
      */
     void (*moMessageStarted)(const uint16_t id);
+
+    /**
+     * @brief Callback for when the messaging activity status has changed.
+     * 
+     * Only called once notifications have been enabled with 
+     * rbSetMessageActivityStatus(true).
+     * 
+     * @param active True when the modem has MO or MT messages to transfer and is, 
+     * or intends to be, sending/receiving them. False when no message transfer 
+     * is ongoing or required.
+     */
+    void (*messageActivityStatus)(const bool active);
 } rbCallbacks_t;
 
 /**
@@ -463,6 +475,31 @@ char *  rbGetFirmwareVersion(void);
  * @return true on success, false on failure.
  */
 bool rbResyncServiceConfig(void);
+
+/**
+ * @brief Enable or disable unsolicited messageActivityStatus notifications.
+ * 
+ * When enabled, the modem will report whenever the messaging service changes 
+ * between active and inactive, these are passed to the messageActivityStatus 
+ * callback by rbPoll(). The modem defaults to disabled after a power cycle.
+ * 
+ * @note Requires modem JSPR API version 1.6.0 or later.
+ * 
+ * @param enabled True to enable notifications, false to disable.
+ * @return true on success, false on failure.
+ */
+bool rbSetMessageActivityStatus(const bool enabled);
+
+/**
+ * @brief Get the current messaging activity status from the modem.
+ * 
+ * @note Requires modem JSPR API version 1.6.0 or later.
+ * 
+ * @param status Pointer to a structure populated with whether notifications 
+ * are enabled and whether the messaging service is currently active.
+ * @return true on success, false on failure.
+ */
+bool rbGetMessageActivityStatus(jsprMessageActivityStatus_t * status);
 
 #if defined(KERMIT)
 /**
