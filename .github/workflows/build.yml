@@ -26,9 +26,16 @@ jobs:
           - [macos-26-intel, macosx_x86_64]
           - [macos-latest, macosx_arm64]
           - [windows-latest, win_amd64]
+          - [windows-latest, win32]
         
     steps:
       - uses: actions/checkout@v6
+
+      - name: Setup MSVC (32-bit) #https://github.com/mesonbuild/meson/issues/11435#issuecomment-3803764265
+        if: ${{ matrix.buildplat[1] == 'win32' }}
+        uses: bus1/cabuild/action/msdevshell@e22aba57d6e74891d059d66501b6b5aed8123c4d  # v1
+        with:
+          architecture: 'x86'
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v4.3.1
