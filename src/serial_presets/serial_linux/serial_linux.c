@@ -8,6 +8,11 @@
 #include <sys/select.h>
 #include <sys/ioctl.h>
 
+//Maximum retry count for writes
+#define MAX_WRITE_RETRY 10
+//Wait time per retry to clear the transmit buffer
+#define RETRY_WAIT_TIME 10000
+
 //Serial Variables
 extern int serialConnection;
 extern enum serialState serialState;
@@ -191,28 +196,35 @@ int writeLinux(const char * data, const uint16_t length)
     bool retry = false;
     size_t bytesSent = 0;
     size_t toSend = length;
-    if(serialState == OPEN)
+    int retries = 0;
+    if (serialState == OPEN)
     {
         do
         {
             retry = false;
             toSend = length - bytesSent;
             rc = write(serialConnection, &data[bytesSent], toSend);
-            if(rc > 0)
+            if (rc > 0)
             {
                 bytesSent += rc;
+                retries = 0;
             }
             else
             {
                 retry = (errno == EAGAIN) ? true : false;
+                retries++;
+                if (retry == true)
+                {
+                    usleep(RETRY_WAIT_TIME);
+                }
             }
 
-            if (bytesSent < length)
+            if ((rc > 0) && (bytesSent < length))
             {
                 retry = true;
             }
             
-        } while (retry == true);
+        } while ((retry == true) && (retries < MAX_WRITE_RETRY));
 
         if (rc < 0)
         {
